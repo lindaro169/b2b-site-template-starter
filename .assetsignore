@@ -1,0 +1,6 @@
+_worker.js
+_redirects
+.wrangler
+*.log
+.assetsignore
+*.txt

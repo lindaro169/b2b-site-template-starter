@@ -1,0 +1,18 @@
+# Template Catalog Demo Notice
+
+## About This Site
+This site is a sanitized template environment. All visible names, copy, product data, contact details, logo assets, favicon assets, and claims are placeholders that must be replaced before production use.
+
+## How To Treat It
+- Safe for layout review, QA, staging, and internal previews
+- Not a live supplier profile
+- Not a verified catalog or legal source of truth
+
+## Placeholder Areas
+1. Homepage, about, services, contact, product listing, and legal copy
+2. Product cards, detail descriptions, and testimonials
+3. Logo, favicon, and product imagery
+4. Contact channels, email addresses, and metadata
+
+## Publish Rule
+Do not present this site as a real business until all placeholder content has been replaced with approved production data.

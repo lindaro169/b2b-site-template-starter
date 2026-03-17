@@ -1,0 +1,12 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="1200" fill="#F6F1E9"/>
+  <rect x="80" y="80" width="1040" height="1040" rx="48" fill="#FFFDF9" stroke="#D8CBBE" stroke-width="4"/>
+  <circle cx="600" cy="420" r="190" fill="#EFE3D5"/>
+  <path d="M600 230L640 360H775L664 442L706 575L600 494L494 575L536 442L425 360H560L600 230Z" fill="#C29A6B"/>
+  <rect x="240" y="760" width="720" height="26" rx="13" fill="#E7D8C7"/>
+  <rect x="300" y="820" width="600" height="20" rx="10" fill="#EDE3D6"/>
+  <rect x="390" y="888" width="420" height="20" rx="10" fill="#F1EADF"/>
+  <text x="600" y="1040" text-anchor="middle" fill="#7A5A3C" font-family="Georgia, serif" font-size="54" letter-spacing="4">
+    MOCK PRODUCT IMAGE
+  </text>
+</svg>

@@ -1,0 +1,300 @@
+.editor {
+  border: 1px solid #e0e6ed;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 12px;
+  background: #f7fafc;
+  border-bottom: 1px solid #e0e6ed;
+  align-items: center;
+}
+
+.toolbarGroup {
+  display: flex;
+  gap: 2px;
+  padding: 0 8px;
+  border-right: 1px solid #cbd5e0;
+}
+
+.toolbarGroup:last-child {
+  border-right: none;
+}
+
+.toolBtn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: white;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a202c;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolBtn:hover {
+  background: #e6f2ff;
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.toolBtn:active,
+.toolBtn.active {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.formatSelect {
+  padding: 6px 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  background: white;
+  font-size: 12px;
+  color: #1a202c;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.formatSelect:hover {
+  border-color: #667eea;
+}
+
+.formatSelect:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.editorContent {
+  flex: 1;
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #1a202c;
+  overflow-y: auto;
+  min-height: 600px;
+  outline: none;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.editorContent[contenteditable='false'] {
+  background: #f7fafc;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #666;
+  white-space: pre-wrap;
+}
+
+.editorContent[data-placeholder]:empty:before {
+  content: attr(data-placeholder);
+  color: #a0aec0;
+  pointer-events: none;
+}
+
+/* 编辑器内容样式 */
+.editorContent h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 24px 0 12px 0;
+}
+
+.editorContent h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 20px 0 10px 0;
+}
+
+.editorContent h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 16px 0 8px 0;
+}
+
+.editorContent h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 12px 0 6px 0;
+}
+
+.editorContent p {
+  margin: 12px 0;
+}
+
+.editorContent ul,
+.editorContent ol {
+  margin: 12px 0;
+  padding-left: 32px;
+}
+
+.editorContent li {
+  margin: 6px 0;
+}
+
+.editorContent img {
+  max-width: 100%;
+  height: auto;
+  margin: 12px 0;
+  border-radius: 4px;
+  border: 1px solid #e0e6ed;
+}
+
+.editorContent a {
+  color: #667eea;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.editorContent a:hover {
+  text-decoration: underline;
+}
+
+.editorContent blockquote {
+  margin: 12px 0;
+  padding: 12px 16px;
+  border-left: 4px solid #667eea;
+  background: #f0f4ff;
+  color: #4a5568;
+}
+
+.editorContent code {
+  background: #f7fafc;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  color: #c53030;
+}
+
+.editorContent pre {
+  background: #1a202c;
+  color: #e2e8f0;
+  padding: 16px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  margin: 12px 0;
+}
+
+.footer {
+  padding: 12px 20px;
+  background: #f7fafc;
+  border-top: 1px solid #e0e6ed;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 12px;
+  color: #718096;
+}
+
+.wordCount {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.preview {
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #1a202c;
+}
+
+.preview h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 24px 0 12px 0;
+}
+
+.preview h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 20px 0 10px 0;
+}
+
+.preview h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 16px 0 8px 0;
+}
+
+.preview p {
+  margin: 12px 0;
+}
+
+.preview img {
+  max-width: 100%;
+  height: auto;
+  margin: 12px 0;
+  border-radius: 4px;
+}
+
+.preview a {
+  color: #667eea;
+  text-decoration: none;
+}
+
+.preview a:hover {
+  text-decoration: underline;
+}
+
+/* 滚动条样式 */
+.editorContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.editorContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editorContent::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+.editorContent::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .toolbar {
+    gap: 2px;
+    padding: 8px;
+  }
+
+  .toolbarGroup {
+    padding: 0 4px;
+  }
+
+  .toolBtn {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .editorContent {
+    padding: 16px;
+    min-height: 400px;
+    font-size: 13px;
+  }
+
+  .formatSelect {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}

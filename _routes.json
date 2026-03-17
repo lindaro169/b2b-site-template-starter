@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "description": "Cloudflare Pages Routes Configuration for Image Optimization",
+  "include": [
+    "/",
+    "/_next/*",
+    "/images/*",
+    "/logos/*",
+    "/favicon_io/*"
+  ],
+  "exclude": [
+    "/api/*",
+    "/admin/*"
+  ],
+  "rules": [
+    {
+      "type": "CompiledContentType",
+      "include": "/images/**/*",
+      "exclude": ""
+    },
+    {
+      "type": "CompiledContentType",
+      "include": "/logos/**/*",
+      "exclude": ""
+    },
+    {
+      "type": "CompiledContentType",
+      "include": "/favicon_io/**/*",
+      "exclude": ""
+    },
+    {
+      "type": "CompiledContentType",
+      "include": "/_next/image/**/*",
+      "exclude": ""
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+/**
+ * Cloudflare Workers 部署配置
+ *
+ * 此配置使用 OpenNextJS 适配器在 Cloudflare Workers 上运行 Next.js 应用
+ *
+ * 配置说明：
+ * 1. main: Worker 入口点（由 OpenNextJS 生成）
+ * 2. site: 静态资源目录
+ * 3. d1_databases: D1 数据库绑定（如果需要）
+ * 4. kv_namespaces: KV 命名空间（用于缓存）
+ * 5. r2_buckets: R2 对象存储（用于文件存储）
+ *
+ * 部署前需要完成的步骤：
+ * 1. 运行 npm run build 构建应用
+ * 2. 在 Cloudflare 仪表盘创建必要的绑定
+ * 3. 在 wrangler.jsonc 中配置绑定 ID
+ * 4. 运行 wrangler deploy 部署到 Workers
+ */
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "template-catalog-app",
+    // Worker 脚本配置
+    "main": ".open-next/worker.js",
+    "compatibility_date": "2024-12-20",
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    // ✅ 关键修复：启用Worker优先的资源服务
+    // 使用wrangler的assets而不是site绑定，这样可以使用run_worker_first标志
+    // 告诉OpenNextJS在初始化时使用ASSETS KV命名空间来提供静态资源
+    "assets": {
+        "directory": ".open-next/assets",
+        "binding": "ASSETS",
+        "run_worker_first": true
+    },
+    "routes": [
+        {
+            "pattern": "template-catalog.example.com/*",
+            "zone_name": "template-catalog.example.com"
+        },
+        {
+            "pattern": "www.template-catalog.example.com/*",
+            "zone_name": "template-catalog.example.com"
+        }
+    ],
+    // 环境变量（生产环境）
+    "vars": {
+        "NEXT_PUBLIC_WEBSITE": "https://template-catalog.example.com",
+        "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "your-google-client-id.apps.googleusercontent.com",
+        "GOOGLE_CLIENT_ID": "your-google-client-id.apps.googleusercontent.com",
+        "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY": "your-turnstile-site-key",
+        "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-XXXXXXXXXX",
+        "NEXT_PUBLIC_GOOGLE_ADS_ID": "AW-XXXXXXXXXX",
+        "NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL": "your_google_ads_inquiry_label"
+    },
+    // D1 数据库绑定（生产环境）
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "template_catalog",
+            "database_id": "your-d1-database-id",
+            "migrations_dir": "src/drizzle"
+        }
+    ],
+    // KV 命名空间绑定（生产环境）
+    "kv_namespaces": [
+        {
+            "binding": "CACHE",
+            "id": "your-cache-namespace-id"
+        }
+    ],
+    // R2 存储桶绑定（生产环境）
+    "r2_buckets": [
+        {
+            "binding": "R2",
+            "bucket_name": "template-catalog-assets"
+        }
+    ],
+    // 环境配置（目前不需要production环境，因为已经是默认配置）
+    "env": {
+        "production": {
+            "name": "template-catalog-app",
+            "main": ".open-next/worker.js",
+            "compatibility_date": "2024-12-20",
+            "compatibility_flags": [
+                "nodejs_compat"
+            ],
+            "assets": {
+                "directory": ".open-next/assets",
+                "binding": "ASSETS",
+                "run_worker_first": true
+            },
+            "routes": [
+                {
+                    "pattern": "template-catalog.example.com/*",
+                    "zone_name": "template-catalog.example.com"
+                },
+                {
+                    "pattern": "www.template-catalog.example.com/*",
+                    "zone_name": "template-catalog.example.com"
+                }
+            ],
+            // 环境变量（生产环境）
+            "vars": {
+                "NEXT_PUBLIC_WEBSITE": "https://template-catalog.example.com",
+                "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "your-google-client-id.apps.googleusercontent.com",
+                "GOOGLE_CLIENT_ID": "your-google-client-id.apps.googleusercontent.com",
+                "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY": "your-turnstile-site-key",
+                "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-XXXXXXXXXX",
+                "NEXT_PUBLIC_GOOGLE_ADS_ID": "AW-XXXXXXXXXX",
+                "NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL": "your_google_ads_inquiry_label"
+            },
+            // D1 数据库绑定（生产环境）
+            "d1_databases": [
+                {
+                    "binding": "DB",
+                    "database_name": "template_catalog",
+                    "database_id": "your-d1-database-id",
+                    "migrations_dir": "src/drizzle"
+                }
+            ],
+            // KV 命名空间绑定（生产环境）
+            "kv_namespaces": [
+                {
+                    "binding": "CACHE",
+                    "id": "your-cache-namespace-id"
+                }
+            ],
+            // R2 存储桶绑定（生产环境）
+            "r2_buckets": [
+                {
+                    "binding": "R2",
+                    "bucket_name": "template-catalog-assets"
+                }
+            ]
+        },
+        "development": {
+            "name": "template-catalog-dev"
+        }
+    }
+}

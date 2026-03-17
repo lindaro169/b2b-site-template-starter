@@ -1,0 +1,111 @@
+node_modules
+readme-images
+.vscode
+.DS_Store
+frontend/next.config.js
+
+# Agent metadata (not docs!)
+.claude/
+task_plan.md
+findings.md
+progress.md
+
+# Cloudflare Wrangler
+.wrangler/
+
+# Next.js
+.next/
+.open-next/
+out/
+
+# Production
+build/
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.dev.vars
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+.eslint-report.json
+.eslint-prioritized.txt
+
+# Temporary SQL scripts (use migrations folder instead)
+create-auth-tables.sql
+drop_all.sql
+
+# Debug and test API routes
+src/app/api/debug*/
+src/app/api/[...missing]/
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+# Ignore logs, data and assets from local process
+public/test_bg/
+local.db
+scripts/*.py
+1688/
+public/products/*/*.js
+*.html

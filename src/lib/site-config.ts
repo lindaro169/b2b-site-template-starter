@@ -1,0 +1,33 @@
+export const siteConfig = {
+  brandName: 'Template Catalog Demo',
+  legalName: 'Template Catalog Demo',
+  shortName: 'Template Catalog',
+  websiteUrl: 'https://template-catalog.example.com',
+  websiteHost: 'template-catalog.example.com',
+  assetHost: 'assets.template-catalog.example.com',
+  mediaHost: 'media.template-catalog.example.com',
+  r2DevHost: 'pub-template-catalog.r2.dev',
+  contactEmail: 'hello@template-catalog.example.com',
+  adminEmail: 'admin@template-catalog.example.com',
+  whatsappLabel: 'Template chat placeholder',
+  wechatId: 'template_catalog_demo',
+  addressLines: ['123 Template Avenue', 'Suite 200, Example City, EX 10001'],
+  businessHours: 'Monday-Friday, 10:00 AM - 5:00 PM (UTC)',
+  catalogCta: 'Request Template Walkthrough',
+  companyDescription:
+    'All visible names, imagery, contact details, and claims in this storefront are placeholder content to replace before publishing.',
+  productPlaceholder: '/placeholders/product-card.svg',
+  scenePlaceholder: '/placeholders/catalog-scene.svg',
+  logoPath: '/logos/template-logo.svg',
+  templateCopyLabel: '可发布前自行替换的模板文案',
+  templateCopyDescription:
+    'All visible names, imagery, contact details, and promises on this site are placeholder content to replace before publishing.',
+  dbName: 'template_catalog',
+  r2BucketName: 'template-catalog-assets',
+  workerName: 'template-catalog-app',
+  kvNamespaceId: 'your-cache-namespace-id',
+  databaseId: 'your-d1-database-id',
+  cloudflareAccountId: 'your-cloudflare-account-id',
+  demoChatMessage:
+    'Hello, I am reviewing the template catalog and would like a walkthrough.',
+} as const;

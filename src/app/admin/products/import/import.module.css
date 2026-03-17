@@ -1,0 +1,112 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+}
+
+.downloadBtn,
+.backBtn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.downloadBtn {
+  background: #667eea;
+  color: white;
+  border: 1px solid #667eea;
+}
+
+.downloadBtn:hover {
+  background: #5568d3;
+  border-color: #5568d3;
+}
+
+.downloadBtn:active {
+  transform: scale(0.98);
+}
+
+.backBtn {
+  background: white;
+  color: #667eea;
+  border: 1px solid #e0e6ed;
+}
+
+.backBtn:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.content {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.uploadZone {
+  border: 2px dashed #cbd5e0;
+  border-radius: 8px;
+  padding: 48px 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #f7fafc;
+  margin-bottom: 20px;
+}
+
+.uploadZone:hover {
+  border-color: #667eea;
+  background: #eef2ff;
+}
+
+.uploadContent {
+  pointer-events: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerActions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .downloadBtn,
+  .backBtn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .content {
+    padding: 20px;
+  }
+}

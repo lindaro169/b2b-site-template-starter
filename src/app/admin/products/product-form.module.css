@@ -1,0 +1,379 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.backBtn {
+  background: white;
+  border: 1px solid #e0e6ed;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.backBtn:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  font-size: 16px;
+  color: #718096;
+}
+
+.form {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.error {
+  background-color: #fed7d7;
+  border: 1px solid #fc8181;
+  color: #c53030;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.success {
+  background-color: #c6f6d5;
+  border: 1px solid #9ae6b4;
+  color: #22863a;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.twoColumn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: #1a202c;
+  font-size: 14px;
+}
+
+.formGroup input[type='text'],
+.formGroup input[type='number'],
+.formGroup select,
+.textarea {
+  padding: 12px;
+  border: 1px solid #e0e6ed;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.formGroup input[type='text']:focus,
+.formGroup input[type='number']:focus,
+.formGroup select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.inputError {
+  border-color: #fc8181 !important;
+}
+
+.errorText {
+  color: #c53030;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.formGroup input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.formGroup label input[type='checkbox'] + span {
+  margin-left: 8px;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 150px;
+  line-height: 1.5;
+}
+
+.currentImage {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f7fafc;
+  border-radius: 8px;
+}
+
+.currentImage p {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  color: #718096;
+  font-weight: 600;
+}
+
+.currentImage img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: 6px;
+}
+
+/* Media Gallery Styles */
+.mediaGallery {
+  border: 2px dashed #e0e6ed;
+  border-radius: 8px;
+  padding: 20px;
+  background: #f7fafc;
+  min-height: 200px;
+}
+
+.emptyGallery {
+  margin: 0;
+  text-align: center;
+  color: #718096;
+  padding: 40px 20px;
+  font-size: 14px;
+}
+
+.mediaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.mediaItem {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e0e6ed;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.mediaItem:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.mediaItem.mainImage {
+  border-color: #22863a;
+  box-shadow: 0 0 0 3px rgba(34, 134, 58, 0.2);
+}
+
+.mediaItem img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.mainImageBadge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #22863a;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.videoBadge {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f4ff;
+  color: #667eea;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.mediaActions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mediaItem:hover .mediaActions {
+  opacity: 1;
+}
+
+.setMainBtn,
+.removeMediaBtn {
+  padding: 4px 6px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  color: white;
+  background: rgba(102, 126, 234, 0.8);
+}
+
+.setMainBtn:hover {
+  background: #667eea;
+}
+
+.removeMediaBtn {
+  background: rgba(197, 48, 48, 0.8);
+}
+
+.removeMediaBtn:hover {
+  background: #c53030;
+}
+
+.mediaUploadBtns {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.uploadLabel {
+  flex: 1;
+  padding: 12px 16px;
+  background: white;
+  border: 1px solid #e0e6ed;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  color: #667eea;
+  transition: all 0.3s ease;
+  font-size: 13px;
+}
+
+.uploadLabel:hover {
+  background: #eef2ff;
+  border-color: #667eea;
+}
+
+.formActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid #e0e6ed;
+}
+
+.submitBtn,
+.cancelBtn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.submitBtn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.submitBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancelBtn {
+  background: white;
+  border: 1px solid #e0e6ed;
+  color: #1a202c;
+}
+
+.cancelBtn:hover:not(:disabled) {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.cancelBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .twoColumn {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .form {
+    padding: 20px;
+  }
+
+  .formActions {
+    flex-direction: column-reverse;
+  }
+
+  .submitBtn,
+  .cancelBtn {
+    width: 100%;
+  }
+}
