@@ -4,7 +4,7 @@ import { siteConfig } from '@/lib/site-config';
 import './globals.css';
 
 export const metadata = {
-  title: `${siteConfig.brandName} | Mock Wholesale Jewelry Template`,
+  title: `${siteConfig.brandName} | Mock B2B Site Template`,
   description: siteConfig.companyDescription,
   openGraph: {
     siteName: siteConfig.brandName,

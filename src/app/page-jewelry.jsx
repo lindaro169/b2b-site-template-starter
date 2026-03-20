@@ -6,10 +6,10 @@ import CTABanner from "@/components/jewelry/CTABanner";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata = {
-  title: `${siteConfig.brandName} | Mock Wholesale Jewelry Template`,
+  title: `${siteConfig.brandName} | Mock B2B Site Template`,
   description: siteConfig.companyDescription,
   openGraph: {
-    title: `${siteConfig.brandName} | Mock Wholesale Jewelry Template`,
+    title: `${siteConfig.brandName} | Mock B2B Site Template`,
     description: siteConfig.companyDescription,
     type: 'website',
   },
@@ -37,11 +37,11 @@ export default async function Page() {
             "@type": "Organization",
             "name": siteConfig.brandName,
             "description": siteConfig.companyDescription,
-            "url": process.env.NEXT_PUBLIC_WEBSITE || siteConfig.websiteUrl,
+            "url": siteConfig.websiteUrl,
             "contactPoint": {
               "@type": "ContactPoint",
               "contactType": "Demo template contact",
-              "url": `${process.env.NEXT_PUBLIC_WEBSITE || siteConfig.websiteUrl}/contact`
+              "url": `${siteConfig.websiteUrl}/contact`
             }
           })
         }}

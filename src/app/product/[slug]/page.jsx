@@ -42,7 +42,9 @@ export async function generateMetadata({ params }) {
       `Placeholder product content for ${product.name}. Replace this description with approved merchandising copy before publishing.`,
     openGraph: {
       title: product.name,
-      description: product.description || `Wholesale ${product.name}`,
+      description:
+        product.description ||
+        `Template placeholder content for ${product.name}. Replace this summary with approved launch copy before publishing.`,
       images: product.imageUrl
         ? [{ url: product.imageUrl, width: 800, height: 800, alt: product.name }]
         : [],
@@ -89,18 +91,18 @@ function extractMaterialFromName(name) {
 // B2B partner testimonials — uses TestimonialCard field names
 const REVIEWS = [
   {
-    clientName: 'Sarah M.',
-    clientCompany: 'Crystal Life Boutique',
-    clientLocation: 'USA',
-    role: 'Retailer',
-    quote: 'Consistent quality and smooth communication. Our retail customers love these — reorders have been increasing every quarter.',
+    clientName: 'Template Reviewer 03',
+    clientCompany: 'Template Review Group C',
+    clientLocation: 'Template Region C',
+    role: 'Template Reviewer',
+    quote: 'This placeholder product page helped our team validate hierarchy, CTA placement, and proof blocks before approved catalog copy was ready.',
   },
   {
-    clientName: 'Jennifer L.',
-    clientCompany: 'EuroGems Trading',
-    clientLocation: 'UK',
-    role: 'Wholesale Buyer',
-    quote: 'Competitive wholesale pricing, flexible MOQ, and great customization support. Exactly what we needed to expand our jewelry line.',
+    clientName: 'Template Reviewer 04',
+    clientCompany: 'Template Review Group D',
+    clientLocation: 'Template Region D',
+    role: 'Template Approver',
+    quote: 'Keeping this page fully mocked let us review layout and interaction patterns without exposing any live assortment details or commercial promises.',
   },
 ];
 
@@ -227,25 +229,21 @@ export default async function ProductDetailPage({ params }) {
 
             {/* MOQ Info */}
             <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 mb-5">
-              <p className="text-xs text-stone-400 uppercase tracking-wider mb-1">Minimum Order Quantity</p>
+              <p className="text-xs text-stone-400 uppercase tracking-wider mb-1">Template Quantity Placeholder</p>
               <p className="text-lg font-bold text-stone-900">
-                {product.moq
-                  ? product.moq.split('|')[0].trim().replace(/^Ready Stock:\s*/i, '')
-                  : '5 pcs per style'}
+                Replace with approved order minimums
               </p>
-              {product.leadTime && (
-                <p className="text-sm text-stone-500 mt-1">
-                  Lead Time: {product.leadTime.split('|')[0].trim().replace(/^Ready Stock:\s*/i, '')}
-                </p>
-              )}
+              <p className="text-sm text-stone-500 mt-1">
+                Replace this helper line with approved lead-time and qualification rules.
+              </p>
             </div>
 
             {/* Sample Order Badge */}
             <div className="bg-accent-50 border border-accent-200 rounded-xl p-4 mb-5 flex items-start gap-3">
               <span className="text-accent-500 text-lg flex-shrink-0">🧪</span>
               <div>
-                <p className="text-sm font-semibold text-stone-800">Sample Order Available</p>
-                <p className="text-sm text-stone-500 mt-0.5">Try before you bulk order — contact us for sample pricing</p>
+                <p className="text-sm font-semibold text-stone-800">Template Review Note</p>
+                <p className="text-sm text-stone-500 mt-0.5">Replace any sampling, pricing, or follow-up promises before publishing this page.</p>
               </div>
             </div>
 
@@ -266,7 +264,7 @@ export default async function ProductDetailPage({ params }) {
         {product.description && (
           <section className="mb-10">
             <h2 className="font-serif text-xl font-bold text-stone-900 mb-4 pb-2 border-b border-stone-200">
-              Product Description
+              Template Description Block
             </h2>
             <div className="text-stone-600 text-base leading-relaxed space-y-4">
               {product.description.split('\n\n').filter(para => para.trim()).map((para, i) => {
@@ -297,8 +295,8 @@ export default async function ProductDetailPage({ params }) {
                 );
               })}
               <p className="text-stone-500 text-sm italic border-t border-stone-100 pt-4">
-                Ideal for wholesale B2B buyers — factory-direct sourcing with flexible order quantities.
-                Contact us for bulk pricing and customization options.
+                This paragraph is placeholder guidance for template review only.
+                Replace sourcing notes, pricing details, and customization claims before publishing.
               </p>
             </div>
           </section>
@@ -316,17 +314,17 @@ export default async function ProductDetailPage({ params }) {
               return detailedMaterial ? (
                 <div className="flex px-5 py-3.5 bg-stone-50 border-b border-stone-100">
                   <span className="text-stone-500 w-1/3 font-medium text-sm flex-shrink-0">Material</span>
-                  <span className="text-stone-800 text-base">{detailedMaterial}</span>
+                  <span className="text-stone-800 text-base">Template material placeholder</span>
                 </div>
               ) : null;
             })()}
             <div className="flex px-5 py-3.5 bg-white border-b border-stone-100">
               <span className="text-stone-500 w-1/3 font-medium text-sm flex-shrink-0">Minimum Order</span>
-              <span className="text-stone-800 text-base">{product.moq || '5 pcs per style'}</span>
+              <span className="text-stone-800 text-base">Replace with approved quantity rules</span>
             </div>
             <div className="flex px-5 py-3.5 bg-stone-50 border-b border-stone-100">
               <span className="text-stone-500 w-1/3 font-medium text-sm flex-shrink-0">Lead Time</span>
-              <span className="text-stone-800 text-base">{product.leadTime || '3–7 business days'}</span>
+              <span className="text-stone-800 text-base">Replace with approved fulfillment timing</span>
             </div>
             {category && (
               <div className="flex px-5 py-3.5 bg-white border-b border-stone-100">
@@ -334,32 +332,29 @@ export default async function ProductDetailPage({ params }) {
                 <span className="text-stone-800 text-base">{category.name}</span>
               </div>
             )}
-            {attributes && Object.entries(attributes)
-              .filter(([key]) => key.toLowerCase() !== 'material') // Material 已单独显示，避免重复
-              .map(([key, value], i) => (
-                <div
-                  key={key}
-                  className={`flex px-5 py-3.5 border-t border-stone-100 ${i % 2 === 0 ? 'bg-stone-50' : 'bg-white'}`}
-                >
-                  <span className="text-stone-500 w-1/3 font-medium text-sm flex-shrink-0">{key}</span>
-                  <span className="text-stone-800 text-base">{String(value)}</span>
-                </div>
-              ))}
+            {attributes && Object.keys(attributes).length > 0 && (
+              <div className="flex px-5 py-3.5 bg-stone-50 border-t border-stone-100">
+                <span className="text-stone-500 w-1/3 font-medium text-sm flex-shrink-0">Additional Notes</span>
+                <span className="text-stone-800 text-base">
+                  Replace dimension, finish, packaging, and compliance fields with approved public specifications.
+                </span>
+              </div>
+            )}
           </div>
         </section>
 
         {/* 3. Customization Options */}
         <section className="mb-10">
           <h2 className="font-serif text-xl font-bold text-stone-900 mb-4 pb-2 border-b border-stone-200">
-            Customization Options
+            Replaceable Detail Blocks
           </h2>
           <div className="bg-accent-50 border border-accent-200 rounded-xl p-6">
             <div className="space-y-3.5">
               {[
-                'Ready stock styles: MOQ 5 pcs per style — mix styles welcome',
-                'Custom style (your own design / OEM): MOQ 50 pcs per style',
-                'Gift box & retail packaging available upon request',
-                'Color & material customization available for OEM orders',
+                'Use this list for approved quantity rules, package scope, or qualification steps.',
+                'Replace this line with the real options your team supports after review.',
+                'Keep staging copy generic until launch assets, pricing, and workflows are approved.',
+                'Remove any placeholder promises before publishing to a live audience.',
               ].map((option, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <span className="text-accent-500 font-bold mt-0.5 flex-shrink-0">✓</span>
@@ -373,12 +368,12 @@ export default async function ProductDetailPage({ params }) {
         {/* 4. Certifications */}
         <section className="mb-10">
           <h2 className="font-serif text-xl font-bold text-stone-900 mb-4 pb-2 border-b border-stone-200">
-            Certifications
+            Replaceable Trust Blocks
           </h2>
           <div className="space-y-3">
             {[
-              '925 Sterling Silver Certification — Available upon request',
-              'Natural Crystal Certification — Available upon request',
+              'Approved quality or compliance note placeholder',
+              'Approved support, delivery, or review note placeholder',
             ].map((cert, i) => (
               <div key={i} className="flex items-center gap-3">
                 <span className="text-accent-500 font-bold text-lg flex-shrink-0">✓</span>
@@ -386,7 +381,7 @@ export default async function ProductDetailPage({ params }) {
               </div>
             ))}
             <p className="text-sm text-stone-400 mt-1 pl-8">
-              Certifications are provided upon request. Contact us for details.
+              Replace this block with legal- or ops-approved trust language before launch.
             </p>
           </div>
         </section>
@@ -397,7 +392,7 @@ export default async function ProductDetailPage({ params }) {
         {/* 6. Partner Testimonials */}
         <section className="mb-10">
           <h2 className="font-serif text-xl font-bold text-stone-900 mb-6 pb-2 border-b border-stone-200">
-            What Our Partners Say
+            Placeholder Review Quotes
           </h2>
           <div className="space-y-4">
             {REVIEWS.map((review, i) => (
@@ -413,10 +408,10 @@ export default async function ProductDetailPage({ params }) {
         <section className="bg-stone-50 border-t border-stone-100 py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="font-serif text-2xl font-bold text-stone-900 mb-2 text-center">
-              You May Also Like
+              Related Template Entries
             </h2>
             <p className="text-stone-500 text-base text-center mb-8">
-              More products from {category?.name || 'this collection'}
+              More placeholder items from {category?.name || 'this collection'}
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
               {relatedProducts.map(p => (
@@ -445,7 +440,7 @@ export default async function ProductDetailPage({ params }) {
                     <p className="text-stone-800 text-sm font-medium line-clamp-2 group-hover:text-primary-700 transition-colors">
                       {p.name}
                     </p>
-                    <p className="text-primary-600 text-xs font-medium mt-1.5">View Details →</p>
+                    <p className="text-primary-600 text-xs font-medium mt-1.5">Open Details →</p>
                   </div>
                 </Link>
               ))}
@@ -458,16 +453,16 @@ export default async function ProductDetailPage({ params }) {
       <section className="bg-gradient-to-br from-stone-900 to-stone-800 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white mb-3">
-            Interested in More Products?
+            Need More Placeholder Items?
           </h2>
           <p className="text-stone-400 text-base mb-8">
-            Browse our full collection of premium wholesale crystal jewelry
+            Browse the rest of this template collection and replace it with your approved catalog before publishing
           </p>
           <Link
             href={category ? `/products/${category.slug}` : '/products'}
             className="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-400 text-stone-900 font-semibold px-8 py-3 rounded-lg transition-colors duration-300 shadow-md"
           >
-            {category ? `Browse ${category.name}` : 'View All Products'} →
+            {category ? `Browse ${category.name}` : 'View All Placeholder Products'} →
           </Link>
         </div>
       </section>

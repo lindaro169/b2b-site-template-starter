@@ -5,7 +5,7 @@ import { siteConfig } from '@/lib/site-config';
 
 export const metadata = {
   title: `About This Template — ${siteConfig.brandName}`,
-  description: 'Sanitized demo company profile for a reusable wholesale jewelry storefront.',
+  description: 'Sanitized template company profile for a reusable mock storefront.',
 };
 
 const stats = [
@@ -17,18 +17,18 @@ const stats = [
 
 const testimonials = [
   {
-    clientName: 'Sarah M.',
-    clientCompany: 'Studio Preview Team',
-    clientLocation: 'Remote',
-    role: 'Reviewer',
-    quote: 'This sanitized profile page made it easy to validate spacing, sections, and proof points before adding production content.',
+    clientName: 'Template Reviewer 01',
+    clientCompany: 'Template Review Group A',
+    clientLocation: 'Template Region A',
+    role: 'Template Reviewer',
+    quote: 'This placeholder profile block gave our team a safe way to review section order, spacing, and proof-point density before launch content was approved.',
   },
   {
-    clientName: 'Thomas B.',
-    clientCompany: 'Merch Ops Sandbox',
-    clientLocation: 'Internal',
-    role: 'Approver',
-    quote: 'The mock narrative gave us a safe baseline for stakeholder review without exposing customer names or business metrics.',
+    clientName: 'Template Reviewer 02',
+    clientCompany: 'Template Review Group B',
+    clientLocation: 'Template Region B',
+    role: 'Template Approver',
+    quote: 'Using clearly marked mock data let us validate narrative flow and CTA placement without exposing any real customer, pipeline, or company information.',
   },
 ];
 
