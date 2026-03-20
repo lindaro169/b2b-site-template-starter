@@ -4,6 +4,8 @@
  * Mock implementation for Drizzle/D1 migration
  */
 
+import { D1Database, getTestimonialsD1 } from '@/lib/d1-db';
+
 export interface Testimonial {
     id: number;
     authorName: string;
@@ -19,9 +21,9 @@ export interface Testimonial {
 const mockTestimonials: Testimonial[] = [
     {
         id: 1,
-        authorName: "Sarah Johnson",
-        authorCompany: "Crystal Harmony Boutique",
-        content: "The quality of the rose quartz bracelets is outstanding. My customers love the energy and the craftsmanship. Shipping was fast and the packaging was professional.",
+        authorName: "模板客户 A",
+        authorCompany: "Template Retail Demo",
+        content: "这是模板评价示例，用于演示前台模块与后台数据结构。上线前请替换为已获授权的真实客户反馈。",
         rating: 5,
         order: 1,
         isActive: true,
@@ -29,9 +31,9 @@ const mockTestimonials: Testimonial[] = [
     },
     {
         id: 2,
-        authorName: "Michael Chen",
-        authorCompany: "Zen Living",
-        content: "We used the sanitized demo catalog to review layout and section density before adding our live assortment. It was much safer for internal review.",
+        authorName: "模板客户 B",
+        authorCompany: "Template Buyer Lab",
+        content: "该占位评价仅用于模板预览，帮助确认排版、字数密度和评分组件显示效果，不对应任何真实品牌。",
         rating: 5,
         order: 2,
         isActive: true,
@@ -39,17 +41,15 @@ const mockTestimonials: Testimonial[] = [
     },
     {
         id: 3,
-        authorName: "Emma Davis",
-        authorCompany: "Yoga Spirit Studio",
-        content: "The chakra jewelry sets are a huge hit in our yoga studio. They are beautiful and authentic. Highly recommend for any wellness retailer.",
+        authorName: "模板客户 C",
+        authorCompany: "Template Studio Preview",
+        content: "这里保留的是可替换的 mock data，用于演示客户评价区域。发布前请统一替换为你的业务文案和真实案例。",
         rating: 5,
         order: 3,
         isActive: true,
         createdAt: new Date().toISOString()
     }
 ];
-
-import { D1Database, getTestimonialsD1 } from '@/lib/d1-db';
 
 export async function getTestimonials(db?: D1Database): Promise<{
     success: boolean;

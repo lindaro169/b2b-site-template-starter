@@ -7,6 +7,8 @@
  * - 支持图片上传头像
  */
 
+import { siteConfig } from './site-config';
+
 /**
  * 作者完整数据（带 ID）
  */
@@ -47,34 +49,34 @@ export async function initializeSampleAuthors() {
 
   const samples: AuthorData[] = [
     {
-      name: "Sarah Chen",
-      avatar: "https://i.pravatar.cc/150?img=1",
-      bio: "Expert in wholesale crystal jewelry and B2B sales strategies",
-      email: "sarah@crystalconnect.com",
+      name: "模板编辑甲",
+      avatar: siteConfig.logoPath,
+      bio: "模板作者资料，仅用于演示后台作者管理与文章关联流程。",
+      email: "editor-a@template-site-placeholder.example",
     },
     {
-      name: "Michael Rodriguez",
-      avatar: "https://i.pravatar.cc/150?img=2",
-      bio: "Spiritual wellness consultant and crystal healing expert",
-      email: "michael@crystalconnect.com",
+      name: "模板编辑乙",
+      avatar: siteConfig.logoPath,
+      bio: "占位作者信息，请在发布前替换为真实团队成员资料。",
+      email: "editor-b@template-site-placeholder.example",
     },
     {
-      name: "Emma Watson",
-      avatar: "https://i.pravatar.cc/150?img=3",
-      bio: "Wellness product specialist and market analyst",
-      email: "emma@crystalconnect.com",
+      name: "模板编辑丙",
+      avatar: siteConfig.logoPath,
+      bio: "演示用作者简介，用来展示头像、签名和文章归属等字段。",
+      email: "editor-c@template-site-placeholder.example",
     },
     {
-      name: "David Thompson",
-      avatar: "https://i.pravatar.cc/150?img=4",
-      bio: "Business consultant specializing in retail and wholesale pricing",
-      email: "david@crystalconnect.com",
+      name: "模板编辑丁",
+      avatar: siteConfig.logoPath,
+      bio: "后台样例作者，不代表真实团队、品牌或合作方信息。",
+      email: "editor-d@template-site-placeholder.example",
     },
     {
-      name: "Lisa Anderson",
-      avatar: "https://i.pravatar.cc/150?img=5",
-      bio: "Crystal specialist and conservation expert",
-      email: "lisa@crystalconnect.com",
+      name: "模板编辑戊",
+      avatar: siteConfig.logoPath,
+      bio: "用于占位展示的作者档案，请按你的内容团队配置自行替换。",
+      email: "editor-e@template-site-placeholder.example",
     },
   ];
 

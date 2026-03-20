@@ -17,36 +17,36 @@ export interface FAQ {
 const mockFAQs: FAQ[] = [
     {
         id: 1,
-        question: "What is the Minimum Order Quantity (MOQ)?",
-        answer: "Our MOQ is 5 pieces per style for existing designs. For custom designs, the MOQ starts at 50 pieces depending on the complexity.",
-        category: "Orders",
+        question: "Can I publish these FAQ entries as-is?",
+        answer: "No. These entries are mock data only. Replace every question and answer with approved customer-facing content before launch.",
+        category: "Template",
         order: 1,
         isActive: true,
         createdAt: new Date().toISOString()
     },
     {
         id: 2,
-        question: "Do you offer international shipping?",
-        answer: "Yes, we ship to over 30 countries worldwide. Shipping costs and times vary by location. We use reliable carriers like DHL, FedEx, and UPS.",
-        category: "Shipping",
+        question: "Where should I put delivery or service promises?",
+        answer: "Use this section only after operations, legal, and support teams have approved the final wording for delivery, onboarding, or response commitments.",
+        category: "Template",
         order: 2,
         isActive: true,
         createdAt: new Date().toISOString()
     },
     {
         id: 3,
-        question: "Are your crystals natural?",
-        answer: "Yes, all our crystals are guaranteed natural unless specified otherwise (e.g., opalite). We provide certificates of authenticity for our premium collection.",
-        category: "Products",
+        question: "Why does this page avoid detailed product claims?",
+        answer: "The template intentionally avoids real specifications and certifications so teams can review layout and content hierarchy safely before production copy is ready.",
+        category: "Template",
         order: 3,
         isActive: true,
         createdAt: new Date().toISOString()
     },
     {
         id: 4,
-        question: "Can I customize the jewelry?",
-        answer: "Absolutely! We offer customization for bead sizes, charms, and packaging. Contact our sales team for a custom quote.",
-        category: "Customization",
+        question: "Can I keep these mock FAQs in staging?",
+        answer: "Yes. Keeping clearly labeled placeholder FAQs in staging is the safest way to review UX and information architecture before publishing real business data.",
+        category: "Template",
         order: 4,
         isActive: true,
         createdAt: new Date().toISOString()
