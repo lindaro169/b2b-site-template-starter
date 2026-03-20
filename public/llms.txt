@@ -1,18 +1,19 @@
-# Template Catalog Demo Notice
+# 模板站点占位说明
 
-## About This Site
-This site is a sanitized template environment. All visible names, copy, product data, contact details, logo assets, favicon assets, and claims are placeholders that must be replaced before production use.
+## 站点性质
+这是一个已经清洗过的模板环境。当前网页中可见的公司名称、域名、联系信息、产品信息、图片资源、法律文案、评价内容与说明性承诺均为 mock data，发布前必须替换。
 
-## How To Treat It
-- Safe for layout review, QA, staging, and internal previews
-- Not a live supplier profile
-- Not a verified catalog or legal source of truth
+## 使用方式
+- 适合用于布局评审、测试环境、内部预览与演示
+- 不代表真实企业主页
+- 不代表真实目录、真实法务文本或真实经营承诺
 
-## Placeholder Areas
-1. Homepage, about, services, contact, product listing, and legal copy
-2. Product cards, detail descriptions, and testimonials
-3. Logo, favicon, and product imagery
-4. Contact channels, email addresses, and metadata
+## 当前占位范围
+1. 首页、关于、服务、联系、产品页、博客页与法律页
+2. 产品卡片、产品详情、评价、CTA 与表单提示
+3. Logo、favicon、产品图与场景图
+4. 域名、邮箱、社媒账号、结构化数据与爬虫入口信息
+5. 统计与分析模块中的演示指标
 
-## Publish Rule
-Do not present this site as a real business until all placeholder content has been replaced with approved production data.
+## 发布规则
+在所有占位内容替换为已批准的正式数据之前，不应将此站点对外描述为真实业务站点。

@@ -26,19 +26,20 @@ pnpm type-check
 ## 模板环境变量
 
 ```bash
-NEXT_PUBLIC_WEBSITE=http://localhost:3002
-BETTER_AUTH_SECRET=replace-with-a-real-secret
-GOOGLE_CLIENT_ID=replace-with-your-google-client-id
-GOOGLE_CLIENT_SECRET=replace-with-your-google-client-secret
-NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY=replace-with-your-turnstile-site-key
-CLOUDFLARE_TURNSTILE_SECRET_KEY=replace-with-your-turnstile-secret-key
-RESEND_API_KEY=replace-with-your-resend-api-key
-RESEND_FROM_EMAIL=hello@template-catalog.example.com
-SALES_NOTIFICATION_EMAIL=hello@template-catalog.example.com
-NEXT_PUBLIC_GOOGLE_ADS_ID=AW-XXXXXXXXXX
-NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL=replace-with-your-google-ads-label
-GOOGLE_ADS_FEED_USERNAME=replace-with-your-feed-username
-GOOGLE_ADS_FEED_PASSWORD=replace-with-your-feed-password
+NEXT_PUBLIC_WEBSITE=https://template-site-placeholder.example
+BETTER_AUTH_SECRET=mock-better-auth-secret
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=mock-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=mock-google-client-secret
+NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY=mock-turnstile-site-key
+CLOUDFLARE_TURNSTILE_SECRET_KEY=mock-turnstile-secret-key
+RESEND_API_KEY=re_mock_template_key
+RESEND_FROM_EMAIL=contact@template-site-placeholder.example
+SALES_NOTIFICATION_EMAIL=admin@template-site-placeholder.example
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-TEMPLATE0000
+NEXT_PUBLIC_GOOGLE_ADS_ID=AW-TEMPLATE0000
+NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL=template_inquiry_label
+GOOGLE_ADS_FEED_USERNAME=template-feed-user
+GOOGLE_ADS_FEED_PASSWORD=template-feed-password
 ```
 
 ## 注意事项
