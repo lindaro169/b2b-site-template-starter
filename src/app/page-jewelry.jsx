@@ -16,11 +16,11 @@ export const metadata = {
 };
 
 export default async function Page() {
-  // TODO: Fetch data from Strapi when ready
+  // 如需扩展首页模块数据，可在本地 mock 数据或 Cloudflare API 层补充
   // const [categories, testimonials, faqs] = await Promise.all([
-  //   fetchProductCategories(),
+  //   fetchCategories(),
   //   fetchTestimonials(),
-  //   fetchFAQs({ page: 'homepage' })
+  //   fetchFAQs()
   // ]);
 
   const categories = null;

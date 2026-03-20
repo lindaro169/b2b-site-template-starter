@@ -1,5 +1,5 @@
-import { fetchPostSitemap } from "@/lib/api";
 import { getProducts } from "@/lib/products";
+import { getPosts } from "@/lib/posts";
 import { siteConfig } from "@/lib/site-config";
 import { getAllCategorySlugs } from "@/constants/categoryMapping";
 
@@ -16,18 +16,17 @@ export default async function sitemap() {
   let posts = [];
   let products = [];
 
-  try {
-    // 获取所有博客文章
-    const postData = await fetchPostSitemap();
-    posts = postData || [];
+  const [postResult, productResult] = await Promise.all([
+    getPosts({ limit: 1000, published: true }),
+    getProducts({ limit: 1000, isActive: true }),
+  ]);
 
-    // 获取所有已发布产品
-    const productsData = await getProducts({ limit: 1000, published: true });
-    if (productsData.success && productsData.data) {
-      products = productsData.data;
-    }
-  } catch (error) {
-    console.error('Sitemap fetch error:', error.message);
+  if (postResult.success && postResult.data) {
+    posts = postResult.data;
+  }
+
+  if (productResult.success && productResult.data) {
+    products = productResult.data;
   }
 
   // 博客文章 URL (月更)

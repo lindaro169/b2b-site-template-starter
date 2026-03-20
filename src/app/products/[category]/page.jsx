@@ -130,10 +130,9 @@ export default async function CategoryPage({ params }) {
     let db;
     try {
       const { env } = await getCloudflareContext();
-      db = getD1Database(env.DB);
+      db = env?.DB ? getD1Database(env.DB) : undefined;
     } catch {
-      // Fallback or dev mode without bindings
-      db = getD1Database();
+      db = undefined;
     }
 
     const categoryId = getCategoryId(resolvedCategory);

@@ -1,7 +1,7 @@
 /**
  * Drizzle ORM Schema for the sanitized template catalog
  *
- * This schema defines all database tables needed to replace the Strapi backend.
+ * This schema defines all database tables used by the template's local data layer.
  * It includes 9 tables with complete relationships, indexes, and constraints.
  *
  * Tables:

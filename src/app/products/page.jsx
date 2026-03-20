@@ -6,18 +6,13 @@ import IconChakra from '@/components/icons/IconChakra';
 import IconAromatherapy from '@/components/icons/IconAromatherapy';
 import Link from 'next/link';
 import TemplateCopyBadge from '@/components/TemplateCopyBadge';
-import { fetchProductCategories, fetchFAQs } from '@/lib/api-jewelry';
 import ProductCardB2B from '@/components/ProductCardB2B';
 import { getProducts } from '@/lib/products';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getD1Database } from '@/lib/d1-db';
+import { getFAQs } from '@/lib/faqs';
 import { siteConfig } from '@/lib/site-config';
-import {
-  MAIN_CATEGORIES,
-  getCategoryId,
-  getCategorySlug,
-  getCategoryById as getMappedCategoryById,
-} from '@/constants/categoryMapping';
+import { MAIN_CATEGORIES } from '@/constants/categoryMapping';
 
 export const metadata = {
   title: `Demo Collections — ${siteConfig.brandName}`,
@@ -37,24 +32,6 @@ const defaultCategories = MAIN_CATEGORIES.map((category) => ({
   description: category.description,
   image: { url: siteConfig.scenePlaceholder },
 }));
-
-function normalizeCategoryCard(category) {
-  const categoryId = getCategoryId(category.slug || '');
-
-  if (!categoryId) {
-    return category;
-  }
-
-  const mappedCategory = getMappedCategoryById(categoryId);
-  const canonicalSlug = getCategorySlug(categoryId) || category.slug;
-
-  return {
-    ...category,
-    name: mappedCategory?.name || category.name,
-    slug: canonicalSlug,
-    description: mappedCategory?.description || category.description,
-  };
-}
 
 const defaultFAQs = [
   {
@@ -112,35 +89,22 @@ export default async function ProductsPage() {
   let categories = defaultCategories;
   let faqs = defaultFAQs;
   let allProducts = [];
+  let db;
 
   try {
-    const [stratiCategories, strapiFAQs] = await Promise.all([
-      fetchProductCategories().catch(() => null),
-      fetchFAQs({ section: { $eq: 'products' } }).catch(() => null),
-    ]);
+    const { env } = await getCloudflareContext();
+    db = env?.DB ? getD1Database(env.DB) : undefined;
+  } catch {
+    db = undefined;
+  }
 
-    if (stratiCategories && stratiCategories.length > 0) {
-      categories = stratiCategories.map(normalizeCategoryCard);
-    }
-
-    if (strapiFAQs && strapiFAQs.length > 0) {
-      faqs = strapiFAQs;
-    }
-  } catch (error) {
-    console.error('Error fetching data from Strapi:', error);
-    // Use default categories and FAQs
+  const faqResult = await getFAQs(db);
+  if (faqResult.success && faqResult.data && faqResult.data.length > 0) {
+    faqs = faqResult.data;
   }
 
   // Fetch all products from D1 database
   try {
-    let db;
-    try {
-      const { env } = await getCloudflareContext();
-      db = getD1Database(env.DB);
-    } catch {
-      db = getD1Database();
-    }
-
     const result = await getProducts({
       limit: 100,
       isActive: true,

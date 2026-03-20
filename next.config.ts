@@ -19,7 +19,6 @@ const publicEnv = siteConfig.templateMode
       NEXT_PUBLIC_EMAIL_ENCODED: siteConfig.encodedContactEmail,
       NEXT_PUBLIC_TELEPHONE_ENCODED: siteConfig.encodedContactPhone,
       NEXT_PUBLIC_API_URL: siteConfig.apiBaseUrl,
-      NEXT_PUBLIC_STRAPI: siteConfig.strapiBaseUrl,
     }
   : {
       NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
@@ -34,7 +33,6 @@ const publicEnv = siteConfig.templateMode
       NEXT_PUBLIC_EMAIL_ENCODED: process.env.NEXT_PUBLIC_EMAIL_ENCODED,
       NEXT_PUBLIC_TELEPHONE_ENCODED: process.env.NEXT_PUBLIC_TELEPHONE_ENCODED,
       NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-      NEXT_PUBLIC_STRAPI: process.env.NEXT_PUBLIC_STRAPI,
     }
 
 const nextConfig: NextConfig = {

@@ -10,7 +10,6 @@ export const siteConfig = {
   websiteUrl: 'https://template-site-placeholder.example',
   websiteHost: 'template-site-placeholder.example',
   apiBaseUrl: 'https://template-site-placeholder.example/api',
-  strapiBaseUrl: 'https://cms.template-site-placeholder.example',
   assetHost: 'assets.template-site-placeholder.example',
   mediaHost: 'media.template-site-placeholder.example',
   r2DevHost: 'template-site-placeholder.r2.dev',
