@@ -2,11 +2,13 @@
 
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import ProductCardB2B from '@/components/ProductCardB2B';
 import { CircleDot, Gem } from 'lucide-react';
 import {
   CATEGORY_METADATA,
   PRODUCT_TYPES,
+  getCanonicalCategorySlug,
   getCategoryId,
   isValidCategorySlug,
   isValidProductType,
@@ -32,6 +34,9 @@ function transformProductData(apiProduct) {
 
 export default function ProductTypePage({ params }) {
   const { category, type } = use(params);
+  const router = useRouter();
+  const canonicalCategory = getCanonicalCategorySlug(category);
+  const resolvedCategory = canonicalCategory || category;
 
   // 状态管理
   const [products, setProducts] = useState([]);
@@ -39,11 +44,17 @@ export default function ProductTypePage({ params }) {
   const [error, setError] = useState(null);
 
   // 验证参数
-  const isValidCategory = isValidCategorySlug(category);
+  const isValidCategory = isValidCategorySlug(resolvedCategory);
   const isValidType = isValidProductType(type);
-  const categoryData = CATEGORY_METADATA[category];
+  const categoryData = CATEGORY_METADATA[resolvedCategory];
   const typeInfo = PRODUCT_TYPES[type] || PRODUCT_TYPES.bracelets;
-  const categoryName = categoryData?.name || 'Products';
+  const categoryName = categoryData?.name || 'Template Products';
+
+  useEffect(() => {
+    if (canonicalCategory && canonicalCategory !== category) {
+      router.replace(`/products/${canonicalCategory}/${type}`);
+    }
+  }, [canonicalCategory, category, type, router]);
 
   useEffect(() => {
     // 如果参数无效，不获取数据
@@ -59,7 +70,7 @@ export default function ProductTypePage({ params }) {
         setError(null);
 
         // 根据分类slug获取categoryId
-        const categoryId = getCategoryId(category);
+        const categoryId = getCategoryId(resolvedCategory);
 
         if (!categoryId) {
           throw new Error('无法获取分类ID (Failed to get category ID)');
@@ -104,7 +115,11 @@ export default function ProductTypePage({ params }) {
     };
 
     fetchProducts();
-  }, [category, type, isValidCategory, isValidType]);
+  }, [resolvedCategory, type, isValidCategory, isValidType]);
+
+  if (canonicalCategory && canonicalCategory !== category) {
+    return null;
+  }
 
   // 如果参数无效，显示错误页面
   if (!isValidCategory || !isValidType) {
@@ -139,7 +154,7 @@ export default function ProductTypePage({ params }) {
             Products
           </Link>
           <span>/</span>
-          <Link href={`/products/${category}`} className="hover:text-primary-600">
+          <Link href={`/products/${resolvedCategory}`} className="hover:text-primary-600">
             {categoryName}
           </Link>
           <span>/</span>
@@ -162,7 +177,7 @@ export default function ProductTypePage({ params }) {
             </div>
             <div>
               <h1 className="text-4xl md:text-5xl font-serif font-bold mb-2">{categoryName}</h1>
-              <p className="text-xl text-stone-400 font-light tracking-wide">{typeInfo.name} Collection</p>
+              <p className="text-xl text-stone-400 font-light tracking-wide">{typeInfo.name} Section</p>
             </div>
           </div>
           <p className="text-lg text-stone-300 max-w-3xl mt-6 leading-relaxed border-l-2 border-primary-600 pl-6">
@@ -174,7 +189,7 @@ export default function ProductTypePage({ params }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Features */}
         <div className="mb-12 bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Product Features</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Section Notes</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {typeInfo.features.map((feature, index) => (
               <div key={index} className="flex items-start gap-3">
@@ -199,7 +214,7 @@ export default function ProductTypePage({ params }) {
               {typeInfo.name} ({loading ? '...' : products.length})
             </h2>
             <Link
-              href={`/products/${category}`}
+              href={`/products/${resolvedCategory}`}
               className="text-primary-600 hover:text-primary-700 font-semibold flex items-center gap-2"
             >
               <svg
@@ -215,7 +230,7 @@ export default function ProductTypePage({ params }) {
                   d="M15 19l-7-7 7-7"
                 />
               </svg>
-              View All {categoryName}
+              Back to {categoryName}
             </Link>
           </div>
 
@@ -259,13 +274,13 @@ export default function ProductTypePage({ params }) {
           {!loading && !error && products.length === 0 && (
             <div className="text-center py-16 bg-gray-50 rounded-lg">
               <p className="text-xl text-gray-600 mb-4">
-                No products found in this category yet.
+                No placeholder items are currently assigned to this section.
               </p>
               <Link
                 href="/contact"
                 className="inline-block text-primary-600 hover:text-primary-700 font-semibold"
               >
-                Contact us for custom orders →
+                Open the contact template →
               </Link>
             </div>
           )}
@@ -275,22 +290,22 @@ export default function ProductTypePage({ params }) {
         <div className="mt-16 bg-stone-900 rounded-2xl p-12 text-center text-white shadow-xl relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-stone-900 to-stone-800 opacity-50"></div>
           <div className="relative z-10">
-            <h2 className="text-3xl font-serif font-bold mb-4">Interested in Bulk Orders?</h2>
+            <h2 className="text-3xl font-serif font-bold mb-4">Need This Section Replaced?</h2>
             <p className="text-xl mb-8 text-stone-200">
-              Contact us for special wholesale pricing and customization options
+              Use this template section for review only. Replace pricing, imagery, and assortment details before publishing.
             </p>
             <div className="flex gap-4 justify-center">
               <Link
                 href="/contact"
                 className="inline-block bg-primary-600 hover:bg-primary-500 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
-                Get a Quote
+                Request Template Update
               </Link>
               <Link
-                href={`/products/${category}`}
+                href={`/products/${resolvedCategory}`}
                 className="inline-block border-2 border-stone-700 text-white hover:bg-stone-800 px-8 py-4 rounded-lg font-semibold text-lg transition-colors"
               >
-                Browse All {categoryName}
+                Browse {categoryName}
               </Link>
             </div>
           </div>

@@ -4,12 +4,13 @@ import IconSilver from '@/components/icons/IconSilver';
 import IconChakra from '@/components/icons/IconChakra';
 import IconAromatherapy from '@/components/icons/IconAromatherapy';
 import { siteConfig } from '@/lib/site-config';
+import { MAIN_CATEGORIES } from '@/constants/categoryMapping';
 
 const categoryIcons = {
-  'healing-crystal-jewelry': IconCrystal,
-  '925-silver-crystal-jewelry': IconSilver,
-  'chakra-yoga-jewelry': IconChakra,
-  'aromatherapy-jewelry': IconAromatherapy,
+  'template-collection-a': IconCrystal,
+  'template-collection-b': IconSilver,
+  'template-collection-c': IconChakra,
+  'template-collection-d': IconAromatherapy,
 };
 
 export default function ProductCategories({ categories }) {
@@ -37,45 +38,18 @@ export default function ProductCategories({ categories }) {
               />
             ))
           ) : (
-            // Fallback with default categories
-            <>
+            MAIN_CATEGORIES.map((category) => (
               <CategoryCard
+                key={category.id}
                 category={{
-                  name: 'Quartz Capsule Line',
-                  slug: 'healing-crystal-jewelry',
-                  description: 'Mock bracelets and pendants for template previews.',
-                  image: { url: siteConfig.scenePlaceholder }
+                  name: category.name,
+                  slug: category.slug,
+                  description: category.description,
+                  image: { url: siteConfig.scenePlaceholder },
                 }}
-                icon={IconCrystal}
+                icon={categoryIcons[category.slug]}
               />
-              <CategoryCard
-                category={{
-                  name: 'Silver Studio Line',
-                  slug: '925-silver-crystal-jewelry',
-                  description: 'Mock silver-tone assortment for navigation and card testing.',
-                  image: { url: siteConfig.scenePlaceholder }
-                }}
-                icon={IconSilver}
-              />
-              <CategoryCard
-                category={{
-                  name: 'Mindful Ritual Edit',
-                  slug: 'chakra-yoga-jewelry',
-                  description: 'Mock wellness-inspired line for content density checks.',
-                  image: { url: siteConfig.scenePlaceholder }
-                }}
-                icon={IconChakra}
-              />
-              <CategoryCard
-                category={{
-                  name: 'Aroma Companion Series',
-                  slug: 'aromatherapy-jewelry',
-                  description: 'Mock diffuser accessories with placeholder merchandising.',
-                  image: { url: siteConfig.scenePlaceholder }
-                }}
-                icon={IconAromatherapy}
-              />
-            </>
+            ))
           )}
         </div>
       </div>

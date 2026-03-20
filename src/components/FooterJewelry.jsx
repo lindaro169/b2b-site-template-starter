@@ -6,10 +6,10 @@ export default function FooterJewelry() {
 
   const footerLinks = {
     products: [
-      { name: 'Quartz Capsule Line', href: '/products/healing-crystal-jewelry' },
-      { name: 'Silver Studio Line', href: '/products/925-silver-crystal-jewelry' },
-      { name: 'Mindful Ritual Edit', href: '/products/chakra-yoga-jewelry' },
-      { name: 'Aroma Companion Series', href: '/products/aromatherapy-jewelry' },
+      { name: 'Template Collection A', href: '/products/template-collection-a' },
+      { name: 'Template Collection B', href: '/products/template-collection-b' },
+      { name: 'Template Collection C', href: '/products/template-collection-c' },
+      { name: 'Template Collection D', href: '/products/template-collection-d' },
     ],
     company: [
       { name: 'About Template', href: '/about' },
