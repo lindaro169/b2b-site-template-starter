@@ -124,7 +124,9 @@ export async function initializeSampleProducts() {
     mockProducts.set(product.id, product);
   }
 
-  console.log(`✅ 已初始化 ${mockProducts.size} 个珠宝产品 (Initialized ${mockProducts.size} jewelry products)`);
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`✅ 已初始化 ${mockProducts.size} 个珠宝产品 (Initialized ${mockProducts.size} jewelry products)`);
+  }
 }
 
 function ensureSampleProducts() {
