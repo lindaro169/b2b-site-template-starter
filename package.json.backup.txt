@@ -1,2 +1,0 @@
-Current build script: "next build"
-Current issue: next build doesn't trigger OpenNext Cloudflare build
