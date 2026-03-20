@@ -38,7 +38,7 @@ export default function HeroJewelry() {
 
           {/* H1 - High Impact Serif */}
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-bold text-white mb-10 drop-shadow-xl leading-tight">
-            Professional Supplier of <br />
+            Structured Layout for <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-stone-100 via-white to-stone-200">
               Publish-Ready Template Collections
             </span>
@@ -69,7 +69,7 @@ export default function HeroJewelry() {
             <div className="flex flex-col items-center gap-3 transition-transform hover:-translate-y-1">
               <IconMOQ className="w-10 h-10 text-stone-200" />
               <div className="text-center">
-                <p className="text-stone-200 font-medium text-sm tracking-wide uppercase">Custom MOQ</p>
+                <p className="text-stone-200 font-medium text-sm tracking-wide uppercase">Template Minimums</p>
                 <p className="text-stone-400 text-xs">Replace with your approved thresholds</p>
               </div>
             </div>

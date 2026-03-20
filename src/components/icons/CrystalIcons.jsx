@@ -1,6 +1,6 @@
-// Crystal SVG Icons with realistic shapes
+// Placeholder material SVG icons with generic shapes
 export const CrystalIcons = {
-  // Rose Quartz - soft pink hexagonal crystal
+  // Template Material 01 - soft geometric crystal
   roseQuartz: (
     <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -21,7 +21,7 @@ export const CrystalIcons = {
     </svg>
   ),
 
-  // Amethyst - purple crystal cluster
+  // Template Material 02 - layered crystal cluster
   amethyst: (
     <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -45,7 +45,7 @@ export const CrystalIcons = {
     </svg>
   ),
 
-  // Clear Quartz - transparent/white crystal
+  // Template Material 03 - bright neutral crystal
   clearQuartz: (
     <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -68,7 +68,7 @@ export const CrystalIcons = {
     </svg>
   ),
 
-  // Black Tourmaline - dark/black elongated crystal
+  // Template Material 04 - dark elongated crystal
   blackTourmaline: (
     <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -91,7 +91,7 @@ export const CrystalIcons = {
     </svg>
   ),
 
-  // Moonstone - white/opalescent
+  // Template Material 05 - pale reflective crystal
   moonstone: (
     <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -115,7 +115,7 @@ export const CrystalIcons = {
     </svg>
   ),
 
-  // Labradorite - dark with blue iridescence
+  // Template Material 06 - dark iridescent crystal
   labradorite: (
     <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -138,7 +138,7 @@ export const CrystalIcons = {
     </svg>
   ),
 
-  // Turquoise - bright blue/teal
+  // Template Material 07 - bright teal crystal
   turquoise: (
     <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -161,7 +161,7 @@ export const CrystalIcons = {
     </svg>
   ),
 
-  // Citrine - bright yellow crystal
+  // Template Material 08 - warm amber crystal
   citrine: (
     <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -184,7 +184,7 @@ export const CrystalIcons = {
     </svg>
   ),
 
-  // Green Tourmaline - green needle/rod crystal
+  // Template Material 09 - green rod crystal
   greenTourmaline: (
     <svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -227,26 +227,15 @@ export const CrystalIcons = {
 
 export const getCrystalIcon = (crystalName) => {
   const iconMap = {
-    'Rose Quartz': CrystalIcons.roseQuartz,
-    'Amethyst': CrystalIcons.amethyst,
-    'Clear Quartz': CrystalIcons.clearQuartz,
-    'Black Tourmaline': CrystalIcons.blackTourmaline,
-    'Citrine': CrystalIcons.citrine,
-    'Green Tourmaline': CrystalIcons.greenTourmaline,
-    'Moonstone': CrystalIcons.moonstone,
-    'Labradorite': CrystalIcons.labradorite,
-    'Turquoise': CrystalIcons.turquoise,
-    'Opal': CrystalIcons.generic,
-    'Red Jasper': CrystalIcons.roseQuartz,
-    'Carnelian': CrystalIcons.roseQuartz,
-    'Green Aventurine': CrystalIcons.greenTourmaline,
-    'Black Lava Stone': CrystalIcons.blackTourmaline,
-    'White Lava Stone': CrystalIcons.clearQuartz,
-    'Brown Lava Stone': CrystalIcons.generic,
-    'Tiger Eye': CrystalIcons.generic,
-    'Amazonite': CrystalIcons.turquoise,
-    'Sodalite': CrystalIcons.labradorite,
-    'Lapis Lazuli': CrystalIcons.labradorite,
+    'Template Material 01': CrystalIcons.roseQuartz,
+    'Template Material 02': CrystalIcons.amethyst,
+    'Template Material 03': CrystalIcons.clearQuartz,
+    'Template Material 04': CrystalIcons.blackTourmaline,
+    'Template Material 05': CrystalIcons.moonstone,
+    'Template Material 06': CrystalIcons.labradorite,
+    'Template Material 07': CrystalIcons.turquoise,
+    'Template Material 08': CrystalIcons.citrine,
+    'Template Material 09': CrystalIcons.greenTourmaline,
   };
 
   return iconMap[crystalName] || CrystalIcons.generic;

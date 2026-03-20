@@ -55,6 +55,10 @@ import {
   DBCategory
 } from '@/lib/d1-db';
 import { SAMPLE_CATEGORIES } from '@/lib/sample-data';
+import {
+  getCategoryId as getMappedCategoryId,
+  getCategorySlug as getMappedCategorySlug,
+} from '@/constants/categoryMapping';
 
 type CategoryRow = DBCategory & {
   parent_id?: number | null;
@@ -64,20 +68,6 @@ function getCategoryParentId(category: CategoryRow): number | null {
   return typeof category.parent_id === 'number' || category.parent_id === null
     ? category.parent_id
     : null;
-}
-
-function mapCategoryRow(category: CategoryRow): CategoryProfile {
-  return {
-    id: category.id,
-    name: category.name as string,
-    slug: category.slug as string,
-    description: category.description as string,
-    imageUrl: category.image_url as string,
-    isActive: !!category.is_active,
-    parentId: getCategoryParentId(category),
-    createdAt: category.created_at as string,
-    updatedAt: (category.updated_at as string) || (category.created_at as string),
-  };
 }
 
 const fallbackCategories = SAMPLE_CATEGORIES.map((category) => ({
@@ -92,7 +82,29 @@ const fallbackCategories = SAMPLE_CATEGORIES.map((category) => ({
   updatedAt: category.updatedAt,
 }));
 
+const fallbackCategoryMap = new Map(
+  fallbackCategories.map((category) => [category.id, category])
+);
 
+function mapCategoryRow(category: CategoryRow): CategoryProfile {
+  const fallbackCategory = fallbackCategoryMap.get(category.id);
+
+  return {
+    id: category.id,
+    name: fallbackCategory?.name || (category.name as string),
+    slug:
+      fallbackCategory?.slug ||
+      getMappedCategorySlug(category.id) ||
+      (category.slug as string),
+    description:
+      fallbackCategory?.description || (category.description as string),
+    imageUrl: fallbackCategory?.imageUrl || (category.image_url as string),
+    isActive: !!category.is_active,
+    parentId: getCategoryParentId(category),
+    createdAt: category.created_at as string,
+    updatedAt: (category.updated_at as string) || (category.created_at as string),
+  };
+}
 
 /**
  * 获取所有分类
@@ -138,17 +150,7 @@ export async function getCategoryById(id: number, db?: D1Database): Promise<{
       const c = await getCategoryD1(db, id);
       return {
         success: true,
-        data: {
-          id: c.id,
-          name: c.name as string,
-          slug: c.slug as string,
-          description: c.description as string,
-          imageUrl: c.image_url as string,
-          isActive: !!c.is_active,
-          parentId: null,
-          createdAt: c.created_at as string,
-          updatedAt: c.updated_at as string || c.created_at as string,
-        }
+        data: mapCategoryRow(c as CategoryRow),
       };
     }
 
@@ -181,25 +183,29 @@ export async function getCategoryBySlug(slug: string, db?: D1Database): Promise<
   error?: string;
 }> {
   try {
+    const mappedCategoryId = getMappedCategoryId(slug);
+
     if (db) {
+      if (mappedCategoryId !== undefined) {
+        const c = await getCategoryD1(db, mappedCategoryId);
+        return {
+          success: true,
+          data: mapCategoryRow(c as CategoryRow),
+        };
+      }
+
       const c = await getCategoryBySlugD1(db, slug);
       return {
         success: true,
-        data: {
-          id: c.id,
-          name: c.name as string,
-          slug: c.slug as string,
-          description: c.description as string,
-          imageUrl: c.image_url as string,
-          isActive: !!c.is_active,
-          parentId: null,
-          createdAt: c.created_at as string,
-          updatedAt: c.updated_at as string || c.created_at as string,
-        }
+        data: mapCategoryRow(c as CategoryRow),
       };
     }
 
-    const fallback = fallbackCategories.find((category) => category.slug === slug);
+    const fallback =
+      (mappedCategoryId !== undefined
+        ? fallbackCategoryMap.get(mappedCategoryId)
+        : undefined) ||
+      fallbackCategories.find((category) => category.slug === slug);
     if (fallback) {
       return {
         success: true,

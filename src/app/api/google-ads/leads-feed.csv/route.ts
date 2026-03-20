@@ -5,6 +5,7 @@ import {
   getD1Database,
   type D1Database,
 } from '@/lib/d1-db';
+import { siteConfig } from '@/lib/site-config';
 
 type CloudflareEnv = {
   DB?: D1Database;
@@ -58,8 +59,12 @@ function buildCsv(rows: Array<Record<string, string>>): string {
 }
 
 function isAuthorized(request: NextRequest): boolean {
-  const username = process.env.GOOGLE_ADS_FEED_USERNAME;
-  const password = process.env.GOOGLE_ADS_FEED_PASSWORD;
+  const username = siteConfig.templateMode
+    ? siteConfig.googleAdsFeedUsername
+    : process.env.GOOGLE_ADS_FEED_USERNAME;
+  const password = siteConfig.templateMode
+    ? siteConfig.googleAdsFeedPassword
+    : process.env.GOOGLE_ADS_FEED_PASSWORD;
 
   if (!username || !password) {
     return false;

@@ -67,7 +67,7 @@ const faqs = [
     answer: 'Use the trust band and FAQ section once legal and ops have confirmed the wording.',
   },
   {
-    question: 'Can I use this page for non-jewelry services?',
+    question: 'Can I reuse this page for a different service model?',
     answer: 'Yes. The structure is generic enough for onboarding, production, procurement, and fulfillment offers.',
   },
   {
@@ -97,7 +97,7 @@ export default function ServicesPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-5 justify-center">
               <Link
-                href="/contact?type=sample"
+                href="/contact?type=template-review"
                 className="inline-flex items-center justify-center px-8 py-4 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-500 transition-all shadow-lg hover:shadow-primary-600/30 hover:-translate-y-1"
               >
                 Review Contact Template

@@ -3,26 +3,27 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { use, useState, useEffect } from 'react';
+import { siteConfig } from '@/lib/site-config';
 
 // 相关文章
 const relatedPosts = [
   {
-    slug: '7-chakra-stones-complete-guide',
-    title: '7 Chakra Stones: Complete Guide',
+    slug: 'template-content-example-01',
+    title: 'Template Content Example 01',
     image: 'https://images.unsplash.com/photo-1603561596112-0a132b757442?w=400',
-    category: 'Guide'
+    category: 'Template Guide'
   },
   {
-    slug: 'aromatherapy-jewelry-trending-wellness',
-    title: 'Aromatherapy Jewelry Trends',
+    slug: 'template-content-example-02',
+    title: 'Template Content Example 02',
     image: 'https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?w=400',
-    category: 'Trends'
+    category: 'Template Updates'
   },
   {
-    slug: 'wholesale-jewelry-pricing-strategy',
-    title: 'Wholesale Pricing Strategy',
+    slug: 'template-content-example-03',
+    title: 'Template Content Example 03',
     image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400',
-    category: 'Guide'
+    category: 'Template Guide'
   }
 ];
 
@@ -41,44 +42,44 @@ function transformBlogData(apiPost) {
     },
     author: {
       name: apiPost.author?.name || '博客编辑',
-      avatar: apiPost.author?.avatar || 'https://i.pravatar.cc/150?img=1',
-      bio: apiPost.author?.bio || 'Editorial Team providing insights on jewelry wholesale business'
+      avatar: apiPost.author?.avatar || siteConfig.logoPath,
+      bio: apiPost.author?.bio || '模板文章作者简介，用于演示博客详情页的作者信息区块。'
     },
     publishedAt: apiPost.publishedAt,
-    category: apiPost.category?.name || apiPost.category || 'Guide',
+    category: apiPost.category?.name || apiPost.category || 'Template Guide',
     readTime: apiPost.readTime || 5,
-    tags: apiPost.tags || ['jewelry', 'insights', 'wholesale']
+    tags: apiPost.tags || ['template', 'content', 'placeholder']
   };
 }
 
 // 默认文章内容（用于加载失败或文章不存在）
 const defaultPost = {
-  title: 'Blog Post Not Found',
-  excerpt: 'This article could not be loaded. It may have been removed or is no longer available.',
+  title: 'Template Article Not Available',
+  excerpt: 'This placeholder article could not be loaded. Replace this fallback with your approved empty-state messaging before publishing.',
   content: `
-<p>We're sorry, but the article you're looking for could not be found.</p>
+<p>This placeholder article could not be loaded.</p>
 
-<h2>What to Do Next</h2>
-<p>Here are some options:</p>
+<h2>Suggested Next Steps</h2>
+<p>Use one of the placeholder actions below while your real content workflow is still in review:</p>
 <ul>
-  <li><a href="/blog">Browse other articles</a></li>
-  <li><a href="/contact">Contact us</a> if you have questions</li>
-  <li>Check back later as we continue to add content</li>
+  <li><a href="/blog">Browse other template articles</a></li>
+  <li><a href="/contact">Open the contact template</a> if you need a replacement flow</li>
+  <li>Replace this fallback once your real content inventory is approved</li>
 </ul>
 
-<p><a href="/blog">← Back to All Articles</a></p>
+<p><a href="/blog">← Back to Template Articles</a></p>
   `,
   featuredImage: {
     url: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=1200',
-    alt: 'Jewelry Business'
+    alt: 'Template article placeholder'
   },
   author: {
-    name: 'Editorial Team',
-    avatar: 'https://i.pravatar.cc/150?img=5',
-    bio: 'Your trusted source for jewelry wholesale insights'
+    name: '模板编辑团队',
+    avatar: siteConfig.logoPath,
+    bio: '用于占位展示的作者资料，请在发布前替换为真实团队介绍。'
   },
   publishedAt: new Date().toISOString(),
-  category: 'Guide',
+  category: 'Template Guide',
   readTime: 5,
   tags: ['not-found']
 };
@@ -251,7 +252,7 @@ export default function BlogPostPage({ params }) {
               className="rounded-full"
             />
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">About {post.author.name}</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">About This Template Author</h3>
               <p className="text-gray-700">{post.author.bio}</p>
             </div>
           </div>
@@ -292,15 +293,15 @@ export default function BlogPostPage({ params }) {
         <div className="mt-16 bg-stone-900 rounded-2xl p-12 text-center text-white shadow-xl relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-stone-900 to-stone-800 opacity-50"></div>
           <div className="relative z-10">
-            <h3 className="text-3xl font-serif font-bold mb-4">Ready to Start Your Jewelry Business?</h3>
+            <h3 className="text-3xl font-serif font-bold mb-4">Need to Replace This Template Section?</h3>
             <p className="text-xl mb-8 text-stone-200">
-              Get wholesale pricing and samples of our healing crystal jewelry collection
+              This article CTA is still placeholder content. Replace it with your approved offer, destination, and contact path before publishing.
             </p>
             <Link
               href="/contact"
               className="inline-block bg-primary-600 hover:bg-primary-500 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
             >
-              Contact Us for Quotes
+              Update This CTA
             </Link>
           </div>
         </div>

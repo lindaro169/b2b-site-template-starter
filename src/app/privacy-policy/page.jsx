@@ -21,8 +21,11 @@ export default function PrivacyPolicyPage() {
         <div className="bg-white shadow-sm rounded-xl p-8 sm:p-12">
           <header className="mb-10 text-center">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-              Privacy Policy
+              Template Privacy Policy Placeholder
             </h1>
+            <p className="text-gray-600 leading-relaxed">
+              This page contains mock legal structure and mock company information. Replace it with reviewed production language before publishing.
+            </p>
           </header>
 
           <div className="prose prose-lg prose-gray max-w-none space-y-8">
@@ -89,7 +92,7 @@ export default function PrivacyPolicyPage() {
             <section>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Contact Us</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us at:
+                The contact details below are mock data for template review only:
               </p>
               <div className="bg-gray-50 rounded-lg p-6 text-gray-700 space-y-2 border border-gray-100">
                 <p><span className="font-semibold">Email:</span> {siteConfig.contactEmail}</p>

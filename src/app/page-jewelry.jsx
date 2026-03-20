@@ -6,21 +6,21 @@ import CTABanner from "@/components/jewelry/CTABanner";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata = {
-  title: `${siteConfig.brandName} | Mock Wholesale Jewelry Template`,
+  title: `${siteConfig.brandName} | Mock B2B Site Template`,
   description: siteConfig.companyDescription,
   openGraph: {
-    title: `${siteConfig.brandName} | Mock Wholesale Jewelry Template`,
+    title: `${siteConfig.brandName} | Mock B2B Site Template`,
     description: siteConfig.companyDescription,
     type: 'website',
   },
 };
 
 export default async function Page() {
-  // TODO: Fetch data from Strapi when ready
+  // 如需扩展首页模块数据，可在本地 mock 数据或 Cloudflare API 层补充
   // const [categories, testimonials, faqs] = await Promise.all([
-  //   fetchProductCategories(),
+  //   fetchCategories(),
   //   fetchTestimonials(),
-  //   fetchFAQs({ page: 'homepage' })
+  //   fetchFAQs()
   // ]);
 
   const categories = null;
@@ -37,11 +37,11 @@ export default async function Page() {
             "@type": "Organization",
             "name": siteConfig.brandName,
             "description": siteConfig.companyDescription,
-            "url": process.env.NEXT_PUBLIC_WEBSITE || siteConfig.websiteUrl,
+            "url": siteConfig.websiteUrl,
             "contactPoint": {
               "@type": "ContactPoint",
               "contactType": "Demo template contact",
-              "url": `${process.env.NEXT_PUBLIC_WEBSITE || siteConfig.websiteUrl}/contact`
+              "url": `${siteConfig.websiteUrl}/contact`
             }
           })
         }}

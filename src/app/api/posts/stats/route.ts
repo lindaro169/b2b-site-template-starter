@@ -15,11 +15,23 @@
 
 import { NextResponse } from 'next/server';
 import { getPostStats, initializeSamplePosts } from '@/lib/posts';
+import { siteConfig } from '@/lib/site-config';
 
 let samplePostsInitialized = false;
 
 export async function GET() {
   try {
+    if (siteConfig.templateMode) {
+      return NextResponse.json(
+        {
+          success: true,
+          data: siteConfig.placeholderMetrics.posts,
+          isPlaceholder: true,
+        },
+        { status: 200 }
+      );
+    }
+
     // Initialize sample posts on first call
     if (!samplePostsInitialized) {
       await initializeSamplePosts();

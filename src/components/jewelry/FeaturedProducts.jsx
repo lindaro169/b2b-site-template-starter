@@ -42,14 +42,14 @@ export default function FeaturedProducts() {
       <section className={styles.section}>
         <div className={styles.container}>
           <div className={styles.header}>
-            <h2 className={styles.title}>Featured Products</h2>
+            <h2 className={styles.title}>Featured Template Entries</h2>
             <p className={styles.subtitle}>
-              Discover our carefully selected bestsellers for B2B wholesale
+              Review placeholder cards, imagery, and copy structure before loading approved catalog content
             </p>
           </div>
           <div className={styles.loadingContainer}>
             <div className={styles.loadingSpinner}></div>
-            <p>Loading featured products...</p>
+            <p>Loading placeholder entries...</p>
           </div>
         </div>
       </section>
@@ -61,13 +61,13 @@ export default function FeaturedProducts() {
       <section className={styles.section}>
         <div className={styles.container}>
           <div className={styles.header}>
-            <h2 className={styles.title}>Featured Products</h2>
+            <h2 className={styles.title}>Featured Template Entries</h2>
             <p className={styles.subtitle}>
-              Discover our carefully selected bestsellers for B2B wholesale
+              Review placeholder cards, imagery, and copy structure before loading approved catalog content
             </p>
           </div>
           <div className={styles.errorContainer}>
-            <p>Unable to load featured products. Please try again later.</p>
+            <p>Unable to load placeholder entries. Please try again later.</p>
           </div>
         </div>
       </section>
@@ -83,9 +83,9 @@ export default function FeaturedProducts() {
       <div className={styles.container}>
         {/* Section Header */}
         <div className={styles.header}>
-          <h2 className={styles.title}>Featured Products</h2>
+          <h2 className={styles.title}>Featured Template Entries</h2>
           <p className={styles.subtitle}>
-            Discover our carefully selected bestsellers for B2B wholesale
+            Review placeholder cards, imagery, and copy structure before loading approved catalog content
           </p>
         </div>
 
@@ -128,7 +128,7 @@ export default function FeaturedProducts() {
                 <div className={styles.actions}>
                   <Link href={`/product/${product.slug}`}>
                     <button className={styles.viewDetailsBtn}>
-                      View Details
+                      Open Details
                     </button>
                   </Link>
                 </div>
@@ -141,7 +141,7 @@ export default function FeaturedProducts() {
         <div className={styles.cta}>
           <Link href="/products">
             <button className={styles.viewAllBtn}>
-              View All Products →
+              View All Template Entries →
             </button>
           </Link>
         </div>

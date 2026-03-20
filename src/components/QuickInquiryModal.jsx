@@ -11,8 +11,8 @@ export default function QuickInquiryModal({ product, onClose }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    quantity: '50 pcs',
-    message: `I'm interested in ${product?.title || 'this product'}`,
+    quantity: 'Replace with approved quantity',
+    message: `I want to review the placeholder flow for ${product?.title || 'this template entry'}.`,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -88,7 +88,7 @@ export default function QuickInquiryModal({ product, onClose }) {
 
         {/* Header - Premium Stone & Gold */}
         <div className="sticky top-0 bg-gradient-to-r from-stone-900 to-stone-800 text-white p-5 flex items-center justify-between rounded-t-xl">
-          <h2 className="text-lg font-serif font-semibold tracking-wide">Quick Inquiry</h2>
+          <h2 className="text-lg font-serif font-semibold tracking-wide">Template Inquiry</h2>
           <button
             onClick={onClose}
             className="text-stone-300 hover:text-white hover:bg-white/10 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
@@ -102,8 +102,8 @@ export default function QuickInquiryModal({ product, onClose }) {
           {submitSuccess ? (
             <div className="text-center py-8">
               <div className="text-4xl mb-4">✅</div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Inquiry Submitted Successfully</h3>
-              <p className="text-gray-600">Our sales team will contact you shortly</p>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Template Inquiry Submitted</h3>
+              <p className="text-gray-600">Replace this confirmation with your real handoff and response message before publishing.</p>
             </div>
           ) : (
             <>
@@ -151,7 +151,7 @@ export default function QuickInquiryModal({ product, onClose }) {
                     onChange={handleInputChange}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="Your name"
+                    placeholder="Template contact name"
                   />
                 </div>
 
@@ -167,14 +167,14 @@ export default function QuickInquiryModal({ product, onClose }) {
                     onChange={handleInputChange}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="your@email.com"
+                    placeholder="contact@template-site-placeholder.example"
                   />
                 </div>
 
                 {/* Estimated Quantity */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">
-                    Estimated Quantity
+                    Template Quantity
                   </label>
                   <input
                     type="text"
@@ -182,7 +182,7 @@ export default function QuickInquiryModal({ product, onClose }) {
                     value={formData.quantity}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="e.g. 50 pcs, 100 pcs/style"
+                    placeholder="Replace with approved quantity guidance"
                   />
                 </div>
 
@@ -198,7 +198,7 @@ export default function QuickInquiryModal({ product, onClose }) {
                     required
                     rows="3"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="Please enter your inquiry..."
+                    placeholder="Describe the approved workflow, routing, or follow-up content you want to publish..."
                   />
                 </div>
 
@@ -238,11 +238,11 @@ export default function QuickInquiryModal({ product, onClose }) {
                   disabled={isSubmitting}
                   className="w-full bg-stone-900 hover:bg-primary-600 disabled:bg-stone-300 text-white font-serif font-semibold py-3.5 rounded-lg transition-all duration-300 mt-4 shadow-lg hover:shadow-xl"
                 >
-                  {isSubmitting ? 'Sending...' : 'Submit Inquiry'}
+                  {isSubmitting ? 'Submitting...' : 'Submit Template Inquiry'}
                 </button>
 
                 <p className="text-xs text-gray-500 text-center">
-                  We will reply within 24 hours
+                  Replace response time and follow-up promises before publishing
                 </p>
               </form>
             </>

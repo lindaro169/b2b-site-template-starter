@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { siteConfig } from '@/lib/site-config'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -16,6 +17,11 @@ export default function LoginForm() {
 
   // 加载 Turnstile 脚本
   useEffect(() => {
+    if (siteConfig.templateMode) {
+      setTurnstileReady(true)
+      return
+    }
+
     const script = document.createElement('script')
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
     script.async = true
@@ -70,6 +76,12 @@ export default function LoginForm() {
     setLoading(true)
 
     try {
+      if (siteConfig.templateMode) {
+        setError('模板模式下已禁用真实后台登录')
+        setLoading(false)
+        return
+      }
+
       // 前端验证
       if (!email || !password) {
         setError('邮箱和密码不能为空')
@@ -184,16 +196,22 @@ export default function LoginForm() {
 
         {/* Turnstile Widget */}
         <div className="flex justify-center">
-          <div ref={containerRef} className="w-full" />
+          {siteConfig.templateMode ? (
+            <div className="w-full rounded-lg border border-dashed border-stone-300 bg-stone-50 px-4 py-3 text-center text-sm text-stone-500">
+              模板模式下不加载真实 Turnstile 配置。
+            </div>
+          ) : (
+            <div ref={containerRef} className="w-full" />
+          )}
         </div>
 
         {/* 登录按钮 */}
         <button
           type="submit"
-          disabled={loading || !turnstileReady}
+          disabled={siteConfig.templateMode || loading || !turnstileReady}
           className="w-full py-2.5 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {loading ? '登录中...' : '登录'}
+          {siteConfig.templateMode ? '模板模式下已禁用' : loading ? '登录中...' : '登录'}
         </button>
 
         {/* 链接 */}
@@ -214,8 +232,8 @@ export default function LoginForm() {
         {/* Demo 凭证提示 */}
         <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700">
           <p className="font-semibold mb-1">📝 模板凭证示例:</p>
-          <p>邮箱: admin@company.com</p>
-          <p>密码: Admin123!Pass</p>
+          <p>邮箱: admin@template-site-placeholder.example</p>
+          <p>密码: ReplaceBeforeLaunch123!</p>
         </div>
       </form>
     </div>

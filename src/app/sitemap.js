@@ -1,6 +1,7 @@
-import { fetchPostSitemap } from "@/lib/api";
 import { getProducts } from "@/lib/products";
+import { getPosts } from "@/lib/posts";
 import { siteConfig } from "@/lib/site-config";
+import { getAllCategorySlugs } from "@/constants/categoryMapping";
 
 /**
  * 动态生成 sitemap.xml
@@ -9,29 +10,29 @@ import { siteConfig } from "@/lib/site-config";
  * 排除：登录、后台、API 等敏感页面
  */
 export default async function sitemap() {
-  const BASE_URL = process.env.NEXT_PUBLIC_WEBSITE || siteConfig.websiteUrl;
+  const BASE_URL = siteConfig.websiteUrl;
+  const PLACEHOLDER_LAST_MODIFIED = new Date(siteConfig.placeholderLastModified);
 
   let posts = [];
   let products = [];
 
-  try {
-    // 获取所有博客文章
-    const postData = await fetchPostSitemap();
-    posts = postData || [];
+  const [postResult, productResult] = await Promise.all([
+    getPosts({ limit: 1000, published: true }),
+    getProducts({ limit: 1000, isActive: true }),
+  ]);
 
-    // 获取所有已发布产品
-    const productsData = await getProducts({ limit: 1000, published: true });
-    if (productsData.success && productsData.data) {
-      products = productsData.data;
-    }
-  } catch (error) {
-    console.error('Sitemap fetch error:', error.message);
+  if (postResult.success && postResult.data) {
+    posts = postResult.data;
+  }
+
+  if (productResult.success && productResult.data) {
+    products = productResult.data;
   }
 
   // 博客文章 URL (月更)
   const postUrls = posts.map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
-    lastModified: post.updatedAt || new Date(),
+    lastModified: PLACEHOLDER_LAST_MODIFIED,
     changeFrequency: 'monthly',
     priority: 0.6,
   }));
@@ -39,22 +40,17 @@ export default async function sitemap() {
   // 产品详情页 URL (周更)
   const productUrls = products.map((product) => ({
     url: `${BASE_URL}/product/${product.slug}`,
-    lastModified: product.updatedAt || new Date(),
+    lastModified: PLACEHOLDER_LAST_MODIFIED,
     changeFrequency: 'weekly',
     priority: 0.8,
   }));
 
   // 产品分类页
-  const categories = [
-    'healing-crystal-jewelry',
-    '925-silver-crystal-jewelry',
-    'chakra-yoga-jewelry',
-    'aromatherapy-jewelry',
-  ];
+  const categories = getAllCategorySlugs();
 
   const categoryUrls = categories.map((category) => ({
     url: `${BASE_URL}/products/${category}`,
-    lastModified: new Date(),
+    lastModified: PLACEHOLDER_LAST_MODIFIED,
     changeFrequency: 'weekly',
     priority: 0.9,
   }));
@@ -63,14 +59,14 @@ export default async function sitemap() {
     // 首页 - 最高优先级
     {
       url: BASE_URL,
-      lastModified: new Date(),
+      lastModified: PLACEHOLDER_LAST_MODIFIED,
       changeFrequency: 'daily',
       priority: 1.0,
     },
     // 产品列表概览页
     {
       url: `${BASE_URL}/products`,
-      lastModified: new Date(),
+      lastModified: PLACEHOLDER_LAST_MODIFIED,
       changeFrequency: 'daily',
       priority: 0.9,
     },
@@ -81,28 +77,28 @@ export default async function sitemap() {
     // 博客列表页
     {
       url: `${BASE_URL}/blog`,
-      lastModified: new Date(),
+      lastModified: PLACEHOLDER_LAST_MODIFIED,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     // 关于我们
     {
       url: `${BASE_URL}/about`,
-      lastModified: new Date(),
+      lastModified: PLACEHOLDER_LAST_MODIFIED,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     // 联系方式
     {
       url: `${BASE_URL}/contact`,
-      lastModified: new Date(),
+      lastModified: PLACEHOLDER_LAST_MODIFIED,
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     // 服务页面
     {
       url: `${BASE_URL}/services`,
-      lastModified: new Date(),
+      lastModified: PLACEHOLDER_LAST_MODIFIED,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
@@ -111,13 +107,13 @@ export default async function sitemap() {
     // 隐私政策和条款 - 低优先级
     {
       url: `${BASE_URL}/privacy-policy`,
-      lastModified: new Date(),
+      lastModified: PLACEHOLDER_LAST_MODIFIED,
       changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
       url: `${BASE_URL}/terms-conditions`,
-      lastModified: new Date(),
+      lastModified: PLACEHOLDER_LAST_MODIFIED,
       changeFrequency: 'yearly',
       priority: 0.3,
     },

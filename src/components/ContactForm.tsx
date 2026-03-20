@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { siteConfig } from '@/lib/site-config'
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,12 @@ export default function ContactForm() {
 
   // 加载 Turnstile 脚本
   useEffect(() => {
+    if (siteConfig.templateMode) {
+      turnstileRef.current = siteConfig.templateTurnstileToken
+      setTurnstileReady(true)
+      return
+    }
+
     const siteKey = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY
 
     if (!siteKey) {
@@ -105,7 +112,9 @@ export default function ContactForm() {
         return
       }
 
-      const turnstileToken = window.turnstile.getResponse(turnstileRef.current)
+      const turnstileToken = siteConfig.templateMode
+        ? siteConfig.templateTurnstileToken
+        : window.turnstile.getResponse(turnstileRef.current)
       if (!turnstileToken) {
         setError('请完成安全验证')
         setLoading(false)
@@ -131,7 +140,7 @@ export default function ContactForm() {
       setFormData({ name: '', email: '', phone: '', message: '' })
 
       // 重置 Turnstile
-      if (turnstileRef.current) {
+      if (!siteConfig.templateMode && turnstileRef.current) {
         window.turnstile.reset(turnstileRef.current)
       }
 
@@ -143,7 +152,7 @@ export default function ContactForm() {
       setError(err instanceof Error ? err.message : '发生错误, 请稍后重试')
 
       // 重置 Turnstile 以便重试
-      if (turnstileRef.current) {
+      if (!siteConfig.templateMode && turnstileRef.current) {
         window.turnstile.reset(turnstileRef.current)
       }
     } finally {
@@ -242,7 +251,13 @@ export default function ContactForm() {
 
       {/* Turnstile Widget */}
       <div className="flex justify-center">
-        <div id="turnstile-container-contact" ref={containerRef} className="w-full" />
+        {siteConfig.templateMode ? (
+          <div className="w-full rounded-lg border border-dashed border-stone-300 bg-stone-50 px-4 py-3 text-center text-sm text-stone-500">
+            模板模式下不加载真实 Turnstile 配置。
+          </div>
+        ) : (
+          <div id="turnstile-container-contact" ref={containerRef} className="w-full" />
+        )}
       </div>
 
       {/* 按钮 */}

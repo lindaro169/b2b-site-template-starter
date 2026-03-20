@@ -1,6 +1,6 @@
 /**
  * Cloudflare Workers API Client
- * Replaces Strapi API calls with new Cloudflare Workers backend
+ * Shared client for the template's Cloudflare-backed API routes
  */
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';

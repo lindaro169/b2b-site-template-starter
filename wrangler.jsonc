@@ -18,7 +18,7 @@
  */
 {
     "$schema": "node_modules/wrangler/config-schema.json",
-    "name": "template-catalog-app",
+    "name": "template-site-placeholder-app",
     // Worker 脚本配置
     "main": ".open-next/worker.js",
     "compatibility_date": "2024-12-20",
@@ -35,29 +35,29 @@
     },
     "routes": [
         {
-            "pattern": "template-catalog.example.com/*",
-            "zone_name": "template-catalog.example.com"
+            "pattern": "template-site-placeholder.example/*",
+            "zone_name": "template-site-placeholder.example"
         },
         {
-            "pattern": "www.template-catalog.example.com/*",
-            "zone_name": "template-catalog.example.com"
+            "pattern": "www.template-site-placeholder.example/*",
+            "zone_name": "template-site-placeholder.example"
         }
     ],
     // 环境变量（生产环境）
     "vars": {
-        "NEXT_PUBLIC_WEBSITE": "https://template-catalog.example.com",
-        "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "your-google-client-id.apps.googleusercontent.com",
-        "GOOGLE_CLIENT_ID": "your-google-client-id.apps.googleusercontent.com",
-        "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY": "your-turnstile-site-key",
-        "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-XXXXXXXXXX",
-        "NEXT_PUBLIC_GOOGLE_ADS_ID": "AW-XXXXXXXXXX",
-        "NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL": "your_google_ads_inquiry_label"
+        "NEXT_PUBLIC_WEBSITE": "https://template-site-placeholder.example",
+        "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "mock-google-client-id.apps.googleusercontent.com",
+        "GOOGLE_CLIENT_ID": "mock-google-client-id.apps.googleusercontent.com",
+        "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY": "mock-turnstile-site-key",
+        "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-TEMPLATE0000",
+        "NEXT_PUBLIC_GOOGLE_ADS_ID": "AW-TEMPLATE0000",
+        "NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL": "template_inquiry_label"
     },
     // D1 数据库绑定（生产环境）
     "d1_databases": [
         {
             "binding": "DB",
-            "database_name": "template_catalog",
+            "database_name": "template_site_placeholder",
             "database_id": "your-d1-database-id",
             "migrations_dir": "src/drizzle"
         }
@@ -73,13 +73,13 @@
     "r2_buckets": [
         {
             "binding": "R2",
-            "bucket_name": "template-catalog-assets"
+            "bucket_name": "template-site-placeholder-assets"
         }
     ],
     // 环境配置（目前不需要production环境，因为已经是默认配置）
     "env": {
         "production": {
-            "name": "template-catalog-app",
+            "name": "template-site-placeholder-app",
             "main": ".open-next/worker.js",
             "compatibility_date": "2024-12-20",
             "compatibility_flags": [
@@ -92,29 +92,29 @@
             },
             "routes": [
                 {
-                    "pattern": "template-catalog.example.com/*",
-                    "zone_name": "template-catalog.example.com"
+                    "pattern": "template-site-placeholder.example/*",
+                    "zone_name": "template-site-placeholder.example"
                 },
                 {
-                    "pattern": "www.template-catalog.example.com/*",
-                    "zone_name": "template-catalog.example.com"
+                    "pattern": "www.template-site-placeholder.example/*",
+                    "zone_name": "template-site-placeholder.example"
                 }
             ],
             // 环境变量（生产环境）
             "vars": {
-                "NEXT_PUBLIC_WEBSITE": "https://template-catalog.example.com",
-                "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "your-google-client-id.apps.googleusercontent.com",
-                "GOOGLE_CLIENT_ID": "your-google-client-id.apps.googleusercontent.com",
-                "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY": "your-turnstile-site-key",
-                "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-XXXXXXXXXX",
-                "NEXT_PUBLIC_GOOGLE_ADS_ID": "AW-XXXXXXXXXX",
-                "NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL": "your_google_ads_inquiry_label"
+                "NEXT_PUBLIC_WEBSITE": "https://template-site-placeholder.example",
+                "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "mock-google-client-id.apps.googleusercontent.com",
+                "GOOGLE_CLIENT_ID": "mock-google-client-id.apps.googleusercontent.com",
+                "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY": "mock-turnstile-site-key",
+                "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-TEMPLATE0000",
+                "NEXT_PUBLIC_GOOGLE_ADS_ID": "AW-TEMPLATE0000",
+                "NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL": "template_inquiry_label"
             },
             // D1 数据库绑定（生产环境）
             "d1_databases": [
                 {
                     "binding": "DB",
-                    "database_name": "template_catalog",
+                    "database_name": "template_site_placeholder",
                     "database_id": "your-d1-database-id",
                     "migrations_dir": "src/drizzle"
                 }
@@ -130,12 +130,12 @@
             "r2_buckets": [
                 {
                     "binding": "R2",
-                    "bucket_name": "template-catalog-assets"
+                    "bucket_name": "template-site-placeholder-assets"
                 }
             ]
         },
         "development": {
-            "name": "template-catalog-dev"
+            "name": "template-site-placeholder-dev"
         }
     }
 }

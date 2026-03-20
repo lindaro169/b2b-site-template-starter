@@ -1,10 +1,39 @@
 import type { NextConfig } from 'next'
+import { siteConfig } from './src/lib/site-config'
 // Only import and init OpenNextJS for local development
 if (process.env.NODE_ENV === 'development') {
   import('@opennextjs/cloudflare').then(({ initOpenNextCloudflareForDev }) => {
     initOpenNextCloudflareForDev()
   })
 }
+
+const publicEnv = siteConfig.templateMode
+  ? {
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: siteConfig.googleClientId,
+      NEXT_PUBLIC_WEBSITE: siteConfig.websiteUrl,
+      NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY: siteConfig.turnstileSiteKey,
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: siteConfig.turnstileSiteKey,
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: siteConfig.gaMeasurementId,
+      NEXT_PUBLIC_GOOGLE_ADS_ID: siteConfig.googleAdsId,
+      NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL: siteConfig.googleAdsInquiryLabel,
+      NEXT_PUBLIC_EMAIL_ENCODED: siteConfig.encodedContactEmail,
+      NEXT_PUBLIC_TELEPHONE_ENCODED: siteConfig.encodedContactPhone,
+      NEXT_PUBLIC_API_URL: siteConfig.apiBaseUrl,
+    }
+  : {
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      NEXT_PUBLIC_WEBSITE: process.env.NEXT_PUBLIC_WEBSITE,
+      NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY,
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY:
+        process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+        process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY,
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
+      NEXT_PUBLIC_GOOGLE_ADS_ID: process.env.NEXT_PUBLIC_GOOGLE_ADS_ID,
+      NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL: process.env.NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL,
+      NEXT_PUBLIC_EMAIL_ENCODED: process.env.NEXT_PUBLIC_EMAIL_ENCODED,
+      NEXT_PUBLIC_TELEPHONE_ENCODED: process.env.NEXT_PUBLIC_TELEPHONE_ENCODED,
+      NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    }
 
 const nextConfig: NextConfig = {
   output: 'standalone',
@@ -19,11 +48,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['@chakra-ui/react', '@emotion/react', '@emotion/styled'],
   },
   // 确保公共环境变量在客户端可用（Cloudflare Workers 兼容）
-  env: {
-    NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-    NEXT_PUBLIC_WEBSITE: process.env.NEXT_PUBLIC_WEBSITE,
-    NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY,
-  },
+  env: publicEnv,
   // OpenNextJS 优化配置
   // 注意：这些选项优化应用以在 Workers 环境中运行
   compress: true, // 启用 gzip 压缩
@@ -60,15 +85,15 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'assets.template-catalog.example.com',
+        hostname: 'assets.template-site-placeholder.example',
       },
       {
         protocol: 'https',
-        hostname: 'media.template-catalog.example.com',
+        hostname: 'media.template-site-placeholder.example',
       },
       {
         protocol: 'https',
-        hostname: 'pub-template-catalog.r2.dev',
+        hostname: 'template-site-placeholder.r2.dev',
       },
     ],
     // 支持的图片格式（WebP 优化）

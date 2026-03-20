@@ -2,6 +2,7 @@
 
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { PhoneIcon } from "@heroicons/react/24/outline";
+import { siteConfig } from '@/lib/site-config';
 
 const ContactLink = ({
   type, // "email" or "telephone"
@@ -10,17 +11,23 @@ const ContactLink = ({
   ...props // Additional props (e.g., rel, target)
 }) => {
   // Decode environment variables
-  const email = process.env.NEXT_PUBLIC_EMAIL_ENCODED
-    ? atob(process.env.NEXT_PUBLIC_EMAIL_ENCODED).trim() // Clean email for mailto:
-    : null;
+  const email = siteConfig.templateMode
+    ? siteConfig.contactEmail
+    : process.env.NEXT_PUBLIC_EMAIL_ENCODED
+      ? atob(process.env.NEXT_PUBLIC_EMAIL_ENCODED).trim()
+      : null;
 
-  const formattedTelephone = process.env.NEXT_PUBLIC_TELEPHONE_ENCODED
-    ? atob(process.env.NEXT_PUBLIC_TELEPHONE_ENCODED).trim() // Human-readable phone number
-    : null;
+  const formattedTelephone = siteConfig.templateMode
+    ? siteConfig.contactPhoneDisplay
+    : process.env.NEXT_PUBLIC_TELEPHONE_ENCODED
+      ? atob(process.env.NEXT_PUBLIC_TELEPHONE_ENCODED).trim()
+      : null;
 
-  const telephone = formattedTelephone
-    ? formattedTelephone.replace(/[^\d+]/g, "") // Clean phone number for tel:
-    : null;
+  const telephone = siteConfig.templateMode
+    ? siteConfig.contactPhoneHref
+    : formattedTelephone
+      ? formattedTelephone.replace(/[^\d+]/g, "")
+      : null;
 
   // Determine href and label based on type
   let href, label;

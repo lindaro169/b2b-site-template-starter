@@ -31,8 +31,8 @@ jobs:
       - name: Build for Cloudflare Workers
         run: pnpm build
         env:
-          NEXT_PUBLIC_WEBSITE: https://intapdap.com
-          NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY: ${{ secrets.CLOUDFLARE_TURNSTILE_SITE_KEY }}
+          NEXT_PUBLIC_WEBSITE: https://template-site-placeholder.example
+          NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY: mock-turnstile-site-key
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3

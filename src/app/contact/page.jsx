@@ -82,7 +82,7 @@ export default function ContactPage() {
           <nav className="flex text-sm text-gray-600">
             <Link href="/" className="hover:text-primary-600">Home</Link>
             <span className="mx-2">/</span>
-            <span className="text-gray-900">Contact Us</span>
+            <span className="text-gray-900">Template Contact</span>
           </nav>
         </div>
       </div>
@@ -299,10 +299,10 @@ export default function ContactPage() {
             </details>
             <details className="bg-white rounded-lg p-6 border border-gray-200">
               <summary className="font-semibold text-gray-900 cursor-pointer">
-                Can I request samples?
+                Can I request a pilot or demo?
               </summary>
               <p className="mt-3 text-gray-600">
-                Yes. This slot is useful for sample policy, sales qualification, or routing instructions once your team finalizes them.
+                Yes. Use this slot for pilot, demo, intake, or routing instructions once your team has finalized the real workflow.
               </p>
             </details>
             <details className="bg-white rounded-lg p-6 border border-gray-200">

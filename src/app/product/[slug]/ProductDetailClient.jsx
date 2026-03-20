@@ -5,7 +5,7 @@ import QuickInquiryModal from '@/components/QuickInquiryModal';
 import IconInquiry from '@/components/icons/IconInquiry';
 
 function generateTags(categoryName) {
-    const tags = ['#wholesale', '#jewelry', '#crystal'];
+    const tags = ['#template-data', '#replace-before-launch', '#mock-content'];
     if (categoryName) {
         const slug = categoryName.toLowerCase().replace(/\s+/g, '-');
         tags.unshift(`#${slug}`);
@@ -29,14 +29,14 @@ export default function ProductDetailClient({ product, categoryName }) {
                 className="w-full bg-stone-900 hover:bg-primary-600 text-white font-serif font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg mb-3"
             >
                 <IconInquiry className="w-5 h-5" />
-                Send Inquiry
+                Open Template Inquiry
             </button>
 
             {/* Secondary: subtle text link */}
             <p className="text-center text-sm text-stone-500 mb-5">
                 Or{' '}
                 <a href="/contact" className="text-primary-600 hover:text-primary-800 font-medium underline underline-offset-2 transition-colors">
-                    contact our sales team
+                    open the contact template
                 </a>
             </p>
 

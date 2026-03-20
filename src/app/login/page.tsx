@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 import Turnstile from 'react-turnstile';
+import { siteConfig } from '@/lib/site-config';
 import styles from './login.module.css';
 
 export default function LoginPage() {
@@ -12,6 +13,11 @@ export default function LoginPage() {
   const [turnstileKey, setTurnstileKey] = useState(0); // For resetting Turnstile
 
   const handleGoogleLogin = async () => {
+    if (siteConfig.templateMode) {
+      setError('模板模式下已禁用真实后台登录，请在发布前接入正式认证配置。');
+      return;
+    }
+
     if (!turnstileToken) {
       setError('请先完成人机验证');
       return;
@@ -89,36 +95,53 @@ export default function LoginPage() {
             justifyContent: 'center',
             marginBottom: '1.5rem'
           }}>
-            <Turnstile
-              key={turnstileKey}
-              sitekey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || ''}
-              onVerify={(token) => {
-                console.log('Turnstile verified:', token);
-                setTurnstileToken(token);
-                setError('');
-              }}
-              onError={() => {
-                console.error('Turnstile error');
-                setError('人机验证失败，请刷新页面重试');
-                setTurnstileToken(null);
-              }}
-              onExpire={() => {
-                console.log('Turnstile expired');
-                setTurnstileToken(null);
-              }}
-              theme="light"
-            />
+            {siteConfig.templateMode ? (
+              <div
+                style={{
+                  width: '100%',
+                  border: '1px dashed #d6d3d1',
+                  background: '#f5f5f4',
+                  borderRadius: '10px',
+                  padding: '0.9rem 1rem',
+                  textAlign: 'center',
+                  color: '#57534e',
+                  fontSize: '0.875rem',
+                }}
+              >
+                模板模式下不加载真实 Turnstile 或 Google 登录配置。
+              </div>
+            ) : (
+              <Turnstile
+                key={turnstileKey}
+                sitekey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || ''}
+                onVerify={(token) => {
+                  console.log('Turnstile verified:', token);
+                  setTurnstileToken(token);
+                  setError('');
+                }}
+                onError={() => {
+                  console.error('Turnstile error');
+                  setError('人机验证失败，请刷新页面重试');
+                  setTurnstileToken(null);
+                }}
+                onExpire={() => {
+                  console.log('Turnstile expired');
+                  setTurnstileToken(null);
+                }}
+                theme="light"
+              />
+            )}
           </div>
 
           {/* Google Login Button */}
           <button
             type="button"
             onClick={handleGoogleLogin}
-            disabled={loading || !turnstileToken}
+            disabled={siteConfig.templateMode || loading || !turnstileToken}
             className={styles.button}
             style={{
-              opacity: (loading || !turnstileToken) ? 0.6 : 1,
-              cursor: (loading || !turnstileToken) ? 'not-allowed' : 'pointer',
+              opacity: (siteConfig.templateMode || loading || !turnstileToken) ? 0.6 : 1,
+              cursor: (siteConfig.templateMode || loading || !turnstileToken) ? 'not-allowed' : 'pointer',
               background: '#fff',
               color: '#333',
               border: '1px solid #ddd',
@@ -134,7 +157,7 @@ export default function LoginPage() {
               <path d="M3.964 10.712c-.18-.54-.282-1.117-.282-1.71 0-.593.102-1.17.282-1.71V4.96H.957C.347 6.175 0 7.55 0 9.002c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05" />
               <path d="M9.003 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.464.891 11.426 0 9.003 0 5.485 0 2.44 2.017.96 4.958L3.967 7.29c.708-2.127 2.692-3.71 5.036-3.71z" fill="#EA4335" />
             </svg>
-            {loading ? '登录中...' : '使用 Google 账号登录'}
+            {siteConfig.templateMode ? '模板模式下已禁用' : loading ? '登录中...' : '使用 Google 账号登录'}
           </button>
 
           <p style={{

@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { siteConfig } from '@/lib/site-config';
 
-const categories = ['All', 'Guide', 'Trends'];
+const categories = ['All', 'Template Guide', 'Template Updates'];
 
 /**
  * 转换API博客数据为UI需要的格式
@@ -20,11 +21,11 @@ function transformBlogData(apiPost) {
       alt: apiPost.title
     },
     author: {
-      name: apiPost.author?.name || 'Blog Editor',
-      avatar: apiPost.author?.avatar || 'https://i.pravatar.cc/150?img=1'
+      name: apiPost.author?.name || 'Template Editor',
+      avatar: apiPost.author?.avatar || siteConfig.logoPath
     },
     publishedAt: apiPost.publishedAt,
-    category: apiPost.category?.name || apiPost.category || 'Guide',
+    category: apiPost.category?.name || apiPost.category || 'Template Guide',
     readTime: apiPost.readTime || 5
   };
 }
@@ -83,9 +84,9 @@ export default function BlogPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-stone-900 to-stone-800 opacity-90"></div>
         <div className="absolute inset-0 bg-[url('/pattern-noise.png')] opacity-5"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6 tracking-wide">Jewelry Business Insights</h1>
+          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6 tracking-wide">Template Content Hub</h1>
           <p className="text-xl max-w-2xl mx-auto text-stone-300 font-light leading-relaxed">
-            Expert tips, industry trends, and practical guides for wholesale jewelry buyers and retailers
+            Placeholder articles, editorial layouts, and reusable content blocks for pre-launch review.
           </p>
         </div>
       </div>
@@ -111,7 +112,7 @@ export default function BlogPage() {
 
         {/* Featured Post */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Featured Article</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Featured Template Article</h2>
           {loading ? (
             <div className="bg-white rounded-lg shadow-xl p-12 text-center">
               <div className="inline-block">
@@ -171,7 +172,7 @@ export default function BlogPage() {
                     </h3>
                     <p className="text-lg text-gray-600 mb-6">{featuredPost.excerpt}</p>
                     <div className="flex items-center gap-2 text-primary-600 font-semibold">
-                      Read Full Article
+                      Open Template Article
                       <svg className="w-5 h-5 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
@@ -182,14 +183,14 @@ export default function BlogPage() {
             </Link>
           ) : (
             <div className="bg-gray-50 rounded-lg shadow-lg p-12 text-center">
-              <p className="text-gray-600">No articles</p>
+              <p className="text-gray-600">No template articles available</p>
             </div>
           )}
         </div>
 
         {/* Blog Grid */}
         <div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Latest Articles</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Latest Template Articles</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {otherPosts.map((post) => (
               <Link
@@ -237,7 +238,7 @@ export default function BlogPage() {
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-500">{post.readTime} min read</span>
                     <span className="text-primary-600 font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
-                      Read More
+                      Open More
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
@@ -249,22 +250,22 @@ export default function BlogPage() {
           </div>
         </div>
 
-        {/* Newsletter Section */}
+        {/* Placeholder CTA Section */}
         <div className="mt-16 bg-stone-900 rounded-2xl p-12 text-center text-white shadow-xl relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-stone-900 to-stone-800 opacity-50"></div>
           <div className="relative z-10">
-            <h2 className="text-3xl font-serif font-bold mb-4">Stay Updated</h2>
+            <h2 className="text-3xl font-serif font-bold mb-4">Replace This Content CTA</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto text-stone-200">
-              Subscribe to our newsletter for the latest jewelry industry insights, product updates, and exclusive offers
+              Use this area for your approved article CTA, newsletter prompt, or resource download after launch content is ready.
             </p>
             <div className="max-w-md mx-auto flex gap-3">
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Enter a placeholder email"
                 className="flex-1 px-6 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-600 border-none"
               />
               <button className="bg-primary-600 text-white hover:bg-primary-500 px-8 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-primary-600/30">
-                Subscribe
+                Review CTA
               </button>
             </div>
           </div>

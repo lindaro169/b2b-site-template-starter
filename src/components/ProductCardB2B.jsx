@@ -69,7 +69,7 @@ export default function ProductCard({ product }) {
               className="w-full bg-stone-900 hover:bg-primary-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 text-sm shadow-sm"
             >
               <IconInquiry className="w-4 h-4" />
-              <span>Send Inquiry</span>
+              <span>Open Template Inquiry</span>
             </button>
 
             {/* View Details Button */}
@@ -78,7 +78,7 @@ export default function ProductCard({ product }) {
               href={`/product/${slug}`}
               className="w-full bg-white hover:bg-primary-50 text-stone-600 hover:text-primary-600 hover:border-primary-200 font-medium py-2.5 px-4 rounded-lg border border-stone-200 transition-colors duration-200 text-sm flex items-center justify-center"
             >
-              View Details
+              Open Details
             </Link>
           </div>
         </div>

@@ -21,16 +21,16 @@ export default function TermsConditionsPage() {
         <div className="bg-white shadow-sm rounded-xl p-8 sm:p-12">
           <header className="mb-10 text-center">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-              Terms & Conditions
+              Template Terms Placeholder
             </h1>
             <p className="text-lg text-gray-600">
-              Please read these terms carefully before using our website and services.
+              This page is a placeholder legal structure. Replace every clause, entity reference, and contact detail with approved production text before launch.
             </p>
           </header>
 
           <div className="prose prose-lg prose-gray max-w-none space-y-8">
             <section>
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Company Information</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Template Site Information</h2>
               <div className="bg-gray-50 rounded-lg p-6 text-gray-700 space-y-2 border border-gray-100">
                 <p><span className="font-semibold">Company Name:</span> {siteConfig.legalName}</p>
                 <p><span className="font-semibold">Address:</span> {siteConfig.addressLines.join(', ')}</p>
@@ -106,9 +106,9 @@ export default function TermsConditionsPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Customization and OEM Services</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Customization and Setup Options</h2>
               <p className="text-gray-600 leading-relaxed">
-                If you support customization or bespoke work, outline the real approval requirements here:
+                If you support customization, setup, or other optional services, outline the real approval requirements here:
               </p>
               <ul className="list-disc pl-6 mt-4 space-y-2 text-gray-600">
                 <li>Brief or specification requirements</li>
@@ -161,9 +161,9 @@ export default function TermsConditionsPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Contact Us</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Template Contact Information</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                For questions about these terms, please contact us:
+                The details below are mock placeholders for template review:
               </p>
               <div className="bg-gray-50 rounded-lg p-6 text-gray-700 space-y-2 border border-gray-100">
                 <p><span className="font-semibold">Email:</span> {siteConfig.contactEmail}</p>

@@ -8,7 +8,7 @@ import {
 
 describe('visitor tracking utilities', () => {
   it('detects google ads via gclid', () => {
-    const source = detectTrafficSource('https://template-catalog.example.com/contact?gclid=test123&utm_source=google&utm_medium=cpc');
+    const source = detectTrafficSource('https://template-site-placeholder.example/contact?gclid=test123&utm_source=google&utm_medium=cpc');
 
     expect(source.label).toBe('Google Ads');
     expect(source.channel).toBe('paid_search');
@@ -16,7 +16,7 @@ describe('visitor tracking utilities', () => {
   });
 
   it('detects bing organic search from referrer', () => {
-    const source = detectTrafficSource('https://template-catalog.example.com/products', 'https://www.bing.com/search?q=chakra+bracelet');
+    const source = detectTrafficSource('https://template-site-placeholder.example/products', 'https://www.bing.com/search?q=template+collection');
 
     expect(source.label).toBe('Bing Search');
     expect(source.channel).toBe('organic_search');

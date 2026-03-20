@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
+import { siteConfig } from '@/lib/site-config';
 
 interface TurnstileWidgetProps {
   onSuccess: (token: string) => void;
@@ -28,12 +29,23 @@ export default function TurnstileWidget({
     callbacksRef.current = { onSuccess, onError, onExpire };
   }, [onSuccess, onError, onExpire]);
 
+  useEffect(() => {
+    if (!siteConfig.templateMode) {
+      return;
+    }
+
+    callbacksRef.current.onSuccess(siteConfig.templateTurnstileToken);
+  }, [onSuccess]);
+
   const renderWidget = useCallback(() => {
+    if (siteConfig.templateMode) {
+      return;
+    }
+
     if (window.turnstile && containerRef.current) {
       const siteKey = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
       if (!siteKey) {
         console.error('❌ NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY is not configured');
-        console.log('Available env keys:', Object.keys(process.env).filter(k => k.includes('CLOUDFLARE')));
         return;
       }
 
@@ -41,8 +53,6 @@ export default function TurnstileWidget({
       if (widgetIdRef.current !== null) {
         return;
       }
-
-      console.log('✅ Rendering Turnstile widget with site key:', siteKey.substring(0, 10) + '...');
 
       // Render the Turnstile widget
       try {
@@ -76,6 +86,10 @@ export default function TurnstileWidget({
   }, [containerId, theme, size]);
 
   useEffect(() => {
+    if (siteConfig.templateMode) {
+      return;
+    }
+
     // Check if script is already loaded
     if (window.turnstile) {
       renderWidget();
@@ -112,6 +126,23 @@ export default function TurnstileWidget({
       }
     };
   }, [renderWidget]);
+
+  if (siteConfig.templateMode) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          margin: '20px 0',
+          minHeight: '65px',
+        }}
+      >
+        <div className="w-full rounded-lg border border-dashed border-stone-300 bg-stone-50 px-4 py-3 text-center text-sm text-stone-500">
+          模板模式已启用占位验证，不会加载真实 Turnstile 配置。
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

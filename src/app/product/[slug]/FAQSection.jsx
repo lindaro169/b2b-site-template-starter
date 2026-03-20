@@ -4,20 +4,20 @@ import { useState } from 'react';
 
 const FAQS = [
     {
-        q: 'What is the minimum order quantity?',
-        a: 'For our ready stock styles, the minimum is 5 pcs per style — you are welcome to mix different styles in one order. For custom style production (your own design / OEM), the minimum is 50 pcs per style.',
+        q: 'Can I publish these quantities and delivery notes as-is?',
+        a: 'No. This section is mock content only. Replace all quantity thresholds, lead times, and qualification rules with approved public information before launch.',
     },
     {
-        q: 'Can you do OEM / custom style production?',
-        a: 'Yes! If you have your own jewelry design or want us to produce an exclusive style for your brand, we offer OEM production with a minimum of 50 pcs per style. We can also assist with design adjustments, material selection, and sampling before bulk production.',
+        q: 'Where should I add approved specification details?',
+        a: 'Use this FAQ block for final requirements such as dimensions, packaging, fulfillment rules, or support scope after the responsible team signs off.',
     },
     {
-        q: 'Do you provide product certifications?',
-        a: 'Yes. We offer 925 Sterling Silver Certification and Natural Crystal Certification for applicable products. These are available upon request — please mention it when you send your inquiry.',
+        q: 'What should I do with compliance or trust claims?',
+        a: 'Keep them generic in staging. Add certifications, guarantees, or compliance wording only after legal and operations approve the exact language.',
     },
     {
-        q: 'What is the lead time?',
-        a: 'Ready stock items ship within 3–5 business days. OEM / custom style orders typically take 15–20 business days after order confirmation and deposit payment.',
+        q: 'Is it okay to leave these placeholders in a preview environment?',
+        a: 'Yes. A staging or review environment is the right place for placeholder FAQs while final launch content is still being prepared.',
     },
 ];
 
@@ -27,7 +27,7 @@ export default function FAQSection() {
     return (
         <section className="mb-10">
             <h2 className="font-serif text-xl font-bold text-stone-900 mb-4 pb-2 border-b border-stone-200">
-                Frequently Asked Questions
+                Template FAQ Placeholder
             </h2>
             <div className="divide-y divide-stone-200 border border-stone-200 rounded-xl overflow-hidden">
                 {FAQS.map((faq, i) => (

@@ -50,14 +50,14 @@ export async function initializeSampleBlogCategories() {
 
   const samples: BlogCategoryData[] = [
     {
-      name: 'Guide',
+      name: 'Template Guide',
       slug: 'guide',
-      description: 'Guides and tutorials for jewelry wholesale business',
+      description: '模板使用指南、配置说明与发布前检查项。',
     },
     {
-      name: 'Trends',
+      name: 'Template Updates',
       slug: 'trends',
-      description: 'Industry trends and market updates',
+      description: '模板更新记录、内容规划示例与占位文章分类。',
     },
   ];
 

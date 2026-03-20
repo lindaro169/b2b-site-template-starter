@@ -3,6 +3,7 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { verifyTurnstileToken } from '@/lib/validation';
 import { getD1Database, saveInquiryD1 } from '@/lib/d1-db';
 import { sendTrackedInquiryNotification } from '@/lib/email';
+import { siteConfig } from '@/lib/site-config';
 import {
   buildRequestGeoInfo,
   normalizeVisitorTrackingSnapshot,
@@ -57,20 +58,30 @@ export async function POST(request) {
       throw error;
     }
 
-    const turnstileSecret = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
-    if (!turnstileSecret) {
-      console.error('CLOUDFLARE_TURNSTILE_SECRET_KEY environment variable not set');
-      return Response.json(
-        {
-          success: false,
-          error: 'Server configuration error, please try again later',
-        },
-        { status: 500 }
-      );
-    }
-
     const turnstileToken = inquiryData.turnstileToken || inquiryData.turnstile_token || '';
-    const turnstileResult = await verifyTurnstileToken(turnstileToken, turnstileSecret);
+    let turnstileResult;
+
+    if (siteConfig.templateMode) {
+      turnstileResult = {
+        success: turnstileToken === siteConfig.templateTurnstileToken,
+        'error-codes':
+          turnstileToken === siteConfig.templateTurnstileToken ? [] : ['invalid_template_token'],
+      };
+    } else {
+      const turnstileSecret = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
+      if (!turnstileSecret) {
+        console.error('CLOUDFLARE_TURNSTILE_SECRET_KEY environment variable not set');
+        return Response.json(
+          {
+            success: false,
+            error: 'Server configuration error, please try again later',
+          },
+          { status: 500 }
+        );
+      }
+
+      turnstileResult = await verifyTurnstileToken(turnstileToken, turnstileSecret);
+    }
 
     if (!turnstileResult.success) {
       console.warn('Turnstile verification failed for inquiry:', {

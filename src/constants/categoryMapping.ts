@@ -1,99 +1,95 @@
 /**
- * 分类映射常数 (Category Mapping Constants)
+ * 分类映射常量
  *
- * 将前端URL中的分类slug映射到后端的categoryId
- * Maps frontend category slugs to backend category IDs
- *
- * 这使得前端可以使用语义化的分类名称（如 "healing-crystal-jewelry"）
- * 而后端管理分类时使用统一的ID
- *
- * 分类结构（树形）:
- * Tree structure:
- * - Healing Crystal Jewelry (ID: 1, parent_id: NULL)
- *   - Bracelets (ID: 11, parent_id: 1)
- *   - Necklaces (ID: 12, parent_id: 1)
- * - 925 Silver & Crystal Jewelry (ID: 2, parent_id: NULL)
- *   - Bracelets (ID: 21, parent_id: 2)
- *   - Necklaces (ID: 22, parent_id: 2)
- * ... etc
+ * 前台使用模板化的 mock slug，数据库仍可保留旧 slug。
+ * 读取层通过兼容映射把旧 slug 解析到同一个分类 ID，
+ * 这样既能统一用户可见 URL，也不会因为旧数据导致页面失效。
  */
 
-/**
- * 分类树形结构接口
- * Category tree structure interface
- */
 export interface Category {
   id: number;
   slug: string;
   name: string;
   description: string;
   icon: string;
-  parentId: number | null; // NULL for top-level categories
+  parentId: number | null;
   children?: Category[];
 }
 
-/**
- * 主分类（顶级分类）
- * Main categories (top-level)
- */
-export const MAIN_CATEGORIES: Category[] = [
+type MainCategoryDefinition = {
+  id: number;
+  slug: string;
+  legacySlug: string;
+  name: string;
+  description: string;
+  icon: string;
+};
+
+const MAIN_CATEGORY_DEFINITIONS: MainCategoryDefinition[] = [
   {
     id: 1,
-    slug: 'healing-crystal-jewelry',
-    name: 'Healing Crystal Jewelry',
+    slug: 'template-collection-a',
+    legacySlug: 'healing-crystal-jewelry',
+    name: 'Template Collection A',
     description:
-      'Natural healing crystal stones and beads jewelry for spiritual wellness and healing energy.',
+      'Placeholder category for pre-launch review, content structure checks, and future assortment replacement.',
     icon: '🔮',
-    parentId: null,
   },
   {
     id: 2,
-    slug: '925-silver-crystal-jewelry',
-    name: '925 Silver & Crystal Jewelry',
+    slug: 'template-collection-b',
+    legacySlug: '925-silver-crystal-jewelry',
+    name: 'Template Collection B',
     description:
-      'Premium 925 sterling silver jewelry combined with natural crystals and gemstones.',
+      'Placeholder category for alternate merchandising, hierarchy review, and demo navigation states.',
     icon: '✨',
-    parentId: null,
   },
   {
     id: 3,
-    slug: 'chakra-yoga-jewelry',
-    name: 'Chakra & Yoga Jewelry',
+    slug: 'template-collection-c',
+    legacySlug: 'chakra-yoga-jewelry',
+    name: 'Template Collection C',
     description:
-      'Chakra balancing jewelry and yoga-inspired accessories for meditation and spiritual practice.',
+      'Placeholder category for secondary assortment demos and section-level copy validation.',
     icon: '☮️',
-    parentId: null,
   },
   {
     id: 4,
-    slug: 'aromatherapy-jewelry',
-    name: 'Aromatherapy Jewelry',
+    slug: 'template-collection-d',
+    legacySlug: 'aromatherapy-jewelry',
+    name: 'Template Collection D',
     description:
-      'Diffuser jewelry and aromatherapy accessories for essential oils and natural wellness.',
+      'Placeholder category for accessory-style demos and safe internal review of page layouts.',
     icon: '🌿',
-    parentId: null,
   },
 ];
 
-/**
- * 子分类（每个主分类都有这两个子分类）
- * Subcategories (bracelets and necklaces for each main category)
- */
+export const MAIN_CATEGORIES: Category[] = MAIN_CATEGORY_DEFINITIONS.map(
+  (category) => ({
+    id: category.id,
+    slug: category.slug,
+    name: category.name,
+    description: category.description,
+    icon: category.icon,
+    parentId: null,
+  })
+);
+
 export const SUB_CATEGORIES: Record<number, Category[]> = {
   1: [
     {
       id: 11,
       slug: 'bracelets',
-      name: 'Bracelets',
-      description: 'Healing crystal bracelets',
+      name: 'Template Bracelets',
+      description: 'Placeholder bracelet entries for layout review',
       icon: '📿',
       parentId: 1,
     },
     {
       id: 12,
       slug: 'necklaces',
-      name: 'Necklaces',
-      description: 'Healing crystal necklaces',
+      name: 'Template Pendants',
+      description: 'Placeholder pendant entries for layout review',
       icon: '💎',
       parentId: 1,
     },
@@ -102,16 +98,16 @@ export const SUB_CATEGORIES: Record<number, Category[]> = {
     {
       id: 21,
       slug: 'bracelets',
-      name: 'Bracelets',
-      description: '925 silver crystal bracelets',
+      name: 'Template Bracelets',
+      description: 'Placeholder bracelet entries for layout review',
       icon: '📿',
       parentId: 2,
     },
     {
       id: 22,
       slug: 'necklaces',
-      name: 'Necklaces',
-      description: '925 silver crystal necklaces',
+      name: 'Template Pendants',
+      description: 'Placeholder pendant entries for layout review',
       icon: '💎',
       parentId: 2,
     },
@@ -120,16 +116,16 @@ export const SUB_CATEGORIES: Record<number, Category[]> = {
     {
       id: 31,
       slug: 'bracelets',
-      name: 'Bracelets',
-      description: 'Chakra and yoga bracelets',
+      name: 'Template Bracelets',
+      description: 'Placeholder bracelet entries for layout review',
       icon: '📿',
       parentId: 3,
     },
     {
       id: 32,
       slug: 'necklaces',
-      name: 'Necklaces',
-      description: 'Chakra and yoga necklaces',
+      name: 'Template Pendants',
+      description: 'Placeholder pendant entries for layout review',
       icon: '💎',
       parentId: 3,
     },
@@ -138,48 +134,34 @@ export const SUB_CATEGORIES: Record<number, Category[]> = {
     {
       id: 41,
       slug: 'bracelets',
-      name: 'Bracelets',
-      description: 'Aromatherapy diffuser bracelets',
+      name: 'Template Bracelets',
+      description: 'Placeholder bracelet entries for layout review',
       icon: '📿',
       parentId: 4,
     },
     {
       id: 42,
       slug: 'necklaces',
-      name: 'Necklaces',
-      description: 'Aromatherapy diffuser necklaces',
+      name: 'Template Pendants',
+      description: 'Placeholder pendant entries for layout review',
       icon: '💎',
       parentId: 4,
     },
   ],
 };
 
-/**
- * 旧的分类slug到ID的映射（保持向后兼容）
- * Legacy category slug to ID mapping (for backward compatibility)
- */
-export const CATEGORY_SLUG_TO_ID: Record<string, number> = {
-  'healing-crystal-jewelry': 1,
-  '925-silver-crystal-jewelry': 2,
-  'chakra-yoga-jewelry': 3,
-  'aromatherapy-jewelry': 4,
-};
+export const CATEGORY_SLUG_TO_ID: Record<string, number> = Object.fromEntries(
+  MAIN_CATEGORY_DEFINITIONS.map((category) => [category.slug, category.id])
+);
 
-/**
- * 旧的ID到分类slug的反向映射（保持向后兼容）
- * Legacy category ID to slug mapping (for backward compatibility)
- */
-export const CATEGORY_ID_TO_SLUG: Record<number, string> = {
-  1: 'healing-crystal-jewelry',
-  2: '925-silver-crystal-jewelry',
-  3: 'chakra-yoga-jewelry',
-  4: 'aromatherapy-jewelry',
-};
+export const LEGACY_CATEGORY_SLUG_TO_ID: Record<string, number> = Object.fromEntries(
+  MAIN_CATEGORY_DEFINITIONS.map((category) => [category.legacySlug, category.id])
+);
 
-/**
- * 旧的分类元数据（保持向后兼容）
- * Legacy category metadata (for backward compatibility)
- */
+export const CATEGORY_ID_TO_SLUG: Record<number, string> = Object.fromEntries(
+  MAIN_CATEGORY_DEFINITIONS.map((category) => [category.id, category.slug])
+);
+
 export const CATEGORY_METADATA: Record<
   string,
   {
@@ -187,147 +169,86 @@ export const CATEGORY_METADATA: Record<
     description: string;
     icon: string;
   }
-> = {
-  'healing-crystal-jewelry': {
-    name: 'Healing Crystal Jewelry',
-    description:
-      'Natural healing crystal stones and beads jewelry for spiritual wellness and healing energy.',
-    icon: '🔮',
-  },
-  '925-silver-crystal-jewelry': {
-    name: '925 Silver & Crystal Jewelry',
-    description:
-      'Premium 925 sterling silver jewelry combined with natural crystals and gemstones.',
-    icon: '✨',
-  },
-  'chakra-yoga-jewelry': {
-    name: 'Chakra & Yoga Jewelry',
-    description:
-      'Chakra balancing jewelry and yoga-inspired accessories for meditation and spiritual practice.',
-    icon: '☮️',
-  },
-  'aromatherapy-jewelry': {
-    name: 'Aromatherapy Jewelry',
-    description:
-      'Diffuser jewelry and aromatherapy accessories for essential oils and natural wellness.',
-    icon: '🌿',
-  },
-};
+> = Object.fromEntries(
+  MAIN_CATEGORY_DEFINITIONS.map((category) => [
+    category.slug,
+    {
+      name: category.name,
+      description: category.description,
+      icon: category.icon,
+    },
+  ])
+);
 
-/**
- * 产品类型（子分类的详细信息）
- * Product types (subtypes) - detailed information for product listing pages
- */
 export const PRODUCT_TYPES = {
   bracelets: {
-    name: 'Bracelets',
+    name: 'Template Bracelets',
     description:
-      'Elegant and powerful bracelets designed for daily wear. Each piece combines beauty with intention, perfect for your customers who seek both style and spiritual benefits.',
+      'Placeholder bracelet entries used to review filters, cards, and subcategory layouts before your real catalog is loaded.',
     icon: '📿',
     features: [
-      'Adjustable sizing for most wrists',
-      'Durable elastic cord or silver chains',
-      'High-quality natural stones',
-      'Suitable for layering and stacking',
+      'Replace this section title before publishing',
+      'Swap in approved imagery and pricing later',
+      'Useful for internal layout and hierarchy review',
+      'Safe placeholder content for staging demos',
     ],
   },
   necklaces: {
-    name: 'Necklaces',
+    name: 'Template Pendants',
     description:
-      'Stunning necklaces featuring carefully selected gemstones and crystals. These statement pieces are perfect for retailers looking to offer their customers elegant, meaningful jewelry.',
+      'Placeholder pendant and necklace entries used to validate navigation, imagery, and content density in the template.',
     icon: '💎',
     features: [
-      'Adjustable chain lengths available',
-      'Premium quality clasps',
-      'Natural gemstone pendants',
-      'Gift-ready packaging options',
+      'Replace this section title before publishing',
+      'Swap in approved imagery and pricing later',
+      'Useful for internal layout and hierarchy review',
+      'Safe placeholder content for staging demos',
     ],
   },
 };
 
-/**
- * 获取分类ID
- * Get category ID by slug
- * @param slug - 分类slug (category slug)
- * @returns 分类ID或undefined (category ID or undefined)
- */
 export function getCategoryId(slug: string): number | undefined {
-  return CATEGORY_SLUG_TO_ID[slug];
+  return CATEGORY_SLUG_TO_ID[slug] ?? LEGACY_CATEGORY_SLUG_TO_ID[slug];
 }
 
-/**
- * 获取分类Slug
- * Get category slug by ID
- * @param id - 分类ID (category ID)
- * @returns 分类slug或undefined (category slug or undefined)
- */
 export function getCategorySlug(id: number): string | undefined {
   return CATEGORY_ID_TO_SLUG[id];
 }
 
-/**
- * 获取分类名称
- * Get category name by slug
- * @param slug - 分类slug (category slug)
- * @returns 分类名称 (category name)
- */
+export function getCanonicalCategorySlug(slug: string): string | undefined {
+  const categoryId = getCategoryId(slug);
+  if (categoryId === undefined) {
+    return undefined;
+  }
+
+  return getCategorySlug(categoryId);
+}
+
 export function getCategoryName(slug: string): string {
-  return CATEGORY_METADATA[slug]?.name || slug;
+  const canonicalSlug = getCanonicalCategorySlug(slug) ?? slug;
+  return CATEGORY_METADATA[canonicalSlug]?.name || slug;
 }
 
-/**
- * 获取所有分类slug列表
- * Get list of all category slugs
- * @returns 分类slug数组 (array of category slugs)
- */
 export function getAllCategorySlugs(): string[] {
-  return Object.keys(CATEGORY_SLUG_TO_ID);
+  return MAIN_CATEGORIES.map((category) => category.slug);
 }
 
-/**
- * 验证分类slug是否有效
- * Validate if category slug is valid
- * @param slug - 分类slug (category slug)
- * @returns 是否有效 (is valid)
- */
 export function isValidCategorySlug(slug: string): boolean {
-  return CATEGORY_SLUG_TO_ID.hasOwnProperty(slug);
+  return getCategoryId(slug) !== undefined;
 }
 
-/**
- * 验证产品类型是否有效
- * Validate if product type is valid
- * @param type - 产品类型 (product type)
- * @returns 是否有效 (is valid)
- */
 export function isValidProductType(type: string): boolean {
-  return PRODUCT_TYPES.hasOwnProperty(type);
+  return Object.prototype.hasOwnProperty.call(PRODUCT_TYPES, type);
 }
 
-/**
- * 获取主分类列表（顶级分类）
- * Get main categories (top-level categories)
- * @returns 主分类数组 (array of main categories)
- */
 export function getMainCategories(): Category[] {
   return MAIN_CATEGORIES;
 }
 
-/**
- * 获取子分类列表
- * Get subcategories for a main category
- * @param parentId - 主分类ID (main category ID)
- * @returns 子分类数组 (array of subcategories)
- */
 export function getSubCategories(parentId: number): Category[] {
   return SUB_CATEGORIES[parentId] || [];
 }
 
-/**
- * 获取完整的分类树
- * Get full category tree with children
- * @returns 分类树（包含children）(category tree with children)
- */
 export function getCategoryTree(): Category[] {
   return MAIN_CATEGORIES.map((category) => ({
     ...category,
@@ -335,76 +256,57 @@ export function getCategoryTree(): Category[] {
   }));
 }
 
-/**
- * 获取分类信息（按ID）
- * Get category by ID
- * @param id - 分类ID (category ID)
- * @returns 分类对象或undefined
- */
 export function getCategoryById(id: number): Category | undefined {
-  // 检查主分类
-  const mainCategory = MAIN_CATEGORIES.find((cat) => cat.id === id);
-  if (mainCategory) return mainCategory;
+  const mainCategory = MAIN_CATEGORIES.find((category) => category.id === id);
+  if (mainCategory) {
+    return mainCategory;
+  }
 
-  // 检查所有子分类
   for (const subcategories of Object.values(SUB_CATEGORIES)) {
-    const subCategory = subcategories.find((cat) => cat.id === id);
-    if (subCategory) return subCategory;
+    const subCategory = subcategories.find((category) => category.id === id);
+    if (subCategory) {
+      return subCategory;
+    }
   }
 
   return undefined;
 }
 
-/**
- * 获取分类信息（按slug）
- * Get category by slug
- * @param slug - 分类slug (category slug)
- * @returns 分类对象或undefined
- */
 export function getCategoryBySlug(slug: string): Category | undefined {
-  // 检查主分类
-  const mainCategory = MAIN_CATEGORIES.find((cat) => cat.slug === slug);
-  if (mainCategory) return mainCategory;
+  const canonicalSlug = getCanonicalCategorySlug(slug);
+  if (canonicalSlug) {
+    return MAIN_CATEGORIES.find((category) => category.slug === canonicalSlug);
+  }
 
-  // 检查所有子分类
   for (const subcategories of Object.values(SUB_CATEGORIES)) {
-    const subCategory = subcategories.find((cat) => cat.slug === slug);
-    if (subCategory) return subCategory;
+    const subCategory = subcategories.find((category) => category.slug === slug);
+    if (subCategory) {
+      return subCategory;
+    }
   }
 
   return undefined;
 }
 
-/**
- * 获取主分类对应的子分类（按主分类slug）
- * Get subcategories by main category slug
- * @param mainCategorySlug - 主分类slug (main category slug)
- * @returns 子分类数组 (array of subcategories)
- */
 export function getSubCategoriesByMainSlug(mainCategorySlug: string): Category[] {
-  const mainCategory = MAIN_CATEGORIES.find((cat) => cat.slug === mainCategorySlug);
-  if (!mainCategory) return [];
-  return getSubCategories(mainCategory.id);
+  const categoryId = getCategoryId(mainCategorySlug);
+  if (categoryId === undefined) {
+    return [];
+  }
+
+  return getSubCategories(categoryId);
 }
 
-/**
- * 验证是否为主分类slug
- * Check if slug is a main category
- * @param slug - 分类slug (category slug)
- * @returns 是否为主分类 (is main category)
- */
 export function isMainCategorySlug(slug: string): boolean {
-  return MAIN_CATEGORIES.some((cat) => cat.slug === slug);
+  const categoryId = getCategoryId(slug);
+  if (categoryId === undefined) {
+    return false;
+  }
+
+  return MAIN_CATEGORIES.some((category) => category.id === categoryId);
 }
 
-/**
- * 验证是否为子分类slug（在特定主分类下）
- * Check if slug is a subcategory of main category
- * @param mainSlug - 主分类slug (main category slug)
- * @param subSlug - 子分类slug (subcategory slug)
- * @returns 是否为该主分类的子分类 (is subcategory of main)
- */
 export function isSubCategorySlug(mainSlug: string, subSlug: string): boolean {
   const subcategories = getSubCategoriesByMainSlug(mainSlug);
-  return subcategories.some((cat) => cat.slug === subSlug);
+  return subcategories.some((category) => category.slug === subSlug);
 }

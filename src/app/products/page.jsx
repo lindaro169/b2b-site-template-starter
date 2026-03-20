@@ -6,12 +6,13 @@ import IconChakra from '@/components/icons/IconChakra';
 import IconAromatherapy from '@/components/icons/IconAromatherapy';
 import Link from 'next/link';
 import TemplateCopyBadge from '@/components/TemplateCopyBadge';
-import { fetchProductCategories, fetchFAQs } from '@/lib/api-jewelry';
 import ProductCardB2B from '@/components/ProductCardB2B';
 import { getProducts } from '@/lib/products';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getD1Database } from '@/lib/d1-db';
+import { getFAQs } from '@/lib/faqs';
 import { siteConfig } from '@/lib/site-config';
+import { MAIN_CATEGORIES } from '@/constants/categoryMapping';
 
 export const metadata = {
   title: `Demo Collections — ${siteConfig.brandName}`,
@@ -19,39 +20,18 @@ export const metadata = {
 };
 
 const categoryIcons = {
-  'healing-crystal-jewelry': IconCrystal,
-  '925-silver-crystal-jewelry': IconSilver,
-  'chakra-yoga-jewelry': IconChakra,
-  'aromatherapy-jewelry': IconAromatherapy,
+  'template-collection-a': IconCrystal,
+  'template-collection-b': IconSilver,
+  'template-collection-c': IconChakra,
+  'template-collection-d': IconAromatherapy,
 };
 
-// Fallback categories if Strapi data is not available
-const defaultCategories = [
-  {
-    name: 'Quartz Capsule Line',
-    slug: 'healing-crystal-jewelry',
-    description: 'Mock bracelets and pendants used to review collection cards.',
-    image: { url: siteConfig.scenePlaceholder },
-  },
-  {
-    name: 'Silver Studio Line',
-    slug: '925-silver-crystal-jewelry',
-    description: 'Mock silver-tone assortment for sanitized product demos.',
-    image: { url: siteConfig.scenePlaceholder },
-  },
-  {
-    name: 'Mindful Ritual Edit',
-    slug: 'chakra-yoga-jewelry',
-    description: 'Mock wellness line used to test navigation and content depth.',
-    image: { url: siteConfig.scenePlaceholder },
-  },
-  {
-    name: 'Aroma Companion Series',
-    slug: 'aromatherapy-jewelry',
-    description: 'Mock diffuser accessories with placeholder visuals.',
-    image: { url: siteConfig.scenePlaceholder },
-  },
-];
+const defaultCategories = MAIN_CATEGORIES.map((category) => ({
+  name: category.name,
+  slug: category.slug,
+  description: category.description,
+  image: { url: siteConfig.scenePlaceholder },
+}));
 
 const defaultFAQs = [
   {
@@ -93,11 +73,11 @@ function transformProductData(apiProduct) {
     moq: apiProduct.moq || 50,
     price: apiProduct.price,
     leadTime: apiProduct.leadTime || '7-10 days',
-    material: apiProduct.material || 'Natural Crystal',
+    material: apiProduct.material || 'Template Material Placeholder',
     color: 'Mixed',
     isBestSeller: false,
     inStock: apiProduct.isActive,
-    tags: apiProduct.tags || ['jewelry', 'crystal'],
+    tags: apiProduct.tags || ['template', 'catalog'],
     category: {
       slug: apiProduct.category?.slug || '',
       name: apiProduct.category?.name || ''
@@ -109,35 +89,22 @@ export default async function ProductsPage() {
   let categories = defaultCategories;
   let faqs = defaultFAQs;
   let allProducts = [];
+  let db;
 
   try {
-    const [stratiCategories, strapiFAQs] = await Promise.all([
-      fetchProductCategories().catch(() => null),
-      fetchFAQs({ section: { $eq: 'products' } }).catch(() => null),
-    ]);
+    const { env } = await getCloudflareContext();
+    db = env?.DB ? getD1Database(env.DB) : undefined;
+  } catch {
+    db = undefined;
+  }
 
-    if (stratiCategories && stratiCategories.length > 0) {
-      categories = stratiCategories;
-    }
-
-    if (strapiFAQs && strapiFAQs.length > 0) {
-      faqs = strapiFAQs;
-    }
-  } catch (error) {
-    console.error('Error fetching data from Strapi:', error);
-    // Use default categories and FAQs
+  const faqResult = await getFAQs(db);
+  if (faqResult.success && faqResult.data && faqResult.data.length > 0) {
+    faqs = faqResult.data;
   }
 
   // Fetch all products from D1 database
   try {
-    let db;
-    try {
-      const { env } = await getCloudflareContext();
-      db = getD1Database(env.DB);
-    } catch {
-      db = getD1Database();
-    }
-
     const result = await getProducts({
       limit: 100,
       isActive: true,
@@ -191,10 +158,10 @@ export default async function ProductsPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900 mb-4">
-                All Products
+                All Placeholder Products
               </h2>
               <p className="text-lg text-stone-500">
-                Browse {allProducts.length} placeholder products currently included in the sanitized template
+                Browse {allProducts.length} placeholder items currently included in this sanitized template
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

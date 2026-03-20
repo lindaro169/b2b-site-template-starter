@@ -18,35 +18,35 @@ export default function HeaderJewelry() {
       href: '/products',
       dropdown: [
         {
-          name: 'Quartz Capsule Line',
-          href: '/products/healing-crystal-jewelry',
+          name: 'Template Collection A',
+          href: '/products/template-collection-a',
           subItems: [
-            { name: 'Bracelet Mockups', href: '/products/healing-crystal-jewelry/bracelets' },
-            { name: 'Pendant Mockups', href: '/products/healing-crystal-jewelry/necklaces' },
+            { name: 'Template Bracelets', href: '/products/template-collection-a/bracelets' },
+            { name: 'Template Pendants', href: '/products/template-collection-a/necklaces' },
           ]
         },
         {
-          name: 'Silver Studio Line',
-          href: '/products/925-silver-crystal-jewelry',
+          name: 'Template Collection B',
+          href: '/products/template-collection-b',
           subItems: [
-            { name: 'Bracelet Mockups', href: '/products/925-silver-crystal-jewelry/bracelets' },
-            { name: 'Pendant Mockups', href: '/products/925-silver-crystal-jewelry/necklaces' },
+            { name: 'Template Bracelets', href: '/products/template-collection-b/bracelets' },
+            { name: 'Template Pendants', href: '/products/template-collection-b/necklaces' },
           ]
         },
         {
-          name: 'Mindful Ritual Edit',
-          href: '/products/chakra-yoga-jewelry',
+          name: 'Template Collection C',
+          href: '/products/template-collection-c',
           subItems: [
-            { name: 'Bracelet Mockups', href: '/products/chakra-yoga-jewelry/bracelets' },
-            { name: 'Pendant Mockups', href: '/products/chakra-yoga-jewelry/necklaces' },
+            { name: 'Template Bracelets', href: '/products/template-collection-c/bracelets' },
+            { name: 'Template Pendants', href: '/products/template-collection-c/necklaces' },
           ]
         },
         {
-          name: 'Aroma Companion Series',
-          href: '/products/aromatherapy-jewelry',
+          name: 'Template Collection D',
+          href: '/products/template-collection-d',
           subItems: [
-            { name: 'Charm Mockups', href: '/products/aromatherapy-jewelry/bracelets' },
-            { name: 'Capsule Mockups', href: '/products/aromatherapy-jewelry/necklaces' },
+            { name: 'Template Bracelets', href: '/products/template-collection-d/bracelets' },
+            { name: 'Template Pendants', href: '/products/template-collection-d/necklaces' },
           ]
         },
       ]
