@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { siteConfig } from '@/lib/site-config';
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -17,7 +18,7 @@ const socialIcons = {
 
 export default function SocialShare() {
   const pathname = usePathname();
-  const fullUrl = new URL(pathname, process.env.NEXT_PUBLIC_WEBSITE).href;
+  const fullUrl = new URL(pathname, siteConfig.websiteUrl).href;
 
   return (
     <dl className="flex flex-col gap-2 not-prose">

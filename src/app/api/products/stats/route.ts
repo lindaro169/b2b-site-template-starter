@@ -22,6 +22,7 @@ import { NextResponse } from 'next/server';
 import { getProductStats } from '@/lib/products';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getD1Database, D1Database } from '@/lib/d1-db';
+import { siteConfig } from '@/lib/site-config';
 
 interface CloudflareEnv {
   DB: D1Database;
@@ -29,6 +30,17 @@ interface CloudflareEnv {
 
 export async function GET() {
   try {
+    if (siteConfig.templateMode) {
+      return NextResponse.json(
+        {
+          success: true,
+          data: siteConfig.placeholderMetrics.products,
+          isPlaceholder: true,
+        },
+        { status: 200 }
+      );
+    }
+
     let db: D1Database | undefined;
     try {
       const { env } = await getCloudflareContext();

@@ -9,9 +9,18 @@ import { siteConfig } from '@/lib/site-config';
  * 因为在 Workers 上直接访问 process.env.NEXT_PUBLIC_* 在客户端可能不可用
  */
 export async function GET() {
+  if (siteConfig.templateMode) {
+    return NextResponse.json({
+      googleClientId: siteConfig.googleClientId,
+      website: siteConfig.websiteUrl,
+      turnstileSiteKey: siteConfig.turnstileSiteKey,
+      isPlaceholder: true,
+    });
+  }
+
   return NextResponse.json({
     googleClientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '',
-    website: process.env.NEXT_PUBLIC_WEBSITE || siteConfig.websiteUrl,
+    website: siteConfig.websiteUrl,
     turnstileSiteKey: process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || '',
   });
 }

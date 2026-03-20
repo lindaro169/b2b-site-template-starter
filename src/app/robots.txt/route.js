@@ -1,7 +1,7 @@
 import { siteConfig } from '@/lib/site-config';
 
 export async function GET() {
-    const baseUrl = process.env.NEXT_PUBLIC_WEBSITE || siteConfig.websiteUrl
+    const baseUrl = siteConfig.websiteUrl
 
     const robotsTxt = `# robots.txt
 # ==========================================

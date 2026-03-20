@@ -1,3 +1,5 @@
+import { siteConfig } from './site-config';
+
 export interface TurnstileVerifyResponse {
     success: boolean;
     challenge_ts?: string;
@@ -17,6 +19,10 @@ export async function verifyTurnstileToken(
     token: string,
     secretKey: string
 ): Promise<TurnstileVerifyResponse> {
+    if (siteConfig.templateMode && token === siteConfig.templateTurnstileToken) {
+        return { success: true };
+    }
+
     if (!token || !secretKey) {
         return {
             success: false,

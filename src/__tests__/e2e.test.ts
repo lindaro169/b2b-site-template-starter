@@ -7,7 +7,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { SignJWT } from 'jose';
 
 const API_BASE_URL = 'http://localhost:3002';
-const JWT_SECRET = process.env.JWT_SECRET || '0b5fc4d75a674164e453a672d75c33f09323abbf0593b7d7847e397540ac6c19';
+const JWT_SECRET = process.env.JWT_SECRET || 'template-jwt-secret';
 
 /**
  * Helper function to generate JWT token for testing

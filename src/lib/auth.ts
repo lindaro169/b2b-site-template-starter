@@ -23,12 +23,12 @@ export async function initAuth() {
 
     const processEnv = process.env as NodeJS.ProcessEnv & { DB?: D1Database };
     let dbBinding = processEnv.DB;
-    let websiteUrl = process.env.NEXT_PUBLIC_WEBSITE;
-    let betterAuthSecret = process.env.BETTER_AUTH_SECRET;
-    let googleClientId = process.env.GOOGLE_CLIENT_ID;
-    let googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+    let websiteUrl = siteConfig.templateMode ? siteConfig.websiteUrl : process.env.NEXT_PUBLIC_WEBSITE;
+    let betterAuthSecret = siteConfig.templateMode ? siteConfig.betterAuthSecret : process.env.BETTER_AUTH_SECRET;
+    let googleClientId = siteConfig.templateMode ? siteConfig.googleClientId : process.env.GOOGLE_CLIENT_ID;
+    let googleClientSecret = siteConfig.templateMode ? siteConfig.googleClientSecret : process.env.GOOGLE_CLIENT_SECRET;
 
-    if (!dbBinding || !websiteUrl || !betterAuthSecret) {
+    if (!siteConfig.templateMode && (!dbBinding || !websiteUrl || !betterAuthSecret)) {
         try {
             const ctx = await getCloudflareContext();
             if (ctx && ctx.env) {

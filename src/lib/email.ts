@@ -43,11 +43,14 @@ export interface EmailResult {
 }
 
 const RESEND_API_URL = 'https://api.resend.com/emails';
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || siteConfig.contactEmail;
-const ADMIN_EMAIL =
-  process.env.SALES_NOTIFICATION_EMAIL ||
-  process.env.ADMIN_EMAIL ||
-  siteConfig.contactEmail;
+const FROM_EMAIL = siteConfig.templateMode
+  ? siteConfig.contactEmail
+  : process.env.RESEND_FROM_EMAIL || siteConfig.contactEmail;
+const ADMIN_EMAIL = siteConfig.templateMode
+  ? siteConfig.adminEmail
+  : process.env.SALES_NOTIFICATION_EMAIL ||
+    process.env.ADMIN_EMAIL ||
+    siteConfig.contactEmail;
 
 function escapeHtml(value: string): string {
   return value
@@ -117,6 +120,13 @@ function renderTrackingDetails(
 export async function sendEmail(
   options: SendEmailOptions
 ): Promise<EmailResult> {
+  if (siteConfig.templateMode) {
+    return {
+      success: true,
+      id: 'template-email-disabled',
+    };
+  }
+
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {

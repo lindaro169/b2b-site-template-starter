@@ -12,6 +12,8 @@
  * 免费额度：10GB 存储空间/月
  */
 
+import { siteConfig } from './site-config';
+
 export interface R2PutOptions {
   httpMetadata?: { contentType?: string };
   customMetadata?: Record<string, string>;
@@ -73,7 +75,7 @@ export interface DeleteResult {
   error?: string;
 }
 
-const PUBLIC_URL_BASE = 'https://assets.crystalconnect.com';
+const PUBLIC_URL_BASE = `https://${siteConfig.assetHost}`;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 /**

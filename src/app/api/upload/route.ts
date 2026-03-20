@@ -18,7 +18,7 @@
  * 响应 (200):
  * {
  *   success: true
- *   url: "https://assets.crystalconnect.com/...",
+ *   url: "https://assets.template-site-placeholder.example/...",
  *   key: "products/...",
  *   size: 1024000
  * }
@@ -33,6 +33,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { verifyAuth } from '@/lib/auth';
+import { siteConfig } from '@/lib/site-config';
 import {
   uploadProductImage,
   uploadBlogImage,
@@ -146,7 +147,7 @@ export async function POST(request: NextRequest) {
 
       // 返回模拟的 URL（用于本地开发）
       const mockKey = `${uploadType}/${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${file.name.split('.').pop()}`;
-      const mockUrl = `https://mock-assets.crystalconnect.com/${mockKey}`;
+      const mockUrl = `https://${siteConfig.assetHost}/mock/${mockKey}`;
 
       return NextResponse.json(
         {

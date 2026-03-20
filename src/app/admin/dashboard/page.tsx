@@ -24,10 +24,18 @@ interface Stats {
 export default function AdminDashboard() {
   const { token } = useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(siteConfig.templateMode ? false : true);
   const [error, setError] = useState<string | null>(null);
+  const showPlaceholderMetrics = siteConfig.templateMode;
+  const placeholderStats = siteConfig.placeholderMetrics;
 
   useEffect(() => {
+    if (showPlaceholderMetrics) {
+      setStats(null);
+      setLoading(false);
+      return;
+    }
+
     const fetchStats = async () => {
       if (!token) return;
 
@@ -64,13 +72,17 @@ export default function AdminDashboard() {
     };
 
     fetchStats();
-  }, [token]);
+  }, [token, showPlaceholderMetrics]);
 
   return (
     <div className={styles.dashboard}>
       <div className={styles.header}>
         <h1>仪表盘</h1>
-        <p className={styles.subtitle}>欢迎回到 {siteConfig.shortName} 管理系统</p>
+        <p className={styles.subtitle}>
+          {showPlaceholderMetrics
+            ? `当前为 ${siteConfig.shortName} 模板演示指标`
+            : `欢迎回到 ${siteConfig.shortName} 管理系统`}
+        </p>
       </div>
 
       {error && <div className={styles.error}>{error}</div>}
@@ -89,19 +101,21 @@ export default function AdminDashboard() {
               <div className={styles.cardContent}>
                 <div className={styles.statItem}>
                   <span className={styles.label}>总产品数</span>
-                  <span className={styles.value}>{stats?.products.total || 0}</span>
+                  <span className={styles.value}>{showPlaceholderMetrics ? placeholderStats.products.total : stats?.products.total || 0}</span>
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.label}>已激活</span>
-                  <span className={styles.valueGreen}>{stats?.products.active || 0}</span>
+                  <span className={styles.valueGreen}>{showPlaceholderMetrics ? placeholderStats.products.active : stats?.products.active || 0}</span>
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.label}>已禁用</span>
-                  <span className={styles.valueRed}>{stats?.products.inactive || 0}</span>
+                  <span className={styles.valueRed}>{showPlaceholderMetrics ? placeholderStats.products.inactive : stats?.products.inactive || 0}</span>
                 </div>
                 <div className={styles.statItem}>
-                  <span className={styles.label}>平均价格</span>
-                  <span className={styles.value}>¥{stats?.products.avgPrice?.toFixed(2) || '0.00'}</span>
+                  <span className={styles.label}>演示均价</span>
+                  <span className={styles.value}>
+                    ¥{showPlaceholderMetrics ? placeholderStats.products.avgPrice.toFixed(2) : stats?.products.avgPrice?.toFixed(2) || '0.00'}
+                  </span>
                 </div>
               </div>
               <div className={styles.cardFooter}>
@@ -119,20 +133,22 @@ export default function AdminDashboard() {
               <div className={styles.cardContent}>
                 <div className={styles.statItem}>
                   <span className={styles.label}>总文章数</span>
-                  <span className={styles.value}>{stats?.posts.total || 0}</span>
+                  <span className={styles.value}>{showPlaceholderMetrics ? placeholderStats.posts.total : stats?.posts.total || 0}</span>
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.label}>已发布</span>
-                  <span className={styles.valueGreen}>{stats?.posts.published || 0}</span>
+                  <span className={styles.valueGreen}>{showPlaceholderMetrics ? placeholderStats.posts.published : stats?.posts.published || 0}</span>
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.label}>草稿</span>
-                  <span className={styles.valueYellow}>{stats?.posts.draft || 0}</span>
+                  <span className={styles.valueYellow}>{showPlaceholderMetrics ? placeholderStats.posts.draft : stats?.posts.draft || 0}</span>
                 </div>
                 <div className={styles.statItem}>
-                  <span className={styles.label}>发布率</span>
+                  <span className={styles.label}>演示发布率</span>
                   <span className={styles.value}>
-                    {stats?.posts.total ? ((stats.posts.published / stats.posts.total) * 100).toFixed(1) : '0'}%
+                    {showPlaceholderMetrics
+                      ? `${((placeholderStats.posts.published / placeholderStats.posts.total) * 100).toFixed(1)}%`
+                      : `${stats?.posts.total ? ((stats.posts.published / stats.posts.total) * 100).toFixed(1) : '0'}%`}
                   </span>
                 </div>
               </div>
@@ -169,7 +185,7 @@ export default function AdminDashboard() {
           <div className={styles.section}>
             <h2>最近活动</h2>
             <div className={styles.emptyState}>
-              <p>暂无最近活动记录</p>
+              <p>{showPlaceholderMetrics ? '当前显示模板占位状态，无真实运营活动记录。' : '暂无最近活动记录'}</p>
             </div>
           </div>
         </>

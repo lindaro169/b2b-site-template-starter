@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { siteConfig } from '@/lib/site-config'
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -22,6 +23,11 @@ export default function RegisterForm() {
 
   // 加载 Turnstile 脚本
   useEffect(() => {
+    if (siteConfig.templateMode) {
+      setTurnstileReady(true)
+      return
+    }
+
     const script = document.createElement('script')
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
     script.async = true
@@ -129,6 +135,12 @@ export default function RegisterForm() {
     setLoading(true)
 
     try {
+      if (siteConfig.templateMode) {
+        setError('模板模式下已禁用真实后台注册')
+        setLoading(false)
+        return
+      }
+
       // 前端验证
       if (!validateForm()) {
         setLoading(false)
@@ -354,16 +366,22 @@ export default function RegisterForm() {
 
         {/* Turnstile Widget */}
         <div className="flex justify-center">
-          <div ref={containerRef} className="w-full" />
+          {siteConfig.templateMode ? (
+            <div className="w-full rounded-lg border border-dashed border-stone-300 bg-stone-50 px-4 py-3 text-center text-sm text-stone-500">
+              模板模式下不加载真实 Turnstile 配置。
+            </div>
+          ) : (
+            <div ref={containerRef} className="w-full" />
+          )}
         </div>
 
         {/* 注册按钮 */}
         <button
           type="submit"
-          disabled={loading || !turnstileReady}
+          disabled={siteConfig.templateMode || loading || !turnstileReady}
           className="w-full py-2.5 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {loading ? '注册中...' : '注册'}
+          {siteConfig.templateMode ? '模板模式下已禁用' : loading ? '注册中...' : '注册'}
         </button>
 
         {/* 登录链接 */}

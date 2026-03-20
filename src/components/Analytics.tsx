@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 import { GA_MEASUREMENT_ID, NORMALIZED_GOOGLE_ADS_ID, pageview } from '@/lib/gtag';
+import { siteConfig } from '@/lib/site-config';
 
 interface AnalyticsProps {
     /** Microsoft Clarity Project ID (可选) */
@@ -55,6 +56,11 @@ export default function Analytics({ clarityProjectId }: AnalyticsProps) {
         const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
         pageview(url);
     }, [pathname, searchParams, hasConsent, isLoaded]);
+
+    // 模板模式默认关闭真实分析脚本，避免暴露真实 ID 或采集真实访问数据
+    if (!siteConfig.enableAnalytics) {
+        return null;
+    }
 
     // 如果没有任何 Google Tag 或用户未同意，不渲染任何内容
     if (!primaryGoogleTagId || !hasConsent) {
