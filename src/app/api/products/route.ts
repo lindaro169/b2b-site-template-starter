@@ -49,9 +49,12 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getProducts } from '@/lib/products';
+import { z } from 'zod';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getD1Database, D1Database } from '@/lib/d1-db';
+import { apiErrorResponse } from '@/lib/api-response';
+import { verifyAuth } from '@/lib/auth';
+import { createProduct, getProducts, ProductData } from '@/lib/products';
 
 interface CloudflareEnv {
   DB: D1Database;
@@ -98,23 +101,11 @@ export async function GET(request: NextRequest) {
 
     // Validate parameters
     if (limit < 1 || limit > 100) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'limit 必须在 1-100 之间',
-        },
-        { status: 400 }
-      );
+      return apiErrorResponse('limit 必须在 1-100 之间', 400);
     }
 
     if (offset < 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'offset 不能为负数',
-        },
-        { status: 400 }
-      );
+      return apiErrorResponse('offset 不能为负数', 400);
     }
 
     // Fetch products
@@ -130,13 +121,7 @@ export async function GET(request: NextRequest) {
     }, db);
 
     if (!result.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: result.error,
-        },
-        { status: 500 }
-      );
+      return apiErrorResponse(result.error || '获取产品列表失败', 500);
     }
 
     const page = Math.floor(offset / limit) + 1;
@@ -156,15 +141,7 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     console.error('Get products error:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: '获取产品列表失败',
-        details: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      },
-      { status: 500 }
-    );
+    return apiErrorResponse('获取产品列表失败', 500);
   }
 }
 
@@ -196,10 +173,6 @@ export async function GET(request: NextRequest) {
  * 409 - Slug already exists
  * 500 - Server error
  */
-
-import { z } from 'zod';
-import { verifyAuth } from '@/lib/auth';
-import { createProduct, ProductData } from '@/lib/products';
 
 const createProductSchema = z.object({
   // 基础字段
@@ -276,10 +249,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!session) {
-      return NextResponse.json(
-        { success: false, error: '未授权访问' },
-        { status: 401 }
-      );
+      return apiErrorResponse('未授权访问', 401);
     }
 
     // Parse and validate request body
@@ -293,13 +263,7 @@ export async function POST(request: NextRequest) {
         const messages = error.errors
           .map((err) => `${err.path.join('.')}: ${err.message}`)
           .join('; ');
-        return NextResponse.json(
-          {
-            success: false,
-            error: `验证错误: ${messages}`,
-          },
-          { status: 400 }
-        );
+        return apiErrorResponse(`验证错误: ${messages}`, 400);
       }
       throw error;
     }
@@ -309,13 +273,7 @@ export async function POST(request: NextRequest) {
 
     if (!result.success) {
       const statusCode = result.error?.includes('已存在') ? 409 : 400;
-      return NextResponse.json(
-        {
-          success: false,
-          error: result.error,
-        },
-        { status: statusCode }
-      );
+      return apiErrorResponse(result.error || '创建产品失败', statusCode);
     }
 
     console.info('Product created:', {
@@ -334,13 +292,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error('Create product error:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: '创建产品失败',
-      },
-      { status: 500 }
-    );
+    return apiErrorResponse('创建产品失败', 500);
   }
 }
 
