@@ -33,6 +33,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { verifyAuth } from '@/lib/auth';
+import { apiErrorResponse } from '@/lib/api-response';
 import { siteConfig } from '@/lib/site-config';
 import {
   uploadProductImage,
@@ -71,10 +72,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!session) {
-      return NextResponse.json(
-        { success: false, error: '未授权访问' },
-        { status: 401 }
-      );
+      return apiErrorResponse('未授权访问', 401);
     }
 
     // 2. 解析 multipart 表单数据
@@ -85,47 +83,29 @@ export async function POST(request: NextRequest) {
 
     // 3. 验证输入
     if (!file) {
-      return NextResponse.json(
-        { success: false, error: '缺少文件' },
-        { status: 400 }
-      );
+      return apiErrorResponse('缺少文件', 400);
     }
 
     if (!uploadType) {
-      return NextResponse.json(
-        { success: false, error: '缺少上传类型' },
-        { status: 400 }
-      );
+      return apiErrorResponse('缺少上传类型', 400);
     }
 
     if (!['product', 'blog', 'avatar'].includes(uploadType)) {
-      return NextResponse.json(
-        { success: false, error: '无效的上传类型' },
-        { status: 400 }
-      );
+      return apiErrorResponse('无效的上传类型', 400);
     }
 
     // 4. 检查文件大小
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: `文件大小超过限制 (最大 ${MAX_FILE_SIZE / 1024 / 1024}MB)`,
-        },
-        { status: 400 }
+      return apiErrorResponse(
+        `文件大小超过限制 (最大 ${MAX_FILE_SIZE / 1024 / 1024}MB)`,
+        400
       );
     }
 
     // 5. 检查文件类型
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
     if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '不支持的文件类型。仅支持：JPEG, PNG, GIF, WebP, SVG',
-        },
-        { status: 400 }
-      );
+      return apiErrorResponse('不支持的文件类型。仅支持：JPEG, PNG, GIF, WebP, SVG', 400);
     }
 
     // 6. 转换文件为 Buffer
@@ -198,22 +178,13 @@ export async function POST(request: NextRequest) {
           break;
 
         default:
-          return NextResponse.json(
-            { success: false, error: '未知的上传类型' },
-            { status: 400 }
-          );
+          return apiErrorResponse('未知的上传类型', 400);
       }
     }
 
     if (!uploadResult.success) {
       console.error('上传失败:', uploadResult.error);
-      return NextResponse.json(
-        {
-          success: false,
-          error: uploadResult.error || '文件上传失败',
-        },
-        { status: 500 }
-      );
+      return apiErrorResponse('文件上传失败', 500);
     }
 
     // 9. 记录上传日志
@@ -238,14 +209,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error('文件上传错误:', error);
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : '文件上传失败',
-      },
-      { status: 500 }
-    );
+    return apiErrorResponse('文件上传失败', 500);
   }
 }
 

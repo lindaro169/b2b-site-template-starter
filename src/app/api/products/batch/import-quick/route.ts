@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAuth } from '@/lib/auth';
+import { apiErrorResponse } from '@/lib/api-response';
 
 type XLSXModule = typeof import('xlsx');
 type JSZipModule = typeof import('jszip');
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
     // 验证用户权限
     const authResult = await verifyAuth();
     if (!authResult.user) {
-      return NextResponse.json({ error: '未授权' }, { status: 401 });
+      return apiErrorResponse('未授权', 401);
     }
 
     // 获取上传的文件
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File;
 
     if (!file) {
-      return NextResponse.json({ error: '未找到文件' }, { status: 400 });
+      return apiErrorResponse('未找到文件', 400);
     }
 
     // 初始化库
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     if (!excelFile) {
       return NextResponse.json(
-        { error: 'ZIP 文件中未找到 Excel 文件' },
+        { success: false, error: 'ZIP 文件中未找到 Excel 文件' },
         { status: 400 }
       );
     }
@@ -78,7 +79,7 @@ export async function POST(request: NextRequest) {
 
     if (!workbook.SheetNames.length) {
       return NextResponse.json(
-        { error: 'Excel 文件为空' },
+        { success: false, error: 'Excel 文件为空' },
         { status: 400 }
       );
     }
@@ -91,7 +92,7 @@ export async function POST(request: NextRequest) {
 
     if (!data || data.length === 0) {
       return NextResponse.json(
-        { error: 'Excel 文件中没有数据' },
+        { success: false, error: 'Excel 文件中没有数据' },
         { status: 400 }
       );
     }
@@ -163,9 +164,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('快速导入失败:', error);
-    return NextResponse.json(
-      { error: '快速导入失败: ' + (error instanceof Error ? error.message : '未知错误') },
-      { status: 500 }
-    );
+    return apiErrorResponse('快速导入失败', 500);
   }
 }
