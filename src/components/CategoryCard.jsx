@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { siteConfig } from '@/lib/site-config';
 
 export default function CategoryCard({ category, icon: Icon }) {
   // 防御性检查
@@ -8,7 +9,9 @@ export default function CategoryCard({ category, icon: Icon }) {
   }
 
   const { name, slug, description, image, imageUrl } = category;
-  const resolvedImageUrl = image?.url || imageUrl;
+  const resolvedImageUrl = image?.url || imageUrl || siteConfig.scenePlaceholder;
+  const resolvedDescription =
+    description || 'Placeholder category copy for template hierarchy review.';
 
   // 确保必需的字段存在
   if (!name || !slug) {
@@ -48,7 +51,7 @@ export default function CategoryCard({ category, icon: Icon }) {
           {name}
         </h3>
         <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-          {description}
+          {resolvedDescription}
         </p>
         <span className="inline-flex items-center text-sm font-medium text-primary-600 group-hover:text-primary-700">
           Explore Collection

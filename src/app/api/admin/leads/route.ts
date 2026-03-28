@@ -8,6 +8,8 @@ import {
   type LeadSalesStage,
   type LeadType,
 } from '@/lib/d1-db';
+import { siteConfig } from '@/lib/site-config';
+import { getTemplateAdminLeads } from '@/lib/template-admin';
 
 type CloudflareEnv = {
   DB?: D1Database;
@@ -35,14 +37,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const db = await getDB();
-    if (!db) {
-      return NextResponse.json(
-        { success: false, error: '数据库连接不可用' },
-        { status: 500 }
-      );
-    }
-
     const searchParams = request.nextUrl.searchParams;
     const leadTypeParam = searchParams.get('leadType');
     const salesStageParam = searchParams.get('salesStage');
@@ -56,6 +50,33 @@ export async function GET(request: NextRequest) {
       ? (salesStageParam as LeadSalesStage)
       : undefined;
 
+    const db = await getDB();
+    if (!db) {
+      if (siteConfig.templateMode) {
+        const mockLeads = getTemplateAdminLeads({
+          leadType,
+          salesStage,
+          search: searchParams.get('q') || undefined,
+          limit: Number.isFinite(limitParam) ? limitParam : 200,
+          offset: Number.isFinite(offsetParam) ? offsetParam : 0,
+        });
+
+        return NextResponse.json(
+          {
+            success: true,
+            data: mockLeads,
+            storage: 'template-memory',
+          },
+          { status: 200 }
+        );
+      }
+
+      return NextResponse.json(
+        { success: false, error: '数据库连接不可用' },
+        { status: 500 }
+      );
+    }
+
     const leads = await getAdminLeadsD1(db, {
       leadType,
       salesStage,
@@ -68,6 +89,7 @@ export async function GET(request: NextRequest) {
       {
         success: true,
         data: leads,
+        storage: 'd1',
       },
       { status: 200 }
     );

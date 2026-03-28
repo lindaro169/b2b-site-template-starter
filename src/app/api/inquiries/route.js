@@ -142,7 +142,7 @@ export async function POST(request) {
       productName: inquiryData.productName,
       tracking,
       geo,
-    });
+    }, db);
 
     if (!emailResult.success) {
       console.warn('Inquiry notification email failed:', emailResult.error);

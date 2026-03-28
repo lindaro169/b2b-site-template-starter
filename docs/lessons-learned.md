@@ -1,5 +1,29 @@
 # 经验记录
 
+## 2026-03-28：本地 D1 持久化要同时校对 schema、迁移和 seed
+
+### 问题
+
+为了让模板后台的设置和线索在本地跨重启保留，本轮补了本地 D1 的 migrate / seed / setup 流程。实际执行时，seed 报错：`table products has no column named images`。
+
+### 处理方式
+
+- 先用 `pnpm db:local:seed:dry` 验证生成的 SQL 全是 mock data，没有混入真实业务信息
+- 再直接检查 `src/drizzle/schema.ts` 与 `src/drizzle/*.sql`，定位到 `products.images` 已写进 schema，但迁移里没有补这列
+- 新增 `src/drizzle/0005_add_product_images.sql` 后重新执行本地 migrate / seed
+- 最后直接读取 `.wrangler/state/v3/d1/miniflare-D1DatabaseObject/*.sqlite`，确认 `global_config`、`products`、`contacts`、`inquiries` 已真实落盘
+
+### 经验
+
+- 只看 TypeScript schema 不够，本地数据库初始化前必须同步核对 SQL migrations
+- 模板仓库要把本地初始化命令和恢复说明写进 README / restore 文档，否则换机后很容易只恢复代码，不恢复本地数据层
+- 涉及模板 seed 时，先跑 dry run 再落库，能更早发现真实数据混入或字段漂移
+
+### 踩坑记录
+
+- **坑**: 代码层已经新增字段，但历史迁移没补，最终只会在本地 seed 或恢复环境时暴露
+- **避免方法**: 任何依赖本地数据库的模板改动，都至少做一次“迁移 + seed + 直接查库”的闭环验证
+
 ## 2026-03-20：架构切换后，测试也要同步对齐当前入口
 
 ### 问题

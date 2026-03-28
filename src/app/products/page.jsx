@@ -60,15 +60,19 @@ const defaultFAQs = [
  * Transform API product data to UI component format
  */
 function transformProductData(apiProduct) {
+  const fallbackDescription =
+    apiProduct.description ||
+    'Placeholder product copy for template catalog review. Replace this description before publishing.';
+
   return {
     id: apiProduct.id,
     slug: apiProduct.slug,
     title: apiProduct.name,
-    excerpt: apiProduct.description || '',
-    description: apiProduct.description || '',
+    excerpt: fallbackDescription,
+    description: fallbackDescription,
     featuredImage: {
-      url: apiProduct.imageUrl || '/api/placeholder/400/400',
-      alt: apiProduct.name
+      url: apiProduct.imageUrl || apiProduct.featuredImage?.url || siteConfig.productPlaceholder,
+      alt: apiProduct.name || 'Template product placeholder'
     },
     moq: apiProduct.moq || 50,
     price: apiProduct.price,

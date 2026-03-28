@@ -1,102 +1,115 @@
-# 模板目录站说明
+# 模板网站说明
 
-这是一个已经完成基础清洗的模板站点，适合继续改造成企业目录站、品牌展示站或 B2B 询盘站。仓库中的品牌名、域名、邮箱、产品图、站点标识图、浏览器图标、服务文案、法务文案与联系信息均为占位内容，发布前必须替换。
+这是一个可直接拿来改造成新网站的模板仓库，适合做企业官网、目录站、品牌展示站或 B2B 询盘站。
 
-## 当前状态
+仓库里现在看到的品牌名、域名、邮箱、产品图、logo、favicon、后台线索和大部分文案，都是 **mock data / placeholder**。它们的作用是让你先把网站跑起来、看版式、走流程，再逐步替换成自己的内容。
 
-- 前台主要页面已统一为“可发布前自行替换的模板文案”
-- 默认站点标识图使用 `public/logos/template-logo.svg`
-- 默认浏览器图标使用 `public/favicon.svg`
-- 默认产品图与场景图使用 `public/placeholders/` 下的占位资源
-- `docs/` 与本文档已切换为中文模板说明
+如果你是编程小白，先看：
 
-## 适用场景
+- [新手起步指南](./docs/START_HERE.md)
+- [AI 模板接手规则](./docs/AI_TEMPLATE_RULES.md)
+- [AI 开工提示词模板](./docs/AI_PROMPT_TEMPLATES.md)
 
-- 需要保留后台、博客、询盘、部署骨架的项目启动
-- 需要先用占位内容验收版式，再替换正式内容
-- 需要部署到 Cloudflare Workers、D1、R2 的目录型站点
+## 你可以先理解成这样
 
-## 快速开始
+- 前台：给访客看的页面
+- 后台：给你自己管理内容和线索的页面
+- 模板模式：默认只使用 mock data，不会主动连真实业务数据
+- 本地 D1：让后台设置和线索在你重启本地开发服务后还能保留
+
+## 3 分钟跑起来
 
 ```bash
 git clone https://github.com/your-org/template-catalog-starter.git
 cd template-catalog-starter
 pnpm install
+pnpm db:local:setup
 pnpm dev
 ```
 
-本地默认访问地址：
+本地地址：
 
 ```text
-http://localhost:3002
+前台首页: http://localhost:3002
+产品页:   http://localhost:3002/products
+后台首页: http://localhost:3002/admin/dashboard
+线索中心: http://localhost:3002/admin/contacts
 ```
 
-## 本地私有配置
+说明：
 
-不要把真实凭证提交进仓库。请在以下文件中填写你的真实配置：
+- `pnpm db:local:setup` 会创建本地 D1，并写入纯 mock 的分类、产品、邮箱配置和线索样例
+- 本地 D1 数据保存在 `.wrangler/`，会在同一工作目录内跨重启保留
+- 如果你换机器、删了 `.wrangler/`，再执行一次 `pnpm db:local:setup` 即可
 
-- `.env.local`
-- `.dev.vars`
+## 如果你想让 AI 帮你改这个网站
 
-模板示例：
+最稳的方式不是一句话让 AI “全改完”，而是按小步骤来。
 
-```bash
-NEXT_PUBLIC_WEBSITE=http://localhost:3002
-BETTER_AUTH_SECRET=mock-better-auth-secret
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=mock-google-client-id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=mock-google-client-secret
-NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY=mock-turnstile-site-key
-CLOUDFLARE_TURNSTILE_SECRET_KEY=mock-turnstile-secret-key
-RESEND_API_KEY=re_mock_template_key
-RESEND_FROM_EMAIL=contact@template-site-placeholder.example
-SALES_NOTIFICATION_EMAIL=admin@template-site-placeholder.example
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-TEMPLATE0000
-NEXT_PUBLIC_GOOGLE_ADS_ID=AW-TEMPLATE0000
-NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL=template_inquiry_label
-GOOGLE_ADS_FEED_USERNAME=template-feed-user
-GOOGLE_ADS_FEED_PASSWORD=template-feed-password
-```
+推荐顺序：
 
-## 目录结构
+1. 先让 AI 帮你跑起来并确认哪些内容是 mock
+2. 再让 AI 先改品牌基础信息
+3. 然后分页面改首页、产品页、关于页、服务页、联系页
+4. 最后再接真实邮箱、真实登录、真实部署
+
+可以直接这样对 AI 说：
 
 ```text
-src/
-  app/                 页面与接口
-  components/          前台与后台组件
-  lib/                 配置、认证、邮件、数据库逻辑
-  drizzle/             数据表定义与迁移
-public/
-  logos/               占位站点标识图
-  placeholders/        占位产品图与场景图
-docs/                  中文模板文档
+这是一个网站模板，请继续保持 mock data，不要放真实客户信息。
+先把它改成一家做【行业/产品】的网站。
+第一步只改首页和站点品牌基础信息，不要动后台逻辑。
+改完后请告诉我本地该看哪些地址。
 ```
+
+## 你最常会改的地方
+
+- `src/lib/site-config.ts`
+  站点名称、占位邮箱、默认联系方式、logo 路径、placeholder 说明
+- `public/logos/template-logo.svg`
+  站点 logo
+- `public/favicon.svg`
+  浏览器图标
+- `src/app/`
+  前台页面和后台页面
+- `.env.local`、`.dev.vars`
+  本地私有配置和第三方服务密钥
+
+## 不要急着做的事
+
+- 不要一开始就接真实 Google 登录
+- 不要一开始就替换成真实客户数据
+- 不要一开始就部署
+- 不要把真实密钥直接写进仓库
+
+## 文档导航
+
+- [新手起步指南](./docs/START_HERE.md)
+- [AI 模板接手规则](./docs/AI_TEMPLATE_RULES.md)
+- [AI 开工提示词模板](./docs/AI_PROMPT_TEMPLATES.md)
+- [架构说明](./docs/ARCHITECTURE.md)
+- [技术栈与常用命令](./docs/TECH_STACK.md)
+- [部署说明](./docs/DEPLOYMENT_GUIDE.md)
+- [本地恢复说明](./docs/LOCAL_RESTORE_GUIDE.md)
 
 ## 发布前必须替换
 
-- `src/lib/site-config.ts` 中的所有占位值
+- `src/lib/site-config.ts` 中所有占位值
 - `.env.local` 与 `.dev.vars` 中的真实凭证
-- `wrangler.jsonc` 中的域名、路由、绑定与公开地址
-- 联系方式、管理员邮箱白名单、法务文案与服务承诺
-- 占位产品图、站点标识图、浏览器图标与产品说明
+- `wrangler.jsonc` 中的域名、路由、Cloudflare 绑定
+- 联系方式、邮箱、法务文案、服务承诺
+- `public/logos/`、`public/favicon.svg`、`public/placeholders/` 中需要对外展示的资源
 
-## 相关文档
+## 仓库边界
 
-- [项目背景](./docs/PROJECT_CONTEXT.md)
-- [架构说明](./docs/ARCHITECTURE.md)
-- [技术栈说明](./docs/TECH_STACK.md)
-- [部署说明](./docs/DEPLOYMENT_GUIDE.md)
-- [版式说明](./docs/DESIGN_LAYOUT.md)
-- [设计基线](./docs/DESIGN_REFERENCE.md)
-- [接口说明](./docs/API_DESIGN.md)
-- [组件清单](./docs/COMPONENT_INVENTORY.md)
-- [本地恢复说明](./docs/LOCAL_RESTORE_GUIDE.md)
+这个模板默认目标是：
 
-## 清洗范围
+- 本地可跑
+- 前后台可演示
+- 保持 mock data
+- 便于 AI 在此基础上继续改站
 
-本轮清洗已覆盖：
+它默认不是：
 
-- 真实品牌与旧域名替换
-- 对用户可见的主要页面文案替换
-- `README.md` 与 `docs/` 中文化
-- 占位站点标识图与浏览器图标切换
-- 默认产品图片替换为占位图
+- 可直接拿去上线的真实品牌站
+- 已接好所有第三方服务的生产系统

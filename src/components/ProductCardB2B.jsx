@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import QuickInquiryModal from './QuickInquiryModal';
 import IconInquiry from './icons/IconInquiry';
+import { siteConfig } from '@/lib/site-config';
 
 export default function ProductCard({ product }) {
   const [showInquiry, setShowInquiry] = useState(false);
@@ -18,6 +19,12 @@ export default function ProductCard({ product }) {
     description,
     featuredImage,
   } = product;
+  const imageUrl = featuredImage?.url || siteConfig.productPlaceholder;
+  const imageAlt = featuredImage?.alt || `${title} placeholder image`;
+  const summaryText =
+    excerpt ||
+    description ||
+    'Placeholder product copy for template preview. Replace this text before publishing.';
 
   // MOQ is available in product data; kept for potential UI decisions
 
@@ -29,20 +36,14 @@ export default function ProductCard({ product }) {
         <Link href={`/product/${slug}`}>
           <div className="relative aspect-square overflow-hidden bg-gray-100 group cursor-pointer">
             {/* 产品图片 */}
-            {featuredImage?.url ? (
-              <Image
-                src={featuredImage.url}
-                alt={title}
-                fill
-                unoptimized
-                className="object-cover group-hover:scale-110 transition-transform duration-300"
-                sizes="(max-width: 640px) 200px, (max-width: 1024px) 250px, 300px"
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-400">No Image</span>
-              </div>
-            )}
+            <Image
+              src={imageUrl}
+              alt={imageAlt}
+              fill
+              unoptimized
+              className="object-cover group-hover:scale-110 transition-transform duration-300"
+              sizes="(max-width: 640px) 200px, (max-width: 1024px) 250px, 300px"
+            />
           </div>
         </Link>
 
@@ -58,7 +59,7 @@ export default function ProductCard({ product }) {
 
           {/* 产品描述 */}
           <p className="text-sm text-stone-500 mb-4 line-clamp-2 leading-relaxed">
-            {excerpt || description}
+            {summaryText}
           </p>
 
           {/* 快速操作按钮 */}

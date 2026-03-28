@@ -53,7 +53,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const handleLogout = () => {
     logout();
-    router.push('/login');
+    router.push(siteConfig.templateMode ? '/admin/dashboard' : '/login');
   };
 
   const isActive = (path: string) => pathname === path;
@@ -80,7 +80,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         { label: '作者管理', path: '/admin/authors' },
       ],
     },
-    { label: '联系消息', path: '/admin/contacts', icon: '💬' },
+    { label: '线索中心', path: '/admin/contacts', icon: '💬' },
     { label: '设置', path: '/admin/settings', icon: '⚙️' },
   ];
 

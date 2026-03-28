@@ -10,6 +10,10 @@ task_plan.md
 findings.md
 progress.md
 
+# Local Python environments
+.venv/
+.venv_isnet/
+
 # Cloudflare Wrangler
 .wrangler/
 

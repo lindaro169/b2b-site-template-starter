@@ -14,9 +14,12 @@
 
 import {
   buildTrackingSummary,
+  formatDuration,
   type RequestGeoInfo,
   type VisitorTrackingSnapshot,
 } from '@/lib/visitor-tracking';
+import type { D1Database } from '@/lib/d1-db';
+import { getEmailSettings } from '@/lib/global-config';
 import { siteConfig } from '@/lib/site-config';
 
 export interface EmailTemplate {
@@ -43,14 +46,12 @@ export interface EmailResult {
 }
 
 const RESEND_API_URL = 'https://api.resend.com/emails';
-const FROM_EMAIL = siteConfig.templateMode
-  ? siteConfig.contactEmail
-  : process.env.RESEND_FROM_EMAIL || siteConfig.contactEmail;
-const ADMIN_EMAIL = siteConfig.templateMode
-  ? siteConfig.adminEmail
-  : process.env.SALES_NOTIFICATION_EMAIL ||
-    process.env.ADMIN_EMAIL ||
-    siteConfig.contactEmail;
+
+function getFromEmail(): string {
+  return siteConfig.templateMode
+    ? siteConfig.contactEmail
+    : process.env.RESEND_FROM_EMAIL || siteConfig.contactEmail;
+}
 
 function escapeHtml(value: string): string {
   return value
@@ -70,11 +71,22 @@ function renderTrackingDetails(
   geo?: RequestGeoInfo | null
 ): { html: string; text: string } {
   const summary = buildTrackingSummary(tracking, geo);
+  const landingPathWithQuery = tracking?.landingPage?.pathWithQuery || 'Unknown';
+  const landingUrl = tracking?.landingPage?.url || landingPathWithQuery;
+  const pageDetails = (tracking?.pages || []).map((page, index) => ({
+    index: index + 1,
+    label: page.label,
+    pathWithQuery: page.pathWithQuery,
+    url: page.url || page.pathWithQuery,
+    duration: formatDuration(page.durationMs),
+  }));
   const items = [
     ['客户位置（IP推断）', summary.location],
     ['访问来源', summary.source],
     ['访客类型', summary.visitor],
     ['着陆页', summary.landingPage],
+    ['原始 Landing URL', landingUrl],
+    ['Landing Path', landingPathWithQuery],
     ['访问路径', summary.visitPath],
     ['总停留', summary.totalDuration],
     ['会话标识', summary.session],
@@ -107,10 +119,41 @@ function renderTrackingDetails(
           )
           .join('')}
       </table>
+      ${
+        pageDetails.length > 0
+          ? `
+            <div style="margin-top: 18px; border-top: 1px solid #e2e8f0; padding-top: 16px;">
+              <h4 style="margin: 0 0 12px; font-size: 15px; color: #111827;">逐步访问路径</h4>
+              <ol style="margin: 0; padding-left: 18px; color: #111827;">
+                ${pageDetails
+                  .map(
+                    (page) => `
+                      <li style="margin-bottom: 10px;">
+                        <div style="font-weight: 600;">${escapeHtml(page.label)}</div>
+                        <div style="color: #4b5563; font-size: 13px;">${escapeHtml(page.pathWithQuery)}</div>
+                        <div style="color: #6b7280; font-size: 12px;">${escapeHtml(page.url)} · ${escapeHtml(page.duration)}</div>
+                      </li>
+                    `
+                  )
+                  .join('')}
+              </ol>
+            </div>
+          `
+          : ''
+      }
     </div>
   `;
 
-  const text = items.map(([label, value]) => `${label}: ${value}`).join('\n');
+  const text = [
+    ...items.map(([label, value]) => `${label}: ${value}`),
+    pageDetails.length > 0 ? '' : undefined,
+    pageDetails.length > 0 ? '逐步访问路径:' : undefined,
+    ...pageDetails.map(
+      (page) => `${page.index}. ${page.label} | ${page.pathWithQuery} | ${page.url} | ${page.duration}`
+    ),
+  ]
+    .filter(Boolean)
+    .join('\n');
   return { html, text };
 }
 
@@ -145,7 +188,7 @@ export async function sendEmail(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: options.from || FROM_EMAIL,
+        from: options.from || getFromEmail(),
         to: options.to,
         subject: options.subject,
         html: options.html,
@@ -507,11 +550,13 @@ export async function sendAdminNotification(
   contactName: string,
   contactEmail: string,
   message: string,
-  phone?: string
+  phone?: string,
+  db?: D1Database
 ): Promise<EmailResult> {
   const template = getAdminNotificationTemplate(contactName, contactEmail, message, phone);
+  const { contactEmail: notificationEmail } = await getEmailSettings(db);
   return sendEmail({
-    to: ADMIN_EMAIL,
+    to: notificationEmail,
     subject: template.subject,
     html: template.html,
   });
@@ -686,12 +731,14 @@ export function getTrackedInquiryNotificationTemplate(
 }
 
 export async function sendTrackedContactNotification(
-  payload: ContactNotificationPayload
+  payload: ContactNotificationPayload,
+  db?: D1Database
 ): Promise<EmailResult> {
   const template = getTrackedContactNotificationTemplate(payload);
+  const { contactEmail } = await getEmailSettings(db);
 
   return sendEmail({
-    to: ADMIN_EMAIL,
+    to: contactEmail,
     subject: template.subject,
     html: template.html,
     text: template.text,
@@ -700,12 +747,14 @@ export async function sendTrackedContactNotification(
 }
 
 export async function sendTrackedInquiryNotification(
-  payload: InquiryNotificationPayload
+  payload: InquiryNotificationPayload,
+  db?: D1Database
 ): Promise<EmailResult> {
   const template = getTrackedInquiryNotificationTemplate(payload);
+  const { contactEmail } = await getEmailSettings(db);
 
   return sendEmail({
-    to: ADMIN_EMAIL,
+    to: contactEmail,
     subject: template.subject,
     html: template.html,
     text: template.text,
