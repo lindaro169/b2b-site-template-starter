@@ -28,23 +28,12 @@ export interface AuthProviderProps {
   children: ReactNode;
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
+function RuntimeAuthProvider({ children }: AuthProviderProps) {
   const { data: session, isPending, error } = authClient.useSession();
   const [user, setUser] = useState<AdminUser | null>(null);
   const router = useRouter();
-  const isTemplateMode = siteConfig.templateMode;
-  const templateUser: AdminUser = {
-    id: 'template-admin',
-    email: siteConfig.adminEmail,
-    name: `${siteConfig.shortName} Template Admin`,
-    role: 'admin',
-  };
 
   useEffect(() => {
-    if (isTemplateMode) {
-      return;
-    }
-
     console.log('[AuthProvider] Session update:', {
       hasSession: !!session,
       hasUser: !!session?.user,
@@ -68,7 +57,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.log('[AuthProvider] No user in session');
       setUser(null);
     }
-  }, [session, isPending, error, isTemplateMode]);
+  }, [session, isPending, error]);
 
   const login = () => {
     // Legacy support: just redirect or reload
@@ -76,11 +65,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logout = async () => {
-    if (isTemplateMode) {
-      router.push('/admin/dashboard');
-      return;
-    }
-
     await authClient.signOut();
     setUser(null);
     router.push('/login');
@@ -90,19 +74,42 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(updatedUser);
   };
 
-  const resolvedUser = isTemplateMode ? templateUser : user;
-
   const value: AuthContextType = {
-    user: resolvedUser,
-    token: isTemplateMode ? 'template-admin-token' : session?.session?.token || null,
-    isAuthenticated: isTemplateMode ? true : !!session?.user,
-    isLoading: isTemplateMode ? false : isPending,
+    user,
+    token: session?.session?.token || null,
+    isAuthenticated: !!session?.user,
+    isLoading: isPending,
     login,
     logout,
     updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function AuthProvider({ children }: AuthProviderProps) {
+  if (siteConfig.templateMode) {
+    const templateUser: AdminUser = {
+      id: 'template-admin',
+      email: siteConfig.adminEmail,
+      name: `${siteConfig.shortName} Template Admin`,
+      role: 'admin',
+    };
+
+    const value: AuthContextType = {
+      user: templateUser,
+      token: 'template-admin-token',
+      isAuthenticated: true,
+      isLoading: false,
+      login: () => undefined,
+      logout: () => undefined,
+      updateUser: () => undefined,
+    };
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  }
+
+  return <RuntimeAuthProvider>{children}</RuntimeAuthProvider>;
 }
 
 export function useAuth() {

@@ -10,6 +10,11 @@ import {
   type LeadSalesStage,
   type LeadType,
 } from '@/lib/d1-db';
+import { siteConfig } from '@/lib/site-config';
+import {
+  getTemplateAdminLeadById,
+  updateTemplateLeadSalesStage,
+} from '@/lib/template-admin';
 
 type CloudflareEnv = {
   DB?: D1Database;
@@ -59,6 +64,67 @@ export async function POST(request: NextRequest, context: RouteContext) {
 
     const db = await getDB();
     if (!db) {
+      if (siteConfig.templateMode) {
+        const { leadType: rawLeadType, id: rawId } = await context.params;
+        const leadType = normalizeLeadType(rawLeadType);
+        const id = Number.parseInt(rawId, 10);
+
+        if (!leadType || !Number.isFinite(id) || id < 1) {
+          return NextResponse.json(
+            { success: false, error: '无效的线索标识' },
+            { status: 400 }
+          );
+        }
+
+        const body = await request.json();
+        const parsed = stageSchema.safeParse(body);
+        if (!parsed.success) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: parsed.error.errors.map((item) => `${item.path.join('.')}: ${item.message}`).join('; '),
+            },
+            { status: 400 }
+          );
+        }
+
+        const existingLead = getTemplateAdminLeadById(leadType, id);
+        if (!existingLead) {
+          return NextResponse.json(
+            { success: false, error: '线索不存在' },
+            { status: 404 }
+          );
+        }
+
+        const nextStage = parsed.data.salesStage;
+        if (existingLead.salesStage === nextStage) {
+          return NextResponse.json(
+            { success: true, data: existingLead, storage: 'template-memory' },
+            { status: 200 }
+          );
+        }
+
+        if (!allowedTransitions[existingLead.salesStage].includes(nextStage)) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: `不允许从 ${existingLead.salesStage} 变更为 ${nextStage}`,
+            },
+            { status: 409 }
+          );
+        }
+
+        const updatedLead = updateTemplateLeadSalesStage(leadType, id, nextStage);
+        return NextResponse.json(
+          {
+            success: true,
+            data: updatedLead,
+            storage: 'template-memory',
+          },
+          { status: 200 }
+        );
+      }
+
       return NextResponse.json(
         { success: false, error: '数据库连接不可用' },
         { status: 500 }
@@ -120,6 +186,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       {
         success: true,
         data: updatedLead,
+        storage: 'd1',
       },
       { status: 200 }
     );

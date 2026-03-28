@@ -6,6 +6,10 @@
   "packageManager": "pnpm@9.0.0",
   "scripts": {
     "dev": "next dev -p 3002",
+    "db:local:migrate": "wrangler d1 migrations apply template_site_placeholder --local",
+    "db:local:seed": "tsx scripts/seed_local_d1.ts",
+    "db:local:seed:dry": "tsx scripts/seed_local_d1.ts --dry-run",
+    "db:local:setup": "pnpm db:local:migrate && pnpm db:local:seed",
     "build": "next build && opennextjs-cloudflare build --skipNextBuild",
     "postbuild": "node -e \"const fs = require('fs'); fs.writeFileSync('./.open-next/assets/.assetsignore', '_worker.js\\n');\"",
     "start": "next start",

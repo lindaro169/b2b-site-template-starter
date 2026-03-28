@@ -1,90 +1,110 @@
 'use client';
 
-import { useState } from 'react';
-import { useAuth } from '@/lib/auth-context';
-import { siteConfig } from '@/lib/site-config';
+import { useEffect, useState } from 'react';
 import styles from './settings.module.css';
 
-interface AdminSettings {
-  siteName: string;
-  siteDescription: string;
+interface EmailSettings {
   contactEmail: string;
   adminEmail: string;
-  postsPerPage: number;
-  productsPerPage: number;
-  maintenanceMode: boolean;
-  enableComments: boolean;
-  autoBackup: boolean;
 }
 
 export default function SettingsPage() {
-  const { user } = useAuth();
-  const [settings, setSettings] = useState<AdminSettings>({
-    siteName: siteConfig.brandName,
-    siteDescription: siteConfig.companyDescription,
-    contactEmail: siteConfig.contactEmail,
-    adminEmail: siteConfig.adminEmail,
-    postsPerPage: 10,
-    productsPerPage: 20,
-    maintenanceMode: false,
-    enableComments: true,
-    autoBackup: true,
+  const [settings, setSettings] = useState<EmailSettings>({
+    contactEmail: '',
+    adminEmail: '',
   });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [savedMessage, setSavedMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [storage, setStorage] = useState<'d1' | 'template-memory' | 'fallback'>('fallback');
 
-  const [saved, setSaved] = useState(false);
-
-  const handleChange = <K extends keyof AdminSettings>(field: K, value: AdminSettings[K]) => {
+  const handleChange = <K extends keyof EmailSettings>(field: K, value: EmailSettings[K]) => {
     setSettings(prev => ({ ...prev, [field]: value }));
-    setSaved(false);
+    setSavedMessage(null);
   };
 
+  const fetchSettings = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/admin/settings', {
+        cache: 'no-store',
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || '获取设置失败');
+      }
+
+      setSettings(result.data);
+      setStorage(result.storage || 'fallback');
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '获取设置失败');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void fetchSettings();
+  }, []);
+
+  const storageLabel = {
+    d1: 'D1',
+    'template-memory': '模板内存',
+    fallback: '环境变量兜底',
+  }[storage];
+
+  const helperText = {
+    d1: '当前保存到 D1 global_config，contact / inquiry 通知会优先读取这里的联系邮箱。',
+    'template-memory': '当前没有 D1 绑定，模板模式下会先写入本进程 mock store，方便本地预览。',
+    fallback: '当前未检测到可写存储，仅能使用环境变量或站点默认值。',
+  }[storage];
+
   const handleSave = async () => {
-    // In production, save to API
-    console.log('Saving settings:', settings);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    try {
+      setSaving(true);
+      const response = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(settings),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || '保存设置失败');
+      }
+
+      setSettings(result.data);
+      setStorage(result.storage || 'fallback');
+      setSavedMessage('邮箱设置已保存');
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '保存设置失败');
+      setSavedMessage(null);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>设置</h1>
-        <p>管理系统配置和偏好设置</p>
+        <p>这里只持久化通知邮箱配置，其他模板项请在正式项目里按需扩展。</p>
       </div>
 
-      {saved && <div className={styles.success}>✓ 设置已保存</div>}
+      {savedMessage && <div className={styles.success}>✓ {savedMessage}</div>}
+      {error && <div className={styles.error}>{error}</div>}
 
       <div className={styles.content}>
-        {/* General Settings */}
-        <section className={styles.section}>
-          <h2>常规设置</h2>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="siteName">网站名称</label>
-            <input
-              id="siteName"
-              type="text"
-              value={settings.siteName}
-              onChange={(e) => handleChange('siteName', e.target.value)}
-              placeholder="输入网站名称"
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="siteDescription">网站描述</label>
-            <textarea
-              id="siteDescription"
-              value={settings.siteDescription}
-              onChange={(e) => handleChange('siteDescription', e.target.value)}
-              placeholder="输入网站描述"
-              rows={3}
-            />
-          </div>
-        </section>
-
-        {/* Email Settings */}
         <section className={styles.section}>
           <h2>邮件设置</h2>
+          <p>当前存储位置：{storageLabel}</p>
+          <p>{helperText}</p>
 
           <div className={styles.formGroup}>
             <label htmlFor="contactEmail">联系邮箱</label>
@@ -93,9 +113,10 @@ export default function SettingsPage() {
               type="email"
               value={settings.contactEmail}
               onChange={(e) => handleChange('contactEmail', e.target.value)}
+              disabled={loading || saving}
               placeholder="输入联系邮箱地址"
             />
-            <small>用于接收表单提交的邮箱</small>
+            <small>Contact / Inquiry 通知优先发送到这里。</small>
           </div>
 
           <div className={styles.formGroup}>
@@ -105,98 +126,27 @@ export default function SettingsPage() {
               type="email"
               value={settings.adminEmail}
               onChange={(e) => handleChange('adminEmail', e.target.value)}
+              disabled={loading || saving}
               placeholder="输入管理员邮箱地址"
             />
-            <small>用于系统通知的邮箱</small>
+            <small>Better Auth 管理员白名单优先读取这里。</small>
           </div>
         </section>
 
-        {/* Display Settings */}
         <section className={styles.section}>
-          <h2>显示设置</h2>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="postsPerPage">每页博客数</label>
-            <input
-              id="postsPerPage"
-              type="number"
-              value={settings.postsPerPage}
-              onChange={(e) => handleChange('postsPerPage', parseInt(e.target.value))}
-              min="1"
-              max="100"
-            />
-            <small>博客列表每页显示的文章数</small>
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="productsPerPage">每页产品数</label>
-            <input
-              id="productsPerPage"
-              type="number"
-              value={settings.productsPerPage}
-              onChange={(e) => handleChange('productsPerPage', parseInt(e.target.value))}
-              min="1"
-              max="100"
-            />
-            <small>产品列表每页显示的产品数</small>
-          </div>
+          <h2>说明</h2>
+          <p>如果存在 D1 绑定，本页会写入 `global_config`。</p>
+          <p>如果当前是纯本地模板预览且没有 D1，本页会退回模板内存存储，方便你直接演示后台流程。</p>
+          <p>`SALES_NOTIFICATION_EMAIL` 与 `ADMIN_EMAIL` 仍可作为默认值和兜底值存在。</p>
         </section>
 
-        {/* Features Settings */}
-        <section className={styles.section}>
-          <h2>功能设置</h2>
-
-          <div className={styles.checkboxGroup}>
-            <label>
-              <input
-                type="checkbox"
-                checked={settings.maintenanceMode}
-                onChange={(e) => handleChange('maintenanceMode', e.target.checked)}
-              />
-              <span>维护模式</span>
-            </label>
-            <small>启用后,普通用户将看到维护页面</small>
-          </div>
-
-          <div className={styles.checkboxGroup}>
-            <label>
-              <input
-                type="checkbox"
-                checked={settings.enableComments}
-                onChange={(e) => handleChange('enableComments', e.target.checked)}
-              />
-              <span>启用博客评论</span>
-            </label>
-            <small>允许用户在博客文章下评论</small>
-          </div>
-
-          <div className={styles.checkboxGroup}>
-            <label>
-              <input
-                type="checkbox"
-                checked={settings.autoBackup}
-                onChange={(e) => handleChange('autoBackup', e.target.checked)}
-              />
-              <span>自动备份</span>
-            </label>
-            <small>每天自动备份数据库</small>
-          </div>
-        </section>
-
-        {/* User Settings */}
-        <section className={styles.section}>
-          <h2>当前用户</h2>
-          <div className={styles.userInfo}>
-            <p><strong>邮箱:</strong> {user?.email || '未登录'}</p>
-            <p><strong>用户名:</strong> {user?.name || '暂无'}</p>
-            <p><strong>角色:</strong> 管理员</p>
-          </div>
-        </section>
-
-        {/* Save Button */}
         <div className={styles.actions}>
-          <button className={styles.saveBtn} onClick={handleSave}>
-            保存设置
+          <button
+            className={styles.saveBtn}
+            onClick={handleSave}
+            disabled={loading || saving}
+          >
+            {loading ? '加载中...' : saving ? '保存中...' : '保存邮箱设置'}
           </button>
         </div>
       </div>

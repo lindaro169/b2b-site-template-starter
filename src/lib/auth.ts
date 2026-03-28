@@ -3,7 +3,9 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { drizzle } from 'drizzle-orm/d1';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import type { D1Database } from '@/lib/d1-db';
+import { getEmailSettings } from '@/lib/global-config';
 import { siteConfig } from '@/lib/site-config';
+import { createTemplateAdminSession } from '@/lib/template-admin';
 import * as schema from '../drizzle/schema';
 
 type AuthInstance = ReturnType<typeof betterAuth>;
@@ -17,6 +19,23 @@ type AuthEnv = {
 };
 
 let authInstance: AuthInstance | null = null;
+
+function shouldUseSecureCookies(url?: string): boolean {
+    if (!url) {
+        return false;
+    }
+
+    try {
+        const parsed = new URL(url);
+        return (
+            parsed.protocol === 'https:' &&
+            parsed.hostname !== 'localhost' &&
+            parsed.hostname !== '127.0.0.1'
+        );
+    } catch {
+        return false;
+    }
+}
 
 export async function initAuth() {
     if (authInstance) return authInstance;
@@ -48,8 +67,13 @@ export async function initAuth() {
     if (!websiteUrl) console.warn('NEXT_PUBLIC_WEBSITE not found');
     if (!betterAuthSecret) console.warn('BETTER_AUTH_SECRET not found');
 
-    // Email whitelist for admin access
-    const ALLOWED_EMAILS = [siteConfig.adminEmail];
+    if (!dbBinding) {
+        throw new Error('DB binding not found');
+    }
+
+    if (!websiteUrl || !betterAuthSecret) {
+        throw new Error('Better Auth configuration is incomplete');
+    }
 
     authInstance = betterAuth({
         database: drizzleAdapter(drizzle(dbBinding), {
@@ -77,7 +101,7 @@ export async function initAuth() {
             websiteUrl || siteConfig.websiteUrl,
         ],
         advanced: {
-            useSecureCookies: true,
+            useSecureCookies: shouldUseSecureCookies(websiteUrl),
             cookiePrefix: 'better-auth',
         },
         session: {
@@ -91,8 +115,10 @@ export async function initAuth() {
         // Validate email whitelist after successful OAuth
         onSuccess: async (ctx) => {
             const email = ctx.user?.email?.toLowerCase();
+            const { adminEmail } = await getEmailSettings(dbBinding);
+            const allowedEmails = [adminEmail.toLowerCase()];
 
-            if (!email || !ALLOWED_EMAILS.includes(email)) {
+            if (!email || !allowedEmails.includes(email)) {
                 console.warn(`Unauthorized login attempt: ${email}`);
                 // Delete the session and user if not in whitelist
                 throw new Error('你不是后台管理员');
@@ -121,6 +147,11 @@ export const auth = new Proxy({} as AuthInstance, {
 import { headers } from 'next/headers';
 
 export async function verifyAuth() {
+    if (siteConfig.templateMode) {
+        const { adminEmail } = await getEmailSettings();
+        return createTemplateAdminSession(adminEmail);
+    }
+
     const auth = await initAuth();
     const session = await auth.api.getSession({
         headers: await headers(),

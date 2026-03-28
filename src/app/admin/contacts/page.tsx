@@ -71,7 +71,7 @@ function formatDuration(ms: number): string {
   const totalSeconds = Math.max(0, Math.round(ms / 1000));
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
-  return `${minutes}m ${String(seconds).padStart(2, '0')}s`;
+      return `${minutes}m ${String(seconds).padStart(2, '0')}s`;
 }
 
 function formatLocation(geo: LeadGeo | null): string {
@@ -225,7 +225,6 @@ export default function ContactsPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <div>
-          <h1>线索中心</h1>
           <p>统一查看 Contact 和 Inquiry 的来源、路径与销售状态。</p>
         </div>
         <button className={styles.refreshBtn} onClick={fetchLeads} disabled={loading || authLoading}>

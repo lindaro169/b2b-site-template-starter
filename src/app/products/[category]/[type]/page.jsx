@@ -13,19 +13,27 @@ import {
   isValidCategorySlug,
   isValidProductType,
 } from '@/constants/categoryMapping';
+import { siteConfig } from '@/lib/site-config';
 
 /**
  * 转换API产品数据为ProductCardB2B需要的格式
  * Transform API product data to match ProductCardB2B component props
  */
 function transformProductData(apiProduct) {
+  const fallbackDescription =
+    apiProduct.description ||
+    'Placeholder product copy for this template subsection. Replace before publishing.';
+
   return {
     id: apiProduct.id,
     slug: apiProduct.slug,
     title: apiProduct.name,
-    excerpt: apiProduct.description || '',
-    description: apiProduct.description || '',
-    featuredImage: { url: apiProduct.imageUrl },
+    excerpt: fallbackDescription,
+    description: fallbackDescription,
+    featuredImage: {
+      url: apiProduct.imageUrl || apiProduct.featuredImage?.url || siteConfig.productPlaceholder,
+      alt: apiProduct.name || 'Template product placeholder',
+    },
     moq: apiProduct.moq || 50,
     price: apiProduct.price,
     inStock: apiProduct.isActive,

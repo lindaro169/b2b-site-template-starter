@@ -17,15 +17,19 @@ import { getD1Database } from '@/lib/d1-db';
  * Transform API product data to match ProductCardB2B props
  */
 function transformProductData(apiProduct) {
+  const fallbackDescription =
+    apiProduct.description ||
+    'Placeholder product copy for template collection review. Replace it before publishing.';
+
   return {
     id: apiProduct.id,
     slug: apiProduct.slug,
     title: apiProduct.name,
-    excerpt: apiProduct.description || '',
-    description: apiProduct.description || '',
+    excerpt: fallbackDescription,
+    description: fallbackDescription,
     featuredImage: {
-      url: apiProduct.imageUrl || '/api/placeholder/400/400',
-      alt: apiProduct.name
+      url: apiProduct.imageUrl || apiProduct.featuredImage?.url || siteConfig.productPlaceholder,
+      alt: apiProduct.name || 'Template product placeholder'
     },
     moq: 50, // 默认值，真实数据应该从 API 获取
     price: apiProduct.price,

@@ -34,6 +34,7 @@ export interface TrafficSource {
 export interface TrackedPageVisit {
   path: string;
   pathWithQuery: string;
+  url?: string;
   label: string;
   enteredAt: string;
   durationMs: number;
@@ -51,6 +52,7 @@ export interface VisitorTrackingSnapshot {
   landingPage: {
     path: string;
     pathWithQuery: string;
+    url?: string;
     label: string;
   };
   source: TrafficSource;
@@ -78,6 +80,7 @@ interface StoredTrackingSession {
   landingPage: {
     path: string;
     pathWithQuery: string;
+    url?: string;
     label: string;
   };
   pages: TrackedPageVisit[];
@@ -609,6 +612,7 @@ function createPageVisit(url: URL): TrackedPageVisit {
   return {
     path: normalizePathname(url.pathname),
     pathWithQuery,
+    url: url.toString(),
     label: humanizePath(pathWithQuery),
     enteredAt: new Date().toISOString(),
     durationMs: 0,
@@ -645,6 +649,7 @@ function createSession(profile: VisitorProfile, url: URL, referrer?: string): St
     landingPage: {
       path: firstPage.path,
       pathWithQuery: firstPage.pathWithQuery,
+      url: firstPage.url,
       label: firstPage.label,
     },
     pages: [firstPage],
@@ -819,6 +824,7 @@ export function normalizeVisitorTrackingSnapshot(payload: unknown): VisitorTrack
     .map((page) => ({
       path: page.path,
       pathWithQuery: page.pathWithQuery,
+      url: page.url,
       label: page.label || humanizePath(page.pathWithQuery),
       enteredAt: page.enteredAt || new Date().toISOString(),
       durationMs: Math.max(0, Number(page.durationMs || 0)),
@@ -842,11 +848,13 @@ export function normalizeVisitorTrackingSnapshot(payload: unknown): VisitorTrack
       ? {
           path: candidate.landingPage.path || pages[0].path,
           pathWithQuery: candidate.landingPage.pathWithQuery || pages[0].pathWithQuery,
+          url: candidate.landingPage.url || pages[0].url,
           label: candidate.landingPage.label || humanizePath(candidate.landingPage.pathWithQuery || pages[0].pathWithQuery),
         }
       : {
           path: pages[0].path,
           pathWithQuery: pages[0].pathWithQuery,
+          url: pages[0].url,
           label: pages[0].label,
         },
     source: {

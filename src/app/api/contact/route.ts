@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
       message: validatedData.message,
       tracking,
       geo,
-    });
+    }, db);
 
     if (!emailResult.success) {
       console.warn('Contact notification email failed:', emailResult.error);
