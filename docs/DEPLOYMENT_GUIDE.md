@@ -1,18 +1,25 @@
 # 部署说明
 
-## 目标
+这份文档只在你准备把网站正式上线时再看。
 
-将当前模板站点部署到你自己的 Cloudflare 账号与域名，不复用仓库中的占位品牌信息。
+如果你现在还在本地改页面、调版式、换 mock data，可以先不用看这份文档。
 
-## 部署前准备
+## 上线前必须先完成的事
 
-1. 创建 D1 数据库
-2. 创建 R2 存储桶
-3. 创建 KV 命名空间
-4. 准备认证、邮件与人机验证所需真实凭证
-5. 替换模板域名、邮箱与公开资源地址
+1. 把模板里的 mock 品牌信息替换掉
+2. 把 logo、favicon、产品图替换掉
+3. 准备你自己的 Cloudflare 资源
+4. 准备真实环境变量和真实邮箱配置
+5. 确认没有把 `.example.com`、placeholder 邮箱或 mock 文案带进生产
 
-## 必须修改的文件
+## 你需要准备的 Cloudflare 资源
+
+- D1 数据库
+- R2 存储桶
+- KV 命名空间
+- Cloudflare Workers 部署权限
+
+## 你通常要改的文件
 
 - `wrangler.jsonc`
 - `.env.local`
@@ -25,13 +32,22 @@
 ```bash
 pnpm install
 pnpm build
-pnpm wrangler deploy
+pnpm deploy
 ```
 
-## 发布前核对
+## 上线前检查清单
 
-- 域名、回调地址、公开路由已替换
-- 邮箱、管理员白名单与邮件发送地址已替换
-- 站点标识图、浏览器图标、产品图已替换
-- 法务页面与服务承诺已替换
-- 没有把 `.example.com` 域名或模板示例值带到生产环境
+- 真实域名已填好
+- 真实邮箱已配置
+- Google 登录回调地址已改成你的正式域名
+- Turnstile 已切换成真实 key
+- 后台不再依赖模板 mock 语义
+- 前台页面没有明显 placeholder 文案
+- logo 和 favicon 已替换
+
+## 最容易漏掉的地方
+
+- `src/lib/site-config.ts` 里的占位邮箱和品牌名
+- `wrangler.jsonc` 里的域名、路由、绑定 ID
+- `public/favicon.svg` 和 `public/logos/template-logo.svg`
+- 邮件接收邮箱与管理员邮箱
