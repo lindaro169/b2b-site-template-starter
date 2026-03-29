@@ -1,5 +1,60 @@
+function readBooleanFlag(value: string | undefined): boolean | null {
+  if (value === 'true') {
+    return true;
+  }
+
+  if (value === 'false') {
+    return false;
+  }
+
+  return null;
+}
+
+function getHostnameFromUrl(value: string | undefined): string | null {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    return new URL(value).hostname;
+  } catch {
+    return null;
+  }
+}
+
+function isLocalHostname(hostname: string | null): boolean {
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname?.endsWith('.localhost') === true;
+}
+
+function resolveTemplateMode(): boolean {
+  const explicitFlag = readBooleanFlag(process.env.NEXT_PUBLIC_TEMPLATE_MODE);
+  if (explicitFlag !== null) {
+    return explicitFlag;
+  }
+
+  return process.env.NODE_ENV !== 'production';
+}
+
+function resolveLocalPreviewMode(templateMode: boolean): boolean {
+  if (!templateMode) {
+    return false;
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    return true;
+  }
+
+  return isLocalHostname(
+    getHostnameFromUrl(process.env.NEXT_PUBLIC_WEBSITE || process.env.NEXT_PUBLIC_API_URL)
+  );
+}
+
+const templateMode = resolveTemplateMode();
+const localPreviewMode = resolveLocalPreviewMode(templateMode);
+
 export const siteConfig = {
-  templateMode: true,
+  templateMode,
+  localPreviewMode,
   enableAnalytics: false,
   templateTurnstileToken: 'template-turnstile-token',
   turnstileSiteKey: 'mock-turnstile-site-key',
@@ -14,7 +69,7 @@ export const siteConfig = {
   mediaHost: 'media.template-site-placeholder.example',
   r2DevHost: 'template-site-placeholder.r2.dev',
   contactEmail: 'contact@template-site-placeholder.example',
-  adminEmail: 'admin@template-site-placeholder.example',
+  previewAdminEmail: 'preview-admin@template-site-placeholder.example',
   encodedContactEmail: 'Y29udGFjdEB0ZW1wbGF0ZS1zaXRlLXBsYWNlaG9sZGVyLmV4YW1wbGU=',
   contactPhoneDisplay: '+00 0000 0000',
   contactPhoneHref: '+00000000000',

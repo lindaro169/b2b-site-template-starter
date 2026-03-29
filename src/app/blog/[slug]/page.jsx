@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { use, useState, useEffect } from 'react';
 import { siteConfig } from '@/lib/site-config';
+import { renderRichContentToHtml } from '@/lib/sanitize-rich-content';
 
 // 相关文章
 const relatedPosts = [
@@ -222,7 +223,7 @@ export default function BlogPostPage({ params }) {
             prose-ul:my-6 prose-li:text-gray-700
             prose-strong:text-gray-900 prose-strong:font-semibold
             prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: renderRichContentToHtml(post.content) }}
         />
 
         {/* Tags */}

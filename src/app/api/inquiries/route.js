@@ -3,6 +3,7 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { verifyTurnstileToken } from '@/lib/validation';
 import { getD1Database, saveInquiryD1 } from '@/lib/d1-db';
 import { sendTrackedInquiryNotification } from '@/lib/email';
+import { buildRateLimitHeaders, checkRequestRateLimit } from '@/lib/request-rate-limit';
 import { siteConfig } from '@/lib/site-config';
 import {
   buildRequestGeoInfo,
@@ -27,6 +28,11 @@ const inquirySchema = z
     message: 'Turnstile token is required',
     path: ['turnstileToken'],
   });
+
+const INQUIRY_RATE_LIMIT = {
+  limit: 5,
+  windowMs: 10 * 60 * 1000,
+};
 
 async function getDB() {
   try {
@@ -58,10 +64,30 @@ export async function POST(request) {
       throw error;
     }
 
+    const rateLimitResult = checkRequestRateLimit({
+      routeKey: 'public-inquiry-submit',
+      headers: request.headers,
+      limit: INQUIRY_RATE_LIMIT.limit,
+      windowMs: INQUIRY_RATE_LIMIT.windowMs,
+    });
+
+    if (!rateLimitResult.allowed) {
+      return Response.json(
+        {
+          success: false,
+          error: 'Too many submissions. Please try again later.',
+        },
+        {
+          status: 429,
+          headers: buildRateLimitHeaders(rateLimitResult),
+        }
+      );
+    }
+
     const turnstileToken = inquiryData.turnstileToken || inquiryData.turnstile_token || '';
     let turnstileResult;
 
-    if (siteConfig.templateMode) {
+    if (siteConfig.localPreviewMode) {
       turnstileResult = {
         success: turnstileToken === siteConfig.templateTurnstileToken,
         'error-codes':
@@ -94,7 +120,7 @@ export async function POST(request) {
           success: false,
           error: 'Security verification failed, please try again',
         },
-        { status: 429 }
+        { status: 400 }
       );
     }
 
@@ -157,7 +183,10 @@ export async function POST(request) {
         leadType: 'inquiry',
         googleAdsEligible: true,
       },
-      { status: 201 }
+      {
+        status: 201,
+        headers: buildRateLimitHeaders(rateLimitResult),
+      }
     );
   } catch (error) {
     console.error('Error processing inquiry:', error);

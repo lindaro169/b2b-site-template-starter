@@ -1,5 +1,33 @@
 # 经验记录
 
+## 2026-03-29：依赖安全收口时要同时做“直接升级 + 依赖归类 + overrides”
+
+### 问题
+
+`xlsx` 替换掉之后，生产依赖审计里仍然有一批 `high`，来源并不完全相同：
+
+- 一部分来自直接依赖过旧，如 `next`、`better-auth`、`wrangler`
+- 一部分来自纯构建期依赖被放进了 `dependencies`
+- 还有一部分来自暂时无法直接升级的传递依赖
+
+### 处理方式
+
+- 先升级直接依赖到当前兼容补丁版本
+- 把只在 `tailwind.config.ts` 使用的 `@tailwindcss/typography` 挪到 `devDependencies`
+- 用 `pnpm.overrides` 定向压住 audit 里仍命中的高危传递版本
+- 每收一轮都重新跑 `type-check`、`lint`、`vitest`、`build` 和 `pnpm audit --prod`
+
+### 经验
+
+- 依赖安全不能只靠“升级几个包”，还要校正哪些包本来就不该算进生产依赖
+- 对模板站这类仓库，`pnpm audit --prod` 比全量 audit 更接近真实上线暴露面
+- 对传递依赖，优先用小范围 `overrides` 收口，通常比贸然升级一整串上游库更稳
+
+### 踩坑记录
+
+- **坑**: 只看 audit 总数，容易把“构建期包挂错位置”和“运行时真实高危”混在一起处理
+- **避免方法**: 先用 `pnpm why <package>` 看路径，再决定是升级、挪依赖层级，还是加 override
+
 ## 2026-03-28：本地 D1 持久化要同时校对 schema、迁移和 seed
 
 ### 问题

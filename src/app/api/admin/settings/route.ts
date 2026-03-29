@@ -16,7 +16,6 @@ type CloudflareEnv = {
 
 const settingsSchema = z.object({
   contactEmail: z.string().email('联系邮箱格式不正确'),
-  adminEmail: z.string().email('管理员邮箱格式不正确'),
 });
 
 async function getDB(): Promise<D1Database | undefined> {
@@ -90,7 +89,6 @@ export async function POST(request: Request) {
 
     const settings = await saveEmailSettings({
       contactEmail: parsed.data.contactEmail,
-      adminEmail: parsed.data.adminEmail,
     }, db);
 
     return NextResponse.json(

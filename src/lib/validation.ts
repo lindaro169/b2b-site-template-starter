@@ -19,7 +19,7 @@ export async function verifyTurnstileToken(
     token: string,
     secretKey: string
 ): Promise<TurnstileVerifyResponse> {
-    if (siteConfig.templateMode && token === siteConfig.templateTurnstileToken) {
+    if (siteConfig.localPreviewMode && token === siteConfig.templateTurnstileToken) {
         return { success: true };
     }
 

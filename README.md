@@ -14,7 +14,7 @@
 
 - 前台：给访客看的页面
 - 后台：给你自己管理内容和线索的页面
-- 模板模式：默认只使用 mock data，不会主动连真实业务数据
+- 模板模式：本地开发默认开启，生产默认关闭；只使用 mock data，不会主动连真实业务数据
 - 本地 D1：让后台设置和线索在你重启本地开发服务后还能保留
 
 ## 3 分钟跑起来
@@ -41,6 +41,8 @@ pnpm dev
 - `pnpm db:local:setup` 会创建本地 D1，并写入纯 mock 的分类、产品、邮箱配置和线索样例
 - 本地 D1 数据保存在 `.wrangler/`，会在同一工作目录内跨重启保留
 - 如果你换机器、删了 `.wrangler/`，再执行一次 `pnpm db:local:setup` 即可
+- 如需手动强制开关模板运行模式，可在 `.env.local` 里设置 `NEXT_PUBLIC_TEMPLATE_MODE=true/false`
+- 如果你要打开本地后台预览或调用后台接口，请先在 `.env.local` 里配置 `ADMIN_EMAIL`
 
 ## 如果你想让 AI 帮你改这个网站
 
@@ -96,6 +98,7 @@ pnpm dev
 
 - `src/lib/site-config.ts` 中所有占位值
 - `.env.local` 与 `.dev.vars` 中的真实凭证
+- `ADMIN_EMAIL` 中的后台管理员登录邮箱
 - `wrangler.jsonc` 中的域名、路由、Cloudflare 绑定
 - 联系方式、邮箱、法务文案、服务承诺
 - `public/logos/`、`public/favicon.svg`、`public/placeholders/` 中需要对外展示的资源

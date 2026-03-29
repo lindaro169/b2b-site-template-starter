@@ -41,8 +41,8 @@ export default function StepImportMode({ token }: StepImportModeProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
-      setValidationError('只支持 Excel 文件（.xlsx 或 .xls）');
+    if (!file.name.endsWith('.xlsx')) {
+      setValidationError('只支持 Excel 文件（.xlsx）');
       return;
     }
 
@@ -63,8 +63,8 @@ export default function StepImportMode({ token }: StepImportModeProps) {
     const file = e.dataTransfer.files?.[0];
     if (!file) return;
 
-    if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
-      setValidationError('只支持 Excel 文件（.xlsx 或 .xls）');
+    if (!file.name.endsWith('.xlsx')) {
+      setValidationError('只支持 Excel 文件（.xlsx）');
       return;
     }
 
@@ -253,7 +253,7 @@ export default function StepImportMode({ token }: StepImportModeProps) {
               <input
                 ref={excelInputRef}
                 type="file"
-                accept=".xlsx,.xls"
+                accept=".xlsx"
                 onChange={handleExcelSelect}
                 style={{ display: 'none' }}
               />
@@ -262,7 +262,7 @@ export default function StepImportMode({ token }: StepImportModeProps) {
                 {excelFile ? '已选择: ' + excelFile.name : '选择或拖拽 Excel 文件'}
               </p>
               <p style={{ margin: '0', fontSize: '13px', color: '#718096' }}>
-                支持 .xlsx 和 .xls 格式，最大 50MB
+                支持 .xlsx 格式，最大 50MB
               </p>
             </div>
 

@@ -88,10 +88,10 @@ function RuntimeAuthProvider({ children }: AuthProviderProps) {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  if (siteConfig.templateMode) {
+  if (siteConfig.localPreviewMode) {
     const templateUser: AdminUser = {
       id: 'template-admin',
-      email: siteConfig.adminEmail,
+      email: siteConfig.previewAdminEmail,
       name: `${siteConfig.shortName} Template Admin`,
       role: 'admin',
     };

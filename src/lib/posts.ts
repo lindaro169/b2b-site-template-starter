@@ -18,6 +18,10 @@ import {
   unpublishPostD1,
   getPostStatsD1,
 } from './d1-db';
+import {
+  extractPlainTextFromRichContent,
+  sanitizeStoredRichContent,
+} from './sanitize-rich-content';
 
 export interface PostFilters {
   search?: string;
@@ -74,10 +78,22 @@ export interface PostWithAuthor extends PostData {
  * Assuming average 200 words per minute
  */
 function calculateReadTime(content?: string): number {
-  if (!content) return 0;
-  const wordCount = content.trim().split(/\s+/).length;
+  const plainText = extractPlainTextFromRichContent(content);
+  if (!plainText) return 0;
+  const wordCount = plainText.split(/\s+/).filter(Boolean).length;
   const readTime = Math.ceil(wordCount / 200);
   return Math.max(1, readTime);
+}
+
+function sanitizePostPayload<T extends { content?: string }>(data: T): T {
+  if (data.content === undefined) {
+    return data;
+  }
+
+  return {
+    ...data,
+    content: sanitizeStoredRichContent(data.content),
+  };
 }
 
 /**
@@ -462,9 +478,11 @@ export async function createPost(
   error?: string;
 }> {
   try {
+    const preparedData = sanitizePostPayload(data);
+
     if (db) {
       // Validate required fields
-      if (!data.title || !data.slug) {
+      if (!preparedData.title || !preparedData.slug) {
         return {
           success: false,
           error: '文章标题和 slug 不能为空',
@@ -473,7 +491,7 @@ export async function createPost(
 
       // Create post in D1
       try {
-        const p = await createPostD1(db, data);
+        const p = await createPostD1(db, preparedData);
 
         const result: PostWithAuthor = {
           id: p.id as number,
@@ -512,7 +530,7 @@ export async function createPost(
     }
 
     // Validate required fields
-    if (!data.title || !data.slug) {
+    if (!preparedData.title || !preparedData.slug) {
       return {
         success: false,
         error: '文章标题和 slug 不能为空',
@@ -520,7 +538,7 @@ export async function createPost(
     }
 
     // Check for duplicate slug
-    const existing = Array.from(mockPosts.values()).find((p) => p.slug === data.slug);
+    const existing = Array.from(mockPosts.values()).find((p) => p.slug === preparedData.slug);
     if (existing) {
       return {
         success: false,
@@ -529,8 +547,8 @@ export async function createPost(
     }
 
     // Validate authorId if provided
-    if (data.authorId) {
-      const authorResult = await getAuthorById(data.authorId);
+    if (preparedData.authorId) {
+      const authorResult = await getAuthorById(preparedData.authorId);
       if (!authorResult.success) {
         return {
           success: false,
@@ -539,19 +557,19 @@ export async function createPost(
       }
     }
 
-    const readTime = calculateReadTime(data.content);
+    const readTime = calculateReadTime(preparedData.content);
 
     const post = {
       id: nextPostId++,
-      title: data.title,
-      slug: data.slug,
-      content: data.content,
-      excerpt: data.excerpt,
-      featuredImage: data.featuredImage,
-      published: data.published || false,
-      publishedAt: data.publishedAt,
-      authorId: data.authorId,  // ✅ 使用 authorId
-      tags: data.tags,
+      title: preparedData.title,
+      slug: preparedData.slug,
+      content: preparedData.content,
+      excerpt: preparedData.excerpt,
+      featuredImage: preparedData.featuredImage,
+      published: preparedData.published || false,
+      publishedAt: preparedData.publishedAt,
+      authorId: preparedData.authorId,  // ✅ 使用 authorId
+      tags: preparedData.tags,
       readTime,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -595,9 +613,11 @@ export async function updatePost(
   error?: string;
 }> {
   try {
+    const preparedData = sanitizePostPayload(data);
+
     if (db) {
       try {
-        const p = await updatePostD1(db, id, data);
+        const p = await updatePostD1(db, id, preparedData);
 
         const result: PostWithAuthor = {
           id: p.id as number,
@@ -648,8 +668,8 @@ export async function updatePost(
     }
 
     // Check for duplicate slug if slug is being updated
-    if (data.slug && data.slug !== post.slug) {
-      const existing = Array.from(mockPosts.values()).find((p) => p.slug === data.slug);
+    if (preparedData.slug && preparedData.slug !== post.slug) {
+      const existing = Array.from(mockPosts.values()).find((p) => p.slug === preparedData.slug);
       if (existing) {
         return {
           success: false,
@@ -659,8 +679,8 @@ export async function updatePost(
     }
 
     // Validate authorId if provided
-    if (data.authorId !== undefined && data.authorId !== null) {
-      const authorResult = await getAuthorById(data.authorId);
+    if (preparedData.authorId !== undefined && preparedData.authorId !== null) {
+      const authorResult = await getAuthorById(preparedData.authorId);
       if (!authorResult.success) {
         return {
           success: false,
@@ -670,11 +690,12 @@ export async function updatePost(
     }
 
     // Recalculate readTime if content is being updated
-    const readTime = data.content !== undefined ? calculateReadTime(data.content) : post.readTime;
+    const readTime =
+      preparedData.content !== undefined ? calculateReadTime(preparedData.content) : post.readTime;
 
     const updated = {
       ...post,
-      ...data,
+      ...preparedData,
       readTime, // Use recalculated or existing value
       updatedAt: new Date().toISOString(),
     };

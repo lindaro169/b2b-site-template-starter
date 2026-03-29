@@ -30,7 +30,7 @@ export default function TurnstileWidget({
   }, [onSuccess, onError, onExpire]);
 
   useEffect(() => {
-    if (!siteConfig.templateMode) {
+    if (!siteConfig.localPreviewMode) {
       return;
     }
 
@@ -38,7 +38,7 @@ export default function TurnstileWidget({
   }, [onSuccess]);
 
   const renderWidget = useCallback(() => {
-    if (siteConfig.templateMode) {
+    if (siteConfig.localPreviewMode) {
       return;
     }
 
@@ -86,7 +86,7 @@ export default function TurnstileWidget({
   }, [containerId, theme, size]);
 
   useEffect(() => {
-    if (siteConfig.templateMode) {
+    if (siteConfig.localPreviewMode) {
       return;
     }
 
@@ -127,7 +127,7 @@ export default function TurnstileWidget({
     };
   }, [renderWidget]);
 
-  if (siteConfig.templateMode) {
+  if (siteConfig.localPreviewMode) {
     return (
       <div
         style={{
@@ -138,7 +138,7 @@ export default function TurnstileWidget({
         }}
       >
         <div className="w-full rounded-lg border border-dashed border-stone-300 bg-stone-50 px-4 py-3 text-center text-sm text-stone-500">
-          模板模式已启用占位验证，不会加载真实 Turnstile 配置。
+          本地模板预览已启用占位验证，不会加载真实 Turnstile 配置。
         </div>
       </div>
     );

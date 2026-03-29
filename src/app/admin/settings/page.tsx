@@ -5,13 +5,11 @@ import styles from './settings.module.css';
 
 interface EmailSettings {
   contactEmail: string;
-  adminEmail: string;
 }
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<EmailSettings>({
     contactEmail: '',
-    adminEmail: '',
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -118,26 +116,14 @@ export default function SettingsPage() {
             />
             <small>Contact / Inquiry 通知优先发送到这里。</small>
           </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="adminEmail">管理员邮箱</label>
-            <input
-              id="adminEmail"
-              type="email"
-              value={settings.adminEmail}
-              onChange={(e) => handleChange('adminEmail', e.target.value)}
-              disabled={loading || saving}
-              placeholder="输入管理员邮箱地址"
-            />
-            <small>Better Auth 管理员白名单优先读取这里。</small>
-          </div>
         </section>
 
         <section className={styles.section}>
           <h2>说明</h2>
           <p>如果存在 D1 绑定，本页会写入 `global_config`。</p>
           <p>如果当前是纯本地模板预览且没有 D1，本页会退回模板内存存储，方便你直接演示后台流程。</p>
-          <p>`SALES_NOTIFICATION_EMAIL` 与 `ADMIN_EMAIL` 仍可作为默认值和兜底值存在。</p>
+          <p>后台管理员登录邮箱不在这里修改，本地后台预览和正式环境都通过环境变量 `ADMIN_EMAIL` 配置。</p>
+          <p>`SALES_NOTIFICATION_EMAIL` 仍可作为联系邮箱的默认值和兜底值存在。</p>
         </section>
 
         <div className={styles.actions}>

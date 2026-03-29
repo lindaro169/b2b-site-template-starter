@@ -3,12 +3,12 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { drizzle } from 'drizzle-orm/d1';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import type { D1Database } from '@/lib/d1-db';
-import { getEmailSettings } from '@/lib/global-config';
+import { getAdminEmail } from '@/lib/global-config';
 import { siteConfig } from '@/lib/site-config';
 import { createTemplateAdminSession } from '@/lib/template-admin';
 import * as schema from '../drizzle/schema';
 
-type AuthInstance = ReturnType<typeof betterAuth>;
+type AuthInstance = ReturnType<typeof createAuthInstance>;
 type AuthEnv = {
     DB?: D1Database;
     NEXT_PUBLIC_WEBSITE?: string;
@@ -42,12 +42,12 @@ export async function initAuth() {
 
     const processEnv = process.env as NodeJS.ProcessEnv & { DB?: D1Database };
     let dbBinding = processEnv.DB;
-    let websiteUrl = siteConfig.templateMode ? siteConfig.websiteUrl : process.env.NEXT_PUBLIC_WEBSITE;
-    let betterAuthSecret = siteConfig.templateMode ? siteConfig.betterAuthSecret : process.env.BETTER_AUTH_SECRET;
-    let googleClientId = siteConfig.templateMode ? siteConfig.googleClientId : process.env.GOOGLE_CLIENT_ID;
-    let googleClientSecret = siteConfig.templateMode ? siteConfig.googleClientSecret : process.env.GOOGLE_CLIENT_SECRET;
+    let websiteUrl = siteConfig.localPreviewMode ? siteConfig.websiteUrl : process.env.NEXT_PUBLIC_WEBSITE;
+    let betterAuthSecret = siteConfig.localPreviewMode ? siteConfig.betterAuthSecret : process.env.BETTER_AUTH_SECRET;
+    let googleClientId = siteConfig.localPreviewMode ? siteConfig.googleClientId : process.env.GOOGLE_CLIENT_ID;
+    let googleClientSecret = siteConfig.localPreviewMode ? siteConfig.googleClientSecret : process.env.GOOGLE_CLIENT_SECRET;
 
-    if (!siteConfig.templateMode && (!dbBinding || !websiteUrl || !betterAuthSecret)) {
+    if (!siteConfig.localPreviewMode && (!dbBinding || !websiteUrl || !betterAuthSecret)) {
         try {
             const ctx = await getCloudflareContext();
             if (ctx && ctx.env) {
@@ -75,7 +75,39 @@ export async function initAuth() {
         throw new Error('Better Auth configuration is incomplete');
     }
 
-    authInstance = betterAuth({
+    const adminEmail = getAdminEmail().toLowerCase();
+
+    authInstance = createAuthInstance({
+        dbBinding,
+        betterAuthSecret,
+        googleClientId,
+        googleClientSecret,
+        websiteUrl,
+        adminEmail,
+    });
+
+
+    return authInstance;
+}
+
+type CreateAuthInstanceInput = {
+    dbBinding: D1Database;
+    betterAuthSecret: string;
+    googleClientId?: string;
+    googleClientSecret?: string;
+    websiteUrl: string;
+    adminEmail: string;
+};
+
+function createAuthInstance({
+    dbBinding,
+    betterAuthSecret,
+    googleClientId,
+    googleClientSecret,
+    websiteUrl,
+    adminEmail,
+}: CreateAuthInstanceInput) {
+    return betterAuth({
         database: drizzleAdapter(drizzle(dbBinding), {
             provider: 'sqlite',
             schema: {
@@ -115,8 +147,7 @@ export async function initAuth() {
         // Validate email whitelist after successful OAuth
         onSuccess: async (ctx) => {
             const email = ctx.user?.email?.toLowerCase();
-            const { adminEmail } = await getEmailSettings(dbBinding);
-            const allowedEmails = [adminEmail.toLowerCase()];
+            const allowedEmails = [adminEmail];
 
             if (!email || !allowedEmails.includes(email)) {
                 console.warn(`Unauthorized login attempt: ${email}`);
@@ -127,9 +158,6 @@ export async function initAuth() {
             console.log(`Authorized login: ${email}`);
         },
     });
-
-
-    return authInstance;
 }
 
 export const auth = new Proxy({} as AuthInstance, {
@@ -147,9 +175,8 @@ export const auth = new Proxy({} as AuthInstance, {
 import { headers } from 'next/headers';
 
 export async function verifyAuth() {
-    if (siteConfig.templateMode) {
-        const { adminEmail } = await getEmailSettings();
-        return createTemplateAdminSession(adminEmail);
+    if (siteConfig.localPreviewMode) {
+        return createTemplateAdminSession(getAdminEmail());
     }
 
     const auth = await initAuth();

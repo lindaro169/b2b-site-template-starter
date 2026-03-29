@@ -1,18 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAuth } from '@/lib/auth';
 import { apiErrorResponse } from '@/lib/api-response';
-
-type XLSXModule = typeof import('xlsx');
-let XLSX: XLSXModule | null = null;
-
-async function initXLSX() {
-  if (!XLSX) {
-    const mod = await import('xlsx');
-    const maybeDefault = (mod as unknown as { default?: XLSXModule }).default;
-    XLSX = maybeDefault ?? (mod as unknown as XLSXModule);
-  }
-  return XLSX;
-}
+import { isSupportedExcelFileName, readFirstWorksheetRows } from '@/lib/excel';
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,26 +20,12 @@ export async function POST(request: NextRequest) {
       return apiErrorResponse('未找到 Excel 文件', 400);
     }
 
-    // 初始化 xlsx
-
-    const xlsx = await initXLSX();
-
-    // 读取 Excel 文件
-    const excelBuffer = await excelFile.arrayBuffer();
-    const workbook = xlsx.read(excelBuffer, { type: 'array' });
-
-    if (!workbook.SheetNames.length) {
-      return NextResponse.json(
-        { success: false, error: 'Excel 文件为空' },
-        { status: 400 }
-      );
+    if (!isSupportedExcelFileName(excelFile.name)) {
+      return apiErrorResponse('只支持 .xlsx 格式的 Excel 文件', 400);
     }
 
-    // 获取第一个工作表
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const sheetToJson = (xlsx.utils.sheet_to_json as unknown as (ws: unknown) => Array<Record<string, unknown>>);
-    const data = sheetToJson(worksheet);
+    // 读取 Excel 文件
+    const data = await readFirstWorksheetRows(await excelFile.arrayBuffer());
 
     if (!data || data.length === 0) {
       return NextResponse.json(
