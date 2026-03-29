@@ -256,7 +256,7 @@ function cloneLead<T>(value: T): T {
 }
 
 export function createTemplateAdminSession(
-  adminEmail: string = siteConfig.adminEmail
+  adminEmail: string = siteConfig.previewAdminEmail
 ): TemplateAdminSession {
   return {
     user: {

@@ -4,6 +4,7 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { verifyTurnstileToken } from '@/lib/validation';
 import { getD1Database, saveContactD1, type D1Database } from '@/lib/d1-db';
 import { sendTrackedContactNotification } from '@/lib/email';
+import { buildRateLimitHeaders, checkRequestRateLimit } from '@/lib/request-rate-limit';
 import { siteConfig } from '@/lib/site-config';
 import {
   buildRequestGeoInfo,
@@ -34,6 +35,11 @@ const contactSchema = z
   });
 
 type ContactFormData = z.infer<typeof contactSchema>;
+
+const CONTACT_RATE_LIMIT = {
+  limit: 5,
+  windowMs: 10 * 60 * 1000,
+} as const;
 
 async function getDB(): Promise<D1Database | undefined> {
   try {
@@ -69,10 +75,30 @@ export async function POST(request: NextRequest) {
       throw error;
     }
 
+    const rateLimitResult = checkRequestRateLimit({
+      routeKey: 'public-contact-submit',
+      headers: request.headers,
+      limit: CONTACT_RATE_LIMIT.limit,
+      windowMs: CONTACT_RATE_LIMIT.windowMs,
+    });
+
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: '提交过于频繁，请稍后再试',
+        },
+        {
+          status: 429,
+          headers: buildRateLimitHeaders(rateLimitResult),
+        }
+      );
+    }
+
     const turnstileToken = validatedData.turnstile_token || validatedData.turnstileToken || '';
     let turnstileResult;
 
-    if (siteConfig.templateMode) {
+    if (siteConfig.localPreviewMode) {
       turnstileResult = {
         success: turnstileToken === siteConfig.templateTurnstileToken,
         'error-codes':
@@ -105,7 +131,7 @@ export async function POST(request: NextRequest) {
           success: false,
           error: '安全验证失败, 请重试',
         },
-        { status: 429 }
+        { status: 400 }
       );
     }
 
@@ -157,7 +183,10 @@ export async function POST(request: NextRequest) {
         leadType: 'contact',
         googleAdsEligible: true,
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: buildRateLimitHeaders(rateLimitResult),
+      }
     );
   } catch (error) {
     console.error('Contact form error:', error);

@@ -50,4 +50,4 @@ pnpm deploy
 - `src/lib/site-config.ts` 里的占位邮箱和品牌名
 - `wrangler.jsonc` 里的域名、路由、绑定 ID
 - `public/favicon.svg` 和 `public/logos/template-logo.svg`
-- 邮件接收邮箱与管理员邮箱
+- 邮件接收邮箱与 `ADMIN_EMAIL` 管理员登录邮箱

@@ -3,12 +3,10 @@ import { siteConfig } from '@/lib/site-config';
 
 export const GLOBAL_CONFIG_KEYS = {
   contactEmail: 'contact_email',
-  adminEmail: 'admin_email',
 } as const;
 
 export interface EmailSettings {
   contactEmail: string;
-  adminEmail: string;
 }
 
 type GlobalConfigRow = {
@@ -23,7 +21,6 @@ function getTemplateGlobalConfigStore(): Map<string, string> {
   if (!globalForTemplateConfig.__templateGlobalConfigStore) {
     globalForTemplateConfig.__templateGlobalConfigStore = new Map<string, string>([
       [GLOBAL_CONFIG_KEYS.contactEmail, siteConfig.contactEmail],
-      [GLOBAL_CONFIG_KEYS.adminEmail, siteConfig.adminEmail],
     ]);
   }
 
@@ -119,23 +116,24 @@ export async function setGlobalConfigValue(
 export async function getEmailSettings(
   db?: D1Database
 ): Promise<EmailSettings> {
-  const [savedContactEmail, savedAdminEmail] = await Promise.all([
-    getGlobalConfigValue(db, GLOBAL_CONFIG_KEYS.contactEmail),
-    getGlobalConfigValue(db, GLOBAL_CONFIG_KEYS.adminEmail),
-  ]);
+  const savedContactEmail = await getGlobalConfigValue(db, GLOBAL_CONFIG_KEYS.contactEmail);
 
   return {
     contactEmail:
       savedContactEmail ||
       process.env.SALES_NOTIFICATION_EMAIL ||
-      process.env.ADMIN_EMAIL ||
       siteConfig.contactEmail,
-    adminEmail:
-      savedAdminEmail ||
-      process.env.ADMIN_EMAIL ||
-      process.env.SALES_NOTIFICATION_EMAIL ||
-      siteConfig.adminEmail,
   };
+}
+
+export function getAdminEmail(): string {
+  const normalizedAdminEmail = normalizeStoredValue(process.env.ADMIN_EMAIL);
+
+  if (normalizedAdminEmail) {
+    return normalizedAdminEmail;
+  }
+
+  throw new Error('ADMIN_EMAIL 未配置，无法确定后台管理员邮箱');
 }
 
 export async function saveEmailSettings(
@@ -144,23 +142,14 @@ export async function saveEmailSettings(
 ): Promise<EmailSettings> {
   const nextSettings: EmailSettings = {
     contactEmail: input.contactEmail.trim(),
-    adminEmail: input.adminEmail.trim(),
   };
 
-  await Promise.all([
-    setGlobalConfigValue(
-      db,
-      GLOBAL_CONFIG_KEYS.contactEmail,
-      nextSettings.contactEmail,
-      '后台联系邮箱，contact/inquiry 通知优先读取此值'
-    ),
-    setGlobalConfigValue(
-      db,
-      GLOBAL_CONFIG_KEYS.adminEmail,
-      nextSettings.adminEmail,
-      '后台管理员邮箱，Better Auth 白名单优先读取此值'
-    ),
-  ]);
+  await setGlobalConfigValue(
+    db,
+    GLOBAL_CONFIG_KEYS.contactEmail,
+    nextSettings.contactEmail,
+    '后台联系邮箱，contact/inquiry 通知优先读取此值'
+  );
 
   return nextSettings;
 }

@@ -1,8 +1,11 @@
 'use client';
 
-import { useState, useRef, useMemo } from 'react';
-import { marked } from 'marked';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './rich-editor.module.css';
+import {
+  extractPlainTextFromRichContent,
+  renderRichContentToHtml,
+} from '@/lib/sanitize-rich-content';
 
 export interface RichEditorProps {
   value: string;
@@ -20,6 +23,25 @@ export function RichEditor({
   const editorRef = useRef<HTMLDivElement>(null);
   const [isHtmlMode, setIsHtmlMode] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState<string>('');
+
+  useEffect(() => {
+    if (!editorRef.current) {
+      return;
+    }
+
+    if (isHtmlMode) {
+      if (editorRef.current.textContent !== value) {
+        editorRef.current.textContent = value;
+      }
+      editorRef.current.contentEditable = 'false';
+      return;
+    }
+
+    if (editorRef.current.innerHTML !== value) {
+      editorRef.current.innerHTML = value;
+    }
+    editorRef.current.contentEditable = 'true';
+  }, [isHtmlMode, value]);
 
   const execCommand = (command: string, value?: string) => {
     document.execCommand(command, false, value);
@@ -67,16 +89,7 @@ export function RichEditor({
   };
 
   const toggleHtmlMode = () => {
-    if (editorRef.current) {
-      if (isHtmlMode) {
-        editorRef.current.innerHTML = value;
-        editorRef.current.contentEditable = 'true';
-      } else {
-        editorRef.current.textContent = value;
-        editorRef.current.contentEditable = 'false';
-      }
-      setIsHtmlMode(!isHtmlMode);
-    }
+    setIsHtmlMode((prev) => !prev);
   };
 
   return (
@@ -241,14 +254,12 @@ export function RichEditor({
         onKeyDown={handleKeyDown}
         suppressContentEditableWarning
         data-placeholder={placeholder}
-      >
-        {value}
-      </div>
+      />
 
       {/* Word Count */}
       <div className={styles.footer}>
         <span className={styles.wordCount}>
-          字数: {value.replace(/<[^>]*>/g, '').length}
+          字数: {extractPlainTextFromRichContent(value).length}
         </span>
       </div>
     </div>
@@ -259,27 +270,7 @@ export function RichEditor({
 export function EditorPreview({ content }: { content: string }) {
   // 使用 useMemo 缓存转换后的 HTML，避免每次渲染都重新转换
   const htmlContent = useMemo(() => {
-    if (!content || content.trim().length === 0) {
-      return '<p style="color: #999; font-style: italic;">无预览内容</p>';
-    }
-
-    // 检查内容是否为 HTML（包含 HTML 标签）或 markdown（包含 markdown 语法）
-    const isHtml = /<[^>]+>/g.test(content);
-
-    if (isHtml) {
-      // 已经是 HTML，直接返回
-      return content;
-    }
-
-    // 如果是 markdown，将其转换为 HTML
-    try {
-      const converted = marked(content) as string;
-      return converted || '<p style="color: #999; font-style: italic;">无预览内容</p>';
-    } catch (error) {
-      // 如果转换失败，简单处理换行
-      console.error('Failed to parse markdown:', error);
-      return `<p>${content.replace(/\n/g, '<br/>')}</p>`;
-    }
+    return renderRichContentToHtml(content);
   }, [content]);
 
   return (

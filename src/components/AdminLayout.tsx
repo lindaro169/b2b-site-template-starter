@@ -53,7 +53,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const handleLogout = () => {
     logout();
-    router.push(siteConfig.templateMode ? '/admin/dashboard' : '/login');
+    router.push(siteConfig.localPreviewMode ? '/admin/dashboard' : '/login');
   };
 
   const isActive = (path: string) => pathname === path;

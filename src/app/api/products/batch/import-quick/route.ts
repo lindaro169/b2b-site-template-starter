@@ -1,27 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAuth } from '@/lib/auth';
 import { apiErrorResponse } from '@/lib/api-response';
-
-type XLSXModule = typeof import('xlsx');
+import { isSupportedExcelFileName, readFirstWorksheetRows } from '@/lib/excel';
 type JSZipModule = typeof import('jszip');
 
-let XLSX: XLSXModule | null = null;
 let JSZip: JSZipModule | null = null;
 
 async function initLibraries() {
-  if (!XLSX) {
-    const mod = await import('xlsx');
-    const maybeDefault = (mod as unknown as { default?: XLSXModule }).default;
-    XLSX = maybeDefault ?? (mod as unknown as XLSXModule);
-  }
-
   if (!JSZip) {
     const mod = await import('jszip');
     const maybeDefault = (mod as unknown as { default?: JSZipModule }).default;
     JSZip = maybeDefault ?? (mod as unknown as JSZipModule);
   }
 
-  return { XLSX, JSZip };
+  return { JSZip };
 }
 
 export async function POST(request: NextRequest) {
@@ -41,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 初始化库
-    const { XLSX, JSZip } = await initLibraries();
+    const { JSZip } = await initLibraries();
 
     // 读取 ZIP 文件
     const buffer = await file.arrayBuffer();
@@ -59,7 +51,7 @@ export async function POST(request: NextRequest) {
     const files = (zip as { files: JSZipFiles }).files;
 
     for (const [filename, zipEntry] of Object.entries(files)) {
-      if ((filename.endsWith('.xlsx') || filename.endsWith('.xls')) && !filename.includes('__MACOSX')) {
+      if (isSupportedExcelFileName(filename) && !filename.includes('__MACOSX')) {
         excelFile = zipEntry;
         excelFileName = filename;
         break;
@@ -68,27 +60,21 @@ export async function POST(request: NextRequest) {
 
     if (!excelFile) {
       return NextResponse.json(
-        { success: false, error: 'ZIP 文件中未找到 Excel 文件' },
+        { success: false, error: 'ZIP 文件中未找到 .xlsx Excel 文件' },
         { status: 400 }
       );
     }
 
     // 读取 Excel 文件
     const excelBuffer = await excelFile.async('arraybuffer');
-    const workbook = XLSX.read(excelBuffer, { type: 'array' });
-
-    if (!workbook.SheetNames.length) {
+    if (!(excelBuffer instanceof ArrayBuffer) && !(excelBuffer instanceof Uint8Array)) {
       return NextResponse.json(
-        { success: false, error: 'Excel 文件为空' },
+        { success: false, error: 'Excel 文件读取失败' },
         { status: 400 }
       );
     }
 
-    // 获取第一个工作表
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const sheetToJson = (XLSX.utils.sheet_to_json as unknown as (ws: unknown) => Array<Record<string, unknown>>);
-    const data = sheetToJson(worksheet);
+    const data = await readFirstWorksheetRows(excelBuffer);
 
     if (!data || data.length === 0) {
       return NextResponse.json(

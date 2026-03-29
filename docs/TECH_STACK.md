@@ -70,11 +70,16 @@ NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY=mock-turnstile-site-key
 CLOUDFLARE_TURNSTILE_SECRET_KEY=mock-turnstile-secret-key
 RESEND_API_KEY=re_mock_template_key
 RESEND_FROM_EMAIL=contact@template-site-placeholder.example
+ADMIN_EMAIL=admin@template-site-placeholder.example
 SALES_NOTIFICATION_EMAIL=admin@template-site-placeholder.example
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-TEMPLATE0000
 NEXT_PUBLIC_GOOGLE_ADS_ID=AW-TEMPLATE0000
 NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL=template_inquiry_label
+GOOGLE_ADS_FEED_USERNAME=template-feed-user
+GOOGLE_ADS_FEED_PASSWORD=template-feed-password
 ```
+
+如果你只看前台页面，`ADMIN_EMAIL` 可以稍后再配；只要你要看 `/admin` 或调用后台接口，就必须先配它。
 
 ## 什么时候再去研究更深的技术细节
 
@@ -86,10 +91,6 @@ NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL=template_inquiry_label
 - 为什么邮件没有发出去
 
 否则你只要先把网站跑起来，再让 AI 分步骤改页面就够了。
-NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL=template_inquiry_label
-GOOGLE_ADS_FEED_USERNAME=template-feed-user
-GOOGLE_ADS_FEED_PASSWORD=template-feed-password
-```
 
 ## 注意事项
 

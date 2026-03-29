@@ -1,18 +1,6 @@
 import { NextResponse } from 'next/server';
 import { verifyAuth } from '@/lib/auth';
-
-// 动态导入 xlsx，因为它是一个客户端库，但在服务器端使用时需要特殊处理
-type XLSXModule = typeof import('xlsx');
-let XLSX: XLSXModule | null = null;
-
-async function initXLSX() {
-  if (!XLSX) {
-    const mod = await import('xlsx');
-    const maybeDefault = (mod as unknown as { default?: XLSXModule }).default;
-    XLSX = maybeDefault ?? (mod as unknown as XLSXModule);
-  }
-  return XLSX;
-}
+import { createWorkbookBuffer, type ExcelSheetDefinition } from '@/lib/excel';
 
 export async function POST() {
   try {
@@ -22,13 +10,6 @@ export async function POST() {
       return NextResponse.json({ error: '未授权' }, { status: 401 });
     }
 
-    // 初始化 xlsx
-    const xlsx = await initXLSX();
-
-    // 创建工作簿
-    const workbook = xlsx.utils.book_new();
-
-    // Sheet 1: 产品数据模板
     const productTemplate: Array<Record<string, string>> = [
       {
         '产品名称': '示例产品 1',
@@ -54,24 +35,6 @@ export async function POST() {
       },
     ];
 
-    const productSheet = xlsx.utils.json_to_sheet(productTemplate);
-
-    // 设置列宽
-    productSheet['!cols'] = [
-      { wch: 15 }, // 产品名称
-      { wch: 25 }, // 产品描述
-      { wch: 12 }, // 价格
-      { wch: 10 }, // 库存
-      { wch: 12 }, // 分类
-      { wch: 18 }, // 主图片
-      { wch: 20 }, // 其他图片
-      { wch: 12 }, // SKU
-      { wch: 10 }, // 状态
-    ];
-
-    xlsx.utils.book_append_sheet(workbook, productSheet, '产品数据');
-
-    // Sheet 2: 说明文档
     const instructionData: Array<Record<string, string>> = [
       { 字段: '产品名称', 必填: '是', 说明: '产品的名称，长度 1-100 字符' },
       { 字段: '产品描述', 必填: '否', 说明: '产品的详细描述' },
@@ -84,20 +47,37 @@ export async function POST() {
       { 字段: '状态', 必填: '否', 说明: '发布状态：发布 或 草稿（默认为发布）' },
     ];
 
-    const instructionSheet = xlsx.utils.json_to_sheet(instructionData);
-    instructionSheet['!cols'] = [
-      { wch: 15 },
-      { wch: 8 },
-      { wch: 40 },
+    const sheets: ExcelSheetDefinition[] = [
+      {
+        name: '产品数据',
+        columns: [
+          { header: '产品名称', key: '产品名称', width: 15 },
+          { header: '产品描述', key: '产品描述', width: 25 },
+          { header: '价格', key: '价格', width: 12 },
+          { header: '库存', key: '库存', width: 10 },
+          { header: '分类', key: '分类', width: 12 },
+          { header: '主图片', key: '主图片', width: 18 },
+          { header: '其他图片', key: '其他图片', width: 20 },
+          { header: 'SKU', key: 'SKU', width: 12 },
+          { header: '状态', key: '状态', width: 10 },
+        ],
+        rows: productTemplate,
+      },
+      {
+        name: '字段说明',
+        columns: [
+          { header: '字段', key: '字段', width: 15 },
+          { header: '必填', key: '必填', width: 8 },
+          { header: '说明', key: '说明', width: 40 },
+        ],
+        rows: instructionData,
+      },
     ];
 
-    xlsx.utils.book_append_sheet(workbook, instructionSheet, '字段说明');
-
-    // 生成 Excel 文件
-    const buffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+    const buffer = await createWorkbookBuffer(sheets);
 
     // 返回文件
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

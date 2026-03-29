@@ -59,10 +59,10 @@ function buildCsv(rows: Array<Record<string, string>>): string {
 }
 
 function isAuthorized(request: NextRequest): boolean {
-  const username = siteConfig.templateMode
+  const username = siteConfig.localPreviewMode
     ? siteConfig.googleAdsFeedUsername
     : process.env.GOOGLE_ADS_FEED_USERNAME;
-  const password = siteConfig.templateMode
+  const password = siteConfig.localPreviewMode
     ? siteConfig.googleAdsFeedPassword
     : process.env.GOOGLE_ADS_FEED_PASSWORD;
 
