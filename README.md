@@ -116,3 +116,11 @@ pnpm dev
 
 - 可直接拿去上线的真实品牌站
 - 已接好所有第三方服务的生产系统
+
+## 致谢
+
+本项目基于 [lindaro169/fullstack-next-cloudflare](https://github.com/lindaro169/fullstack-next-cloudflare) 二次开发，并针对当前模板网站场景进行了调整。
+
+## License
+
+本项目采用 MIT License，详见 [LICENSE](./LICENSE)。
