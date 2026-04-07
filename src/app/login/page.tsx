@@ -24,7 +24,6 @@ export default function LoginPage() {
       return;
     }
 
-    console.log('Google login button clicked');
     setError('');
     setLoading(true);
 
@@ -33,26 +32,16 @@ export default function LoginPage() {
         provider: 'google',
         callbackURL: '/admin/dashboard',
       }, {
-        onRequest: () => {
-          console.log('Google login request started');
-        },
         onError: (ctx) => {
-          console.error('Google login error:', ctx);
           setError(ctx.error.message || '登录失败，请重试');
           setLoading(false);
-          // Reset Turnstile by changing key
           setTurnstileKey(prev => prev + 1);
           setTurnstileToken(null);
         },
-        onSuccess: () => {
-          console.log('Google login success');
-        }
       });
     } catch (err) {
-      console.error('Google login exception:', err);
       setError('登录失败，请重试');
       setLoading(false);
-      // Reset Turnstile by changing key
       setTurnstileKey(prev => prev + 1);
       setTurnstileToken(null);
     }
@@ -116,17 +105,14 @@ export default function LoginPage() {
                 key={turnstileKey}
                 sitekey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || ''}
                 onVerify={(token) => {
-                  console.log('Turnstile verified:', token);
                   setTurnstileToken(token);
                   setError('');
                 }}
                 onError={() => {
-                  console.error('Turnstile error');
                   setError('人机验证失败，请刷新页面重试');
                   setTurnstileToken(null);
                 }}
                 onExpire={() => {
-                  console.log('Turnstile expired');
                   setTurnstileToken(null);
                 }}
                 theme="light"

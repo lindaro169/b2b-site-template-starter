@@ -68,7 +68,7 @@ const validateProductForm = (data: ProductFormData) => {
 export default function ProductForm() {
   const router = useRouter();
   const params = useParams();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(!!params?.id);
   const [imageUrl, setImageUrl] = useState('');
 
@@ -94,7 +94,7 @@ export default function ProductForm() {
     setFieldValue,
   } = useForm<ProductFormData>({
     onSubmit: async (data) => {
-      if (!token) throw new Error('未登录');
+      if (!isAuthenticated) throw new Error('未登录');
 
       const method = productId ? 'PUT' : 'POST';
       const url = productId
@@ -105,7 +105,6 @@ export default function ProductForm() {
         method,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           // 基础字段
@@ -152,13 +151,11 @@ export default function ProductForm() {
 
   // Load product if editing
   useEffect(() => {
-    if (!productId || !token) return;
+    if (!productId || !isAuthenticated) return;
 
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`/api/products/${productId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetch(`/api/products/${productId}`);
 
         if (!response.ok) throw new Error('Failed to load product');
 
@@ -209,7 +206,7 @@ export default function ProductForm() {
     };
 
     fetchProduct();
-  }, [productId, token, setFieldValue]);
+  }, [productId, isAuthenticated, setFieldValue]);
 
   // 获取分类列表
   useEffect(() => {

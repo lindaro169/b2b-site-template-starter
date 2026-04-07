@@ -25,19 +25,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedMenu, setExpandedMenu] = useState<string | null>('博客管理');
 
-  // Redirect to login if not authenticated
-  // Add a small delay to avoid race condition with OAuth callback
   useEffect(() => {
-    console.log('[AdminLayout] Auth check:', { isLoading, hasUser: !!user, pathname });
-
     if (!isLoading && !user) {
-      // Wait 500ms to allow session to settle after OAuth redirect
-      const timer = setTimeout(() => {
-        console.log('[AdminLayout] Redirecting to login after delay');
-        router.push('/login');
-      }, 500);
-
-      return () => clearTimeout(timer);
+      router.push('/login');
     }
   }, [isLoading, user, router, pathname]);
 

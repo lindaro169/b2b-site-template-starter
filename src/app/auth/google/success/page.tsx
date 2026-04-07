@@ -12,52 +12,15 @@ function GoogleAuthSuccessContent() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Get token and user info from query params
-    const token = searchParams.get('token');
-    const userStr = searchParams.get('user');
     const errorParam = searchParams.get('error');
 
-    console.log('🔍 Auth Success Page - Query Params:', {
-      hasToken: !!token,
-      hasUser: !!userStr,
-      error: errorParam,
-    });
-
-    // Check for errors
     if (errorParam) {
       const errorMsg = decodeURIComponent(errorParam);
-      console.error('❌ OAuth Error:', errorMsg);
       setError(errorMsg);
       return;
     }
 
-    if (token) {
-      try {
-        // Store token in localStorage
-        localStorage.setItem('adminToken', token);
-        console.log('✅ Token stored in localStorage');
-
-        if (userStr) {
-          const user = JSON.parse(userStr);
-          localStorage.setItem('user', JSON.stringify(user));
-          console.log('✅ User info stored:', user);
-        }
-
-        // Redirect to admin dashboard
-        console.log('🚀 Redirecting to dashboard...');
-        setTimeout(() => {
-          router.push('/admin/dashboard');
-        }, 1500);
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : String(err);
-        console.error('❌ Error processing auth:', errorMsg);
-        setError('处理认证信息时出错：' + errorMsg);
-      }
-    } else {
-      const errorMsg = '未收到授权令牌，登录失败。请返回登录页面重试。';
-      console.error('❌ ' + errorMsg);
-      setError(errorMsg);
-    }
+    router.replace('/admin/dashboard');
   }, [searchParams, router]);
 
   if (error) {
@@ -158,13 +121,13 @@ function GoogleAuthSuccessContent() {
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
       }}>
         <h2>✅ 登录成功</h2>
-        <p>正在处理您的认证信息...</p>
+        <p>正在跳转到后台...</p>
         <div style={{
           marginTop: '20px',
           fontSize: '12px',
           color: '#999',
         }}>
-          正在重定向到仪表板...
+          正在重定向...
         </div>
       </div>
     </div>

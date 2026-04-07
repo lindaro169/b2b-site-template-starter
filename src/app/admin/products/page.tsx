@@ -20,7 +20,7 @@ interface Product {
 }
 
 export default function ProductsPage() {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +31,7 @@ export default function ProductsPage() {
   const [deleting, setDeleting] = useState(false);
 
   const fetchProducts = useCallback(async (p: number = 1, q: string = '') => {
-    if (!token) return;
+    if (!isAuthenticated) return;
 
     try {
       setLoading(true);
@@ -41,9 +41,7 @@ export default function ProductsPage() {
         ...(q && { search: q }),
       });
 
-      const response = await fetch(`/api/products?${params}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch(`/api/products?${params}`);
 
       if (!response.ok) throw new Error('Failed to fetch products');
 
@@ -55,7 +53,7 @@ export default function ProductsPage() {
     } finally {
       setLoading(false);
     }
-  }, [token, limit]);
+  }, [isAuthenticated, limit]);
 
   useEffect(() => {
     fetchProducts(page, search);
@@ -68,13 +66,12 @@ export default function ProductsPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!token) return;
+    if (!isAuthenticated) return;
 
     try {
       setDeleting(true);
       const response = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!response.ok) throw new Error('Failed to delete product');

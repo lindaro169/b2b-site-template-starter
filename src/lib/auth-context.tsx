@@ -14,10 +14,9 @@ export interface AdminUser {
 
 export interface AuthContextType {
   user: AdminUser | null;
-  token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (token: string, user: AdminUser) => void;
+  login: () => void;
   logout: () => void;
   updateUser: (user: AdminUser) => void;
 }
@@ -34,16 +33,8 @@ function RuntimeAuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('[AuthProvider] Session update:', {
-      hasSession: !!session,
-      hasUser: !!session?.user,
-      isPending,
-      error
-    });
-
     if (session?.user) {
       const sessionRole = (session.user as Record<string, unknown>).role;
-      console.log('[AuthProvider] Setting user:', session.user.email);
       setUser({
         id: session.user.id,
         email: session.user.email,
@@ -54,7 +45,6 @@ function RuntimeAuthProvider({ children }: AuthProviderProps) {
             : 'user',
       });
     } else {
-      console.log('[AuthProvider] No user in session');
       setUser(null);
     }
   }, [session, isPending, error]);
@@ -76,7 +66,6 @@ function RuntimeAuthProvider({ children }: AuthProviderProps) {
 
   const value: AuthContextType = {
     user,
-    token: session?.session?.token || null,
     isAuthenticated: !!session?.user,
     isLoading: isPending,
     login,
@@ -98,7 +87,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const value: AuthContextType = {
       user: templateUser,
-      token: 'template-admin-token',
       isAuthenticated: true,
       isLoading: false,
       login: () => undefined,

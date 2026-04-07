@@ -16,7 +16,7 @@ interface Post {
 }
 
 export default function PostsPage() {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,13 +26,11 @@ export default function PostsPage() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      if (!token) return;
+      if (!isAuthenticated) return;
 
       try {
         setLoading(true);
-        const response = await fetch('/api/posts', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetch('/api/posts');
 
         if (!response.ok) throw new Error('Failed to fetch posts');
 
@@ -47,16 +45,15 @@ export default function PostsPage() {
     };
 
     fetchPosts();
-  }, [token]);
+  }, [isAuthenticated]);
 
   const handleDelete = async (id: number) => {
-    if (!token) return;
+    if (!isAuthenticated) return;
 
     try {
       setDeleting(true);
       const response = await fetch(`/api/posts/${id}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!response.ok) throw new Error('Failed to delete post');
@@ -71,14 +68,13 @@ export default function PostsPage() {
   };
 
   const handlePublish = async (id: number, published: boolean) => {
-    if (!token) return;
+    if (!isAuthenticated) return;
 
     try {
       const response = await fetch(`/api/posts/${id}/publish`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ published: !published }),
       });
