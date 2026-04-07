@@ -12,16 +12,12 @@ type ImportMode = 'quick' | 'step';
 
 export default function ProductImportPage() {
   const router = useRouter();
-  const { token } = useAuth();
   const [importMode, setImportMode] = useState<ImportMode>('quick');
 
   const handleDownloadTemplate = async () => {
     try {
       const response = await fetch('/api/products/batch/template', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
       });
 
       if (!response.ok) {
@@ -73,9 +69,9 @@ export default function ProductImportPage() {
         />
 
         {importMode === 'quick' ? (
-          <QuickImportMode token={token!} />
+          <QuickImportMode />
         ) : (
-          <StepImportMode token={token!} />
+          <StepImportMode />
         )}
       </div>
     </div>

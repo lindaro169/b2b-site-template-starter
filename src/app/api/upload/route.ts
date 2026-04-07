@@ -51,25 +51,7 @@ type UploadEnv = {
 
 export async function POST(request: NextRequest) {
   try {
-    // 1. 认证检查
-    // 1. 认证检查
-    let session = await verifyAuth();
-
-    // ✅ 开发环境允许绕过认证 (用于脚本批量导入)
-    if (!session && process.env.NODE_ENV === 'development' && request.headers.get('x-bypass-auth') === 'true') {
-      console.log('⚠️ 开发环境：绕过认证检查');
-      session = {
-        user: {
-          id: 'dev-script',
-          email: 'dev@local',
-          name: 'Dev Script',
-          emailVerified: true,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        session: { id: 'dev-session', userId: 'dev-script', expiresAt: new Date(), token: 'dev', createdAt: new Date(), updatedAt: new Date(), ipAddress: '127.0.0.1' }
-      };
-    }
+    const session = await verifyAuth();
 
     if (!session) {
       return apiErrorResponse('未授权访问', 401);

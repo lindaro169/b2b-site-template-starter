@@ -3,11 +3,7 @@
 import { useState, useRef } from 'react';
 import styles from '../import.module.css';
 
-interface QuickImportModeProps {
-  token: string;
-}
-
-export default function QuickImportMode({ token }: QuickImportModeProps) {
+export default function QuickImportMode() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -126,7 +122,6 @@ export default function QuickImportMode({ token }: QuickImportModeProps) {
         });
 
         xhr.open('POST', '/api/products/batch/import-quick');
-        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
         xhr.send(formData);
       });
 

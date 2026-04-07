@@ -22,7 +22,7 @@ interface Stats {
 }
 
 export default function AdminDashboard() {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(siteConfig.templateMode ? false : true);
   const [error, setError] = useState<string | null>(null);
@@ -37,17 +37,13 @@ export default function AdminDashboard() {
     }
 
     const fetchStats = async () => {
-      if (!token) return;
+      if (!isAuthenticated) return;
 
       try {
         setLoading(true);
         const [productsRes, postsRes] = await Promise.all([
-          fetch('/api/products/stats', {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          fetch('/api/posts/stats', {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          fetch('/api/products/stats'),
+          fetch('/api/posts/stats'),
         ]);
 
         if (!productsRes.ok || !postsRes.ok) {
@@ -72,7 +68,7 @@ export default function AdminDashboard() {
     };
 
     fetchStats();
-  }, [token, showPlaceholderMetrics]);
+  }, [isAuthenticated, showPlaceholderMetrics]);
 
   return (
     <div className={styles.dashboard}>

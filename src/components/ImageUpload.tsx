@@ -65,16 +65,8 @@ export function ImageUpload({
           formData.append('id', resourceId);
         }
 
-        const token = localStorage.getItem('adminToken');
-        if (!token) {
-          throw new Error('未登录，请先登录');
-        }
-
         const response = await fetch('/api/upload', {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           body: formData,
         });
 

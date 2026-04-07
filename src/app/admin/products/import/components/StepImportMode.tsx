@@ -2,10 +2,6 @@
 
 import { useState, useRef } from 'react';
 
-interface StepImportModeProps {
-  token: string;
-}
-
 type ImportStep = 'upload-excel' | 'validate' | 'upload-images' | 'complete';
 
 interface ValidationResult {
@@ -23,7 +19,7 @@ interface ValidationResult {
   }>;
 }
 
-export default function StepImportMode({ token }: StepImportModeProps) {
+export default function StepImportMode() {
   const [currentStep, setCurrentStep] = useState<ImportStep>('upload-excel');
   const [excelFile, setExcelFile] = useState<File | null>(null);
   const [isValidating, setIsValidating] = useState(false);
@@ -94,9 +90,6 @@ export default function StepImportMode({ token }: StepImportModeProps) {
 
       const response = await fetch('/api/products/batch/validate-excel', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         body: formData,
       });
 
@@ -179,9 +172,6 @@ export default function StepImportMode({ token }: StepImportModeProps) {
 
       const response = await fetch('/api/products/batch/import-step', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         body: formData,
       });
 

@@ -46,7 +46,7 @@ const validatePostForm = (data: PostFormData) => {
 export default function PostEditor() {
   const router = useRouter();
   const params = useParams();
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(!!params?.id);
   const [showPreview, setShowPreview] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
@@ -71,7 +71,7 @@ export default function PostEditor() {
     setFieldValue,
   } = useForm<PostFormData>({
     onSubmit: async (data) => {
-      if (!token) throw new Error('未登录');
+      if (!isAuthenticated) throw new Error('未登录');
 
       const method = postId ? 'PUT' : 'POST';
       const url = postId ? `/api/posts/${postId}` : '/api/posts';
@@ -80,7 +80,6 @@ export default function PostEditor() {
         method,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title: data.title,
@@ -146,13 +145,11 @@ export default function PostEditor() {
 
   // Load post if editing
   useEffect(() => {
-    if (!postId || !token) return;
+    if (!postId || !isAuthenticated) return;
 
     const fetchPost = async () => {
       try {
-        const response = await fetch(`/api/posts/${postId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetch(`/api/posts/${postId}`);
 
         if (!response.ok) throw new Error('Failed to load post');
 
@@ -194,7 +191,7 @@ export default function PostEditor() {
     };
 
     fetchPost();
-  }, [postId, token, setFieldValue]);
+  }, [postId, isAuthenticated, setFieldValue]);
 
   const handleImageUpload = (url: string) => {
     setImageUrl(url);

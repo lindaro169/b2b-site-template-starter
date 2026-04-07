@@ -95,7 +95,7 @@ function buildTagLines(lead: LeadRecord): string[] {
 }
 
 export default function ContactsPage() {
-  const { token, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [leads, setLeads] = useState<LeadRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -106,15 +106,13 @@ export default function ContactsPage() {
   const [actionKey, setActionKey] = useState<string | null>(null);
 
   const fetchLeads = useCallback(async () => {
-    if (!token) {
+    if (!isAuthenticated) {
       return;
     }
 
     try {
       setLoading(true);
-      const response = await fetch('/api/admin/leads?limit=200', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch('/api/admin/leads?limit=200');
 
       if (!response.ok) {
         throw new Error('Failed to fetch leads');
@@ -140,13 +138,13 @@ export default function ContactsPage() {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
-    if (!authLoading && token) {
+    if (!authLoading && isAuthenticated) {
       fetchLeads();
     }
-  }, [authLoading, token, fetchLeads]);
+  }, [authLoading, isAuthenticated, fetchLeads]);
 
   const filteredLeads = leads.filter((lead) => {
     if (salesStage !== 'all' && lead.salesStage !== salesStage) {
@@ -193,7 +191,6 @@ export default function ContactsPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: token ? `Bearer ${token}` : '',
         },
         body: JSON.stringify({ salesStage: nextStage }),
       });
