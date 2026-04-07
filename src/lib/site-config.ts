@@ -91,9 +91,6 @@ export const siteConfig = {
   googleClientId: 'mock-google-client-id.apps.googleusercontent.com',
   googleClientSecret: 'mock-google-client-secret',
   betterAuthSecret: 'mock-better-auth-secret',
-  gaMeasurementId: 'G-TEMPLATE0000',
-  googleAdsId: 'AW-TEMPLATE0000',
-  googleAdsInquiryLabel: 'template_inquiry_label',
   googleAdsFeedUsername: 'template-feed-user',
   googleAdsFeedPassword: 'template-feed-password',
   placeholderMetrics: {

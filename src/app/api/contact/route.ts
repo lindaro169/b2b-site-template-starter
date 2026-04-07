@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { appendAttributionCookies, getAttributionSnapshotFromRequest } from '@/lib/attribution-session';
 import { verifyTurnstileToken } from '@/lib/validation';
 import { getD1Database, saveContactD1, type D1Database } from '@/lib/d1-db';
 import { sendTrackedContactNotification } from '@/lib/email';
@@ -8,7 +9,6 @@ import { buildRateLimitHeaders, checkRequestRateLimit } from '@/lib/request-rate
 import { siteConfig } from '@/lib/site-config';
 import {
   buildRequestGeoInfo,
-  normalizeVisitorTrackingSnapshot,
 } from '@/lib/visitor-tracking';
 
 interface CloudflareEnv {
@@ -27,7 +27,6 @@ const contactSchema = z
     message: z.string().min(1, '消息不能为空').max(5000, '消息不能超过 5000 个字符'),
     turnstile_token: z.string().optional(),
     turnstileToken: z.string().optional(),
-    tracking: z.unknown().optional(),
   })
   .refine((data) => Boolean(data.turnstile_token || data.turnstileToken), {
     message: 'Turnstile token 不能为空',
@@ -135,8 +134,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const tracking = normalizeVisitorTrackingSnapshot(validatedData.tracking);
-
     let cf: Record<string, unknown> | undefined;
     try {
       const context = await getCloudflareContext({ async: true });
@@ -147,6 +144,8 @@ export async function POST(request: NextRequest) {
 
     const geo = buildRequestGeoInfo(cf, request.headers);
     const db = await getDB();
+    const attribution = await getAttributionSnapshotFromRequest(request, db);
+    const tracking = attribution.snapshot;
 
     let savedId: number | undefined;
     if (db) {
@@ -175,6 +174,9 @@ export async function POST(request: NextRequest) {
       console.warn('Contact notification email failed:', emailResult.error);
     }
 
+    const responseHeaders = new Headers(buildRateLimitHeaders(rateLimitResult));
+    appendAttributionCookies(responseHeaders, attribution.cookies);
+
     return NextResponse.json(
       {
         success: true,
@@ -185,7 +187,7 @@ export async function POST(request: NextRequest) {
       },
       {
         status: 200,
-        headers: buildRateLimitHeaders(rateLimitResult),
+        headers: responseHeaders,
       }
     );
   } catch (error) {

@@ -4,8 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import TurnstileWidget from '@/components/TurnstileWidget';
 import TemplateCopyBadge from '@/components/TemplateCopyBadge';
-import { getTrackingPayloadForSubmit } from '@/lib/visitor-tracking';
-import { trackGoogleAdsLeadSubmit } from '@/lib/gtag';
 import { siteConfig } from '@/lib/site-config';
 
 export default function ContactPage() {
@@ -32,14 +30,12 @@ export default function ContactPage() {
     }
 
     try {
-      const tracking = getTrackingPayloadForSubmit();
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
           turnstile_token: turnstileToken,
-          tracking,
         }),
       });
 
@@ -48,12 +44,7 @@ export default function ContactPage() {
         throw new Error(errorData.error || 'Failed to send message');
       }
 
-      const result = await response.json();
-      trackGoogleAdsLeadSubmit({
-        leadType: result?.leadType === 'contact' ? 'contact' : 'inquiry',
-        leadId: result?.id,
-      });
-
+      await response.json();
       console.log('Message sent successfully');
       setSubmitted(true);
       setFormData({ name: '', email: '', message: '' });

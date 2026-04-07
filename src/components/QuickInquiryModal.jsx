@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import TurnstileWidget from './TurnstileWidget';
-import { getTrackingPayloadForSubmit } from '@/lib/visitor-tracking';
-import { trackGoogleAdsLeadSubmit } from '@/lib/gtag';
 
 export default function QuickInquiryModal({ product, onClose }) {
   // 简化表单 - 仅保留 name, email, message 三个字段
@@ -41,13 +39,11 @@ export default function QuickInquiryModal({ product, onClose }) {
     }
 
     try {
-      const tracking = getTrackingPayloadForSubmit();
       const inquiryData = {
         productId: product.id,
         productName: product.title,
         ...formData,
         turnstileToken,
-        tracking,
         submittedAt: new Date().toISOString(),
       };
 
@@ -63,10 +59,6 @@ export default function QuickInquiryModal({ product, onClose }) {
       }
 
       const result = await response.json();
-      trackGoogleAdsLeadSubmit({
-        leadType: result?.leadType === 'inquiry' ? 'inquiry' : 'contact',
-        leadId: result?.id ?? result?.inquiryId,
-      });
       console.log('Inquiry submitted successfully:', result);
       setSubmitSuccess(true);
 

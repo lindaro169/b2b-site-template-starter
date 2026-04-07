@@ -48,10 +48,7 @@
         "NEXT_PUBLIC_WEBSITE": "https://template-site-placeholder.example",
         "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "mock-google-client-id.apps.googleusercontent.com",
         "GOOGLE_CLIENT_ID": "mock-google-client-id.apps.googleusercontent.com",
-        "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY": "mock-turnstile-site-key",
-        "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-TEMPLATE0000",
-        "NEXT_PUBLIC_GOOGLE_ADS_ID": "AW-TEMPLATE0000",
-        "NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL": "template_inquiry_label"
+        "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY": "mock-turnstile-site-key"
     },
     // D1 数据库绑定（生产环境）
     "d1_databases": [
@@ -105,10 +102,7 @@
                 "NEXT_PUBLIC_WEBSITE": "https://template-site-placeholder.example",
                 "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "mock-google-client-id.apps.googleusercontent.com",
                 "GOOGLE_CLIENT_ID": "mock-google-client-id.apps.googleusercontent.com",
-                "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY": "mock-turnstile-site-key",
-                "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-TEMPLATE0000",
-                "NEXT_PUBLIC_GOOGLE_ADS_ID": "AW-TEMPLATE0000",
-                "NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL": "template_inquiry_label"
+                "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY": "mock-turnstile-site-key"
             },
             // D1 数据库绑定（生产环境）
             "d1_databases": [

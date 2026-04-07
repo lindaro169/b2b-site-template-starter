@@ -13,9 +13,6 @@ const publicEnv = siteConfig.templateMode
       NEXT_PUBLIC_WEBSITE: siteConfig.websiteUrl,
       NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY: siteConfig.turnstileSiteKey,
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: siteConfig.turnstileSiteKey,
-      NEXT_PUBLIC_GA_MEASUREMENT_ID: siteConfig.gaMeasurementId,
-      NEXT_PUBLIC_GOOGLE_ADS_ID: siteConfig.googleAdsId,
-      NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL: siteConfig.googleAdsInquiryLabel,
       NEXT_PUBLIC_EMAIL_ENCODED: siteConfig.encodedContactEmail,
       NEXT_PUBLIC_TELEPHONE_ENCODED: siteConfig.encodedContactPhone,
       NEXT_PUBLIC_API_URL: siteConfig.apiBaseUrl,
@@ -27,9 +24,6 @@ const publicEnv = siteConfig.templateMode
       NEXT_PUBLIC_TURNSTILE_SITE_KEY:
         process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
         process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY,
-      NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
-      NEXT_PUBLIC_GOOGLE_ADS_ID: process.env.NEXT_PUBLIC_GOOGLE_ADS_ID,
-      NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL: process.env.NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL,
       NEXT_PUBLIC_EMAIL_ENCODED: process.env.NEXT_PUBLIC_EMAIL_ENCODED,
       NEXT_PUBLIC_TELEPHONE_ENCODED: process.env.NEXT_PUBLIC_TELEPHONE_ENCODED,
       NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,

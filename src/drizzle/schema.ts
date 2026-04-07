@@ -311,6 +311,26 @@ export const contacts = sqliteTable(
   })
 );
 
+export const trackingSessions = sqliteTable(
+  "tracking_sessions",
+  () => ({
+    sessionId: text("session_id").primaryKey(),
+    visitorId: text("visitor_id").notNull(),
+    visitCount: integer("visit_count").notNull().default(1),
+    visitorType: text("visitor_type").notNull().default("first_time"),
+    startedAt: text("started_at").notNull(),
+    lastActivityAt: text("last_activity_at").notNull(),
+    currentPageStartedAt: integer("current_page_started_at").notNull(),
+    landingPageJson: text("landing_page_json").notNull(),
+    sourceJson: text("source_json").notNull(),
+    attributionJson: text("attribution_json").notNull(),
+    pagesJson: text("pages_json").notNull(),
+    createdAt: text("created_at").default(new Date().toISOString()),
+    updatedAt: text("updated_at").default(new Date().toISOString()),
+  }),
+  () => ({})
+);
+
 /**
  * ============================================================================
  * BETTER-AUTH TABLES
