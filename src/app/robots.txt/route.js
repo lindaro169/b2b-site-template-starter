@@ -42,9 +42,6 @@ Disallow: /api
 Disallow: /api/*
 Disallow: /auth
 Disallow: /auth/*
-Disallow: /privacy-policy
-Disallow: /terms-conditions
-
 # Google AI (Bard/Gemini)
 User-agent: Google-Extended
 Allow: /
