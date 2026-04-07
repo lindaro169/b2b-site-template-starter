@@ -17,6 +17,7 @@
 | 认证 | Better Auth | 后台登录 |
 | 邮件 | Resend | 联系和询盘邮件 |
 | 验证 | Cloudflare Turnstile | 表单人机验证 |
+| 归因跟踪 | 服务端 attribution session | 表单不提交 tracking JSON，后端按 session 拼 tracking 快照 |
 
 ## 最常用命令
 
@@ -72,9 +73,6 @@ RESEND_API_KEY=re_mock_template_key
 RESEND_FROM_EMAIL=contact@template-site-placeholder.example
 ADMIN_EMAIL=admin@template-site-placeholder.example
 SALES_NOTIFICATION_EMAIL=admin@template-site-placeholder.example
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-TEMPLATE0000
-NEXT_PUBLIC_GOOGLE_ADS_ID=AW-TEMPLATE0000
-NEXT_PUBLIC_GOOGLE_ADS_INQUIRY_LABEL=template_inquiry_label
 GOOGLE_ADS_FEED_USERNAME=template-feed-user
 GOOGLE_ADS_FEED_PASSWORD=template-feed-password
 ```

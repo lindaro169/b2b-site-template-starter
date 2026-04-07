@@ -18,6 +18,18 @@ graph TD
     应用 --> 部署["OpenNext + Cloudflare Workers"]
 ```
 
+## 线索归因链路
+
+现在的询盘归因走服务端会话，不再由前端拼完整 tracking JSON。
+
+- 浏览器访问页面时，`VisitorTracker` 只向 `/api/visit` 上报当前 path
+- 服务端依据 path、referer、请求头和 Cloudflare `cf` 信息生成或更新 attribution session
+- `session_id` / `visitor_id` 通过 `httpOnly cookie` 保存
+- Contact / Inquiry 提交时，接口从服务端 session 取回 tracking 快照
+- 线索落库、邮件通知、后台线索中心、Google Ads feed 都消费这份服务端 tracking 快照
+
+这样前端请求里不再携带完整归因 JSON，但邮件和后台仍能看到来源、UTM、点击 ID、落地页和访问路径。
+
 ## 你最需要知道的 3 种运行状态
 
 ### 1. 模板预览模式

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { appendAttributionCookies, getAttributionSnapshotFromRequest } from '@/lib/attribution-session';
 import { verifyTurnstileToken } from '@/lib/validation';
 import { getD1Database, saveInquiryD1 } from '@/lib/d1-db';
 import { sendTrackedInquiryNotification } from '@/lib/email';
@@ -7,7 +8,6 @@ import { buildRateLimitHeaders, checkRequestRateLimit } from '@/lib/request-rate
 import { siteConfig } from '@/lib/site-config';
 import {
   buildRequestGeoInfo,
-  normalizeVisitorTrackingSnapshot,
 } from '@/lib/visitor-tracking';
 
 const inquirySchema = z
@@ -22,7 +22,6 @@ const inquirySchema = z
     productName: z.string().min(1, 'Product name is required'),
     turnstileToken: z.string().optional(),
     turnstile_token: z.string().optional(),
-    tracking: z.unknown().optional(),
   })
   .refine((data) => Boolean(data.turnstileToken || data.turnstile_token), {
     message: 'Turnstile token is required',
@@ -124,8 +123,6 @@ export async function POST(request) {
       );
     }
 
-    const tracking = normalizeVisitorTrackingSnapshot(inquiryData.tracking);
-
     let cf;
     try {
       const context = await getCloudflareContext({ async: true });
@@ -136,6 +133,8 @@ export async function POST(request) {
 
     const geo = buildRequestGeoInfo(cf, request.headers);
     const db = await getDB();
+    const attribution = await getAttributionSnapshotFromRequest(request, db);
+    const tracking = attribution.snapshot;
 
     const numericProductId =
       typeof inquiryData.productId === 'string'
@@ -174,6 +173,9 @@ export async function POST(request) {
       console.warn('Inquiry notification email failed:', emailResult.error);
     }
 
+    const responseHeaders = new Headers(buildRateLimitHeaders(rateLimitResult));
+    appendAttributionCookies(responseHeaders, attribution.cookies);
+
     return Response.json(
       {
         success: true,
@@ -185,7 +187,7 @@ export async function POST(request) {
       },
       {
         status: 201,
-        headers: buildRateLimitHeaders(rateLimitResult),
+        headers: responseHeaders,
       }
     );
   } catch (error) {
