@@ -2,6 +2,7 @@ node_modules
 readme-images
 .vscode
 .DS_Store
+._*
 frontend/next.config.js
 
 # Agent metadata (not docs!)
