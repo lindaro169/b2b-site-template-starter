@@ -1024,10 +1024,6 @@ export function buildTrackingSummary(
   };
 }
 
-export function getTrackingPayloadForSubmit(): VisitorTrackingSnapshot | null {
-  return syncVisitorTrackingCurrentPage();
-}
-
 export function getSearchQueryHint(url: URL): string | undefined {
   return (
     getQueryValue(url, 'q') ||

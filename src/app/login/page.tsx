@@ -39,7 +39,7 @@ export default function LoginPage() {
           setTurnstileToken(null);
         },
       });
-    } catch (err) {
+    } catch {
       setError('登录失败，请重试');
       setLoading(false);
       setTurnstileKey(prev => prev + 1);

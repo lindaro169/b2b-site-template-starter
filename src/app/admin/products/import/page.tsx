@@ -6,7 +6,6 @@ import styles from './import.module.css';
 import ImportModeTabs from './components/ImportModeTabs';
 import QuickImportMode from './components/QuickImportMode';
 import StepImportMode from './components/StepImportMode';
-import { useAuth } from '@/lib/auth-context';
 
 type ImportMode = 'quick' | 'step';
 

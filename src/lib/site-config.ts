@@ -55,7 +55,6 @@ const localPreviewMode = resolveLocalPreviewMode(templateMode);
 export const siteConfig = {
   templateMode,
   localPreviewMode,
-  enableAnalytics: false,
   templateTurnstileToken: 'template-turnstile-token',
   turnstileSiteKey: 'mock-turnstile-site-key',
   turnstileSecretKey: 'mock-turnstile-secret-key',
