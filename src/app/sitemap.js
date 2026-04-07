@@ -104,18 +104,5 @@ export default async function sitemap() {
     },
     // 所有博客文章
     ...postUrls,
-    // 隐私政策和条款 - 低优先级
-    {
-      url: `${BASE_URL}/privacy-policy`,
-      lastModified: PLACEHOLDER_LAST_MODIFIED,
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${BASE_URL}/terms-conditions`,
-      lastModified: PLACEHOLDER_LAST_MODIFIED,
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
   ];
 }
