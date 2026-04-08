@@ -68,7 +68,8 @@ export const siteConfig = {
   mediaHost: 'media.template-site-placeholder.example',
   r2DevHost: 'template-site-placeholder.r2.dev',
   contactEmail: 'contact@template-site-placeholder.example',
-  previewAdminEmail: 'preview-admin@template-site-placeholder.example',
+  previewAdminEmail:
+    process.env.NEXT_PUBLIC_PREVIEW_ADMIN_EMAIL || 'admin@template-site-placeholder.example',
   encodedContactEmail: 'Y29udGFjdEB0ZW1wbGF0ZS1zaXRlLXBsYWNlaG9sZGVyLmV4YW1wbGU=',
   contactPhoneDisplay: '+00 0000 0000',
   contactPhoneHref: '+00000000000',

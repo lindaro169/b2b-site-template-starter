@@ -51,3 +51,4 @@ pnpm deploy
 - `wrangler.jsonc` 里的域名、路由、绑定 ID
 - `public/favicon.svg` 和 `public/logos/template-logo.svg`
 - 邮件接收邮箱与 `ADMIN_EMAIL` 管理员登录邮箱
+- `NEXT_PUBLIC_PREVIEW_ADMIN_EMAIL` 仅用于本地预览显示，不是正式环境认证必需项

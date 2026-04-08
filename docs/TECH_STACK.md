@@ -72,12 +72,22 @@ CLOUDFLARE_TURNSTILE_SECRET_KEY=mock-turnstile-secret-key
 RESEND_API_KEY=re_mock_template_key
 RESEND_FROM_EMAIL=contact@template-site-placeholder.example
 ADMIN_EMAIL=admin@template-site-placeholder.example
+NEXT_PUBLIC_PREVIEW_ADMIN_EMAIL=admin@template-site-placeholder.example
 SALES_NOTIFICATION_EMAIL=admin@template-site-placeholder.example
 GOOGLE_ADS_FEED_USERNAME=template-feed-user
 GOOGLE_ADS_FEED_PASSWORD=template-feed-password
 ```
 
 如果你只看前台页面，`ADMIN_EMAIL` 可以稍后再配；只要你要看 `/admin` 或调用后台接口，就必须先配它。
+
+本地模板预览模式下，后台不会走真实 Google 登录或 Turnstile。要看本地后台界面，请直接访问 `/admin/dashboard`。
+
+变量职责要分开理解：
+
+- `ADMIN_EMAIL`：服务端使用的后台管理员邮箱白名单；本地预览模式下，服务端 mock session 也使用它
+- `NEXT_PUBLIC_PREVIEW_ADMIN_EMAIL`：客户端本地预览模式下展示用的管理员邮箱；只影响前端显示，不参与真实认证
+
+真实 Google 登录、Turnstile、人机验证和回调域名联调，应放在预发布或正式环境测试，不要等正式上线后才第一次验证。
 
 ## 什么时候再去研究更深的技术细节
 

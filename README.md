@@ -43,6 +43,10 @@ pnpm dev
 - 如果你换机器、删了 `.wrangler/`，再执行一次 `pnpm db:local:setup` 即可
 - 如需手动强制开关模板运行模式，可在 `.env.local` 里设置 `NEXT_PUBLIC_TEMPLATE_MODE=true/false`
 - 如果你要打开本地后台预览或调用后台接口，请先在 `.env.local` 里配置 `ADMIN_EMAIL`
+- 如需让本地后台顶部展示的预览管理员邮箱与服务端保持一致，也请同步配置 `NEXT_PUBLIC_PREVIEW_ADMIN_EMAIL`
+- 本地模板预览不会走真实 Google 登录或 Turnstile；本地看后台请直接访问 `/admin/dashboard`
+- `ADMIN_EMAIL` 用于服务端识别后台管理员邮箱；`NEXT_PUBLIC_PREVIEW_ADMIN_EMAIL` 只用于本地预览模式下客户端显示管理员身份
+- 真实 Google 登录和 Turnstile 请在预发布或正式环境联调，不要等正式上线后才第一次测试
 
 ## 如果你想让 AI 帮你改这个网站
 

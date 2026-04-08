@@ -1,4 +1,5 @@
 import type { AdminLeadRecord, LeadSalesStage, LeadType } from '@/lib/d1-db';
+import { getAdminEmail } from '@/lib/global-config';
 import { siteConfig } from '@/lib/site-config';
 import type { VisitorTrackingSnapshot } from '@/lib/visitor-tracking';
 
@@ -256,7 +257,7 @@ function cloneLead<T>(value: T): T {
 }
 
 export function createTemplateAdminSession(
-  adminEmail: string = siteConfig.previewAdminEmail
+  adminEmail: string = getAdminEmail()
 ): TemplateAdminSession {
   return {
     user: {
