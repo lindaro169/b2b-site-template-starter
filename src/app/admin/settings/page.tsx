@@ -122,7 +122,7 @@ export default function SettingsPage() {
           <h2>说明</h2>
           <p>如果存在 D1 绑定，本页会写入 `global_config`。</p>
           <p>如果当前是纯本地模板预览且没有 D1，本页会退回模板内存存储，方便你直接演示后台流程。</p>
-          <p>后台管理员登录邮箱不在这里修改，本地后台预览和正式环境都通过环境变量 `ADMIN_EMAIL` 配置。</p>
+          <p>后台管理员登录邮箱不在这里修改。`ADMIN_EMAIL` 用于服务端管理员白名单；本地预览界面展示邮箱则由 `NEXT_PUBLIC_PREVIEW_ADMIN_EMAIL` 控制。</p>
           <p>`SALES_NOTIFICATION_EMAIL` 仍可作为联系邮箱的默认值和兜底值存在。</p>
         </section>
 
