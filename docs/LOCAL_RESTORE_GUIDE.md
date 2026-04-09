@@ -5,9 +5,8 @@
 ## 哪些东西要保留
 
 - `.env.local`
-- `.dev.vars`
 
-如果这两个文件里有你自己的真实密钥或真实邮箱配置，请自己妥善备份，但不要提交到仓库。
+如果 `.env.local` 里有你自己的真实密钥或真实邮箱配置，请自己妥善备份，但不要提交到仓库。
 
 ## 哪些东西不用备份
 
@@ -31,7 +30,6 @@
 git clone https://github.com/your-org/template-catalog-starter.git
 cd template-catalog-starter
 cp "/path/to/backup/.env.local" ".env.local"
-cp "/path/to/backup/.dev.vars" ".dev.vars"
 pnpm install
 pnpm db:local:setup
 pnpm dev
@@ -50,7 +48,7 @@ pnpm dev
 优先检查这几件事：
 
 1. Node.js 版本是否太旧
-2. `.env.local` 和 `.dev.vars` 是否丢了
+2. `.env.local` 是否丢了
 3. 有没有重新执行 `pnpm db:local:setup`
 4. 你是不是把真实配置和模板配置混在一起了
 - 本地启动正常

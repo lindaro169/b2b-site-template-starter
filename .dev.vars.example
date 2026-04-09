@@ -1,0 +1,29 @@
+# Wrangler / Cloudflare Worker 本地调试示例
+# 只有在你明确要跑 `wrangler dev` 或 Worker runtime 本地联调时，才复制为 `.dev.vars`。
+# 普通模板开发默认不需要这个文件。
+# 真实值不要提交进仓库。
+
+NEXT_PUBLIC_WEBSITE=http://localhost:3002
+NEXT_PUBLIC_API_URL=http://localhost:3002/api
+NEXT_PUBLIC_STRAPI=https://cms.template-site-placeholder.example
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=mock-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_ID=mock-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=mock-google-client-secret
+NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY=mock-turnstile-site-key
+CLOUDFLARE_TURNSTILE_SECRET_KEY=mock-turnstile-secret-key
+BETTER_AUTH_SECRET=mock-better-auth-secret
+JWT_SECRET=mock-jwt-secret
+NEXT_PUBLIC_EMAIL_ENCODED=Y29udGFjdEB0ZW1wbGF0ZS1zaXRlLXBsYWNlaG9sZGVyLmV4YW1wbGU=
+NEXT_PUBLIC_TELEPHONE_ENCODED=KzAwIDAwMDAgMDAwMA==
+RESEND_API_KEY=re_mock_template_key
+RESEND_FROM_EMAIL=contact@template-site-placeholder.example
+ADMIN_EMAIL=admin@template-site-placeholder.example
+NEXT_PUBLIC_PREVIEW_ADMIN_EMAIL=admin@template-site-placeholder.example
+SALES_NOTIFICATION_EMAIL=admin@template-site-placeholder.example
+GOOGLE_ADS_FEED_USERNAME=template-feed-user
+GOOGLE_ADS_FEED_PASSWORD=template-feed-password
+
+# 只有你要用 drizzle d1-http / 远程 D1 / Wrangler 绑定联调时，才补下面这些值。
+# CLOUDFLARE_ACCOUNT_ID=your-cloudflare-account-id
+# CLOUDFLARE_D1_DATABASE_ID=your-d1-database-id
+# CLOUDFLARE_D1_TOKEN=your-cloudflare-api-token

@@ -95,8 +95,8 @@ docs
   数据结构和迁移
 - `wrangler.jsonc`
   Cloudflare 部署配置
-- `.env.local`、`.dev.vars`
-  本地私有配置
+- `.env.local`
+  本地私有配置默认入口
 
 ## 模板默认占位资源
 

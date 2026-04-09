@@ -4,6 +4,14 @@
 
 仓库里现在看到的品牌名、域名、邮箱、产品图、logo、favicon、后台线索和大部分文案，都是 **mock data / placeholder**。它们的作用是让你先把网站跑起来、看版式、走流程，再逐步替换成自己的内容。
 
+环境变量硬规则：
+
+- 默认本地开发只走 `pnpm dev` / `next dev`
+- 除非你明确要跑 `wrangler dev`，否则不要创建 `.dev.vars`
+- 如果本地暂时只看模板和 mock data，通常连 `.env.local` 都不需要
+- 真实 secret 不进仓库；本地需要时才放 `.env.local`
+- 仓库和 CI 会自动拦截 `.env.local`、`.dev.vars` 以及疑似真实 secret 的提交
+
 如果你是编程小白，先看：
 
 - [新手起步指南](./docs/START_HERE.md)
@@ -27,6 +35,13 @@ pnpm db:local:setup
 pnpm dev
 ```
 
+说明：
+
+- 普通模板开发默认用 `pnpm dev`，也就是 `next dev`
+- 这条链路最适合改页面、改文案、改组件、看后台模板效果
+- 只有当你要验证 Cloudflare Worker 运行时差异时，才额外使用 `wrangler dev`
+- 如果你只是继续保持 mock data，通常连 `.env.local` 都不需要创建
+
 本地地址：
 
 ```text
@@ -44,6 +59,7 @@ pnpm dev
 - 如需手动强制开关模板运行模式，可在 `.env.local` 里设置 `NEXT_PUBLIC_TEMPLATE_MODE=true/false`
 - 如果你要打开本地后台预览或调用后台接口，请先在 `.env.local` 里配置 `ADMIN_EMAIL`
 - 如需让本地后台顶部展示的预览管理员邮箱与服务端保持一致，也请同步配置 `NEXT_PUBLIC_PREVIEW_ADMIN_EMAIL`
+- 模板默认只需要一份本地私有文件 `.env.local`；不要默认再维护 `.dev.vars`
 - 本地模板预览不会走真实 Google 登录或 Turnstile；本地看后台请直接访问 `/admin/dashboard`
 - `ADMIN_EMAIL` 用于服务端识别后台管理员邮箱；`NEXT_PUBLIC_PREVIEW_ADMIN_EMAIL` 只用于本地预览模式下客户端显示管理员身份
 - 真实 Google 登录和 Turnstile 请在预发布或正式环境联调，不要等正式上线后才第一次测试
@@ -78,7 +94,7 @@ pnpm dev
   浏览器图标
 - `src/app/`
   前台页面和后台页面
-- `.env.local`、`.dev.vars`
+- `.env.local`
   本地私有配置和第三方服务密钥
 
 ## 不要急着做的事
@@ -101,7 +117,7 @@ pnpm dev
 ## 发布前必须替换
 
 - `src/lib/site-config.ts` 中所有占位值
-- `.env.local` 与 `.dev.vars` 中的真实凭证
+- `.env.local` 中的真实本地凭证
 - `ADMIN_EMAIL` 中的后台管理员登录邮箱
 - `wrangler.jsonc` 中的域名、路由、Cloudflare 绑定
 - 联系方式、邮箱、法务文案、服务承诺
@@ -120,6 +136,15 @@ pnpm dev
 
 - 可直接拿去上线的真实品牌站
 - 已接好所有第三方服务的生产系统
+
+## 环境变量最佳实践
+
+- 本地开发默认只使用 `.env.local`
+- `.env.example` 只放可公开的示例值和 mock 占位值
+- GitHub 仓库不要提交任何真实 secret，包括 production 和 preview
+- GitHub Actions / Cloudflare Workers 的真实 secret 只放平台 secret 管理
+- `.dev.vars` 只在你明确需要 Wrangler 专用本地调试流程时再额外创建；普通模板使用者不需要它
+- 如需 `wrangler dev`，先复制 [`.dev.vars.example`](/Users/linda/Documents/coding-projects/b2b%20site%20template%20starter/.dev.vars.example) 为本地私有的 `.dev.vars`
 
 ## 致谢
 
