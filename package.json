@@ -15,6 +15,7 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
+    "check:repo-safety": "node scripts/check_repo_safety.mjs",
     "deploy": "wrangler deploy"
   },
   "dependencies": {

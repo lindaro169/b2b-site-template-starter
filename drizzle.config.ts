@@ -3,13 +3,18 @@
 import { config } from "dotenv";
 import { defineConfig } from "drizzle-kit";
 
-// Load environment variables from .dev.vars for drizzle studio
-config({ path: ".dev.vars" });
+const envFiles = [".env.local", ".env", ".dev.vars"];
+
+for (const envFile of envFiles) {
+    config({ path: envFile, override: false });
+}
 
 function getRequiredEnv(name: string): string {
     const v = process.env[name];
     if (!v) {
-        throw new Error(`Required environment variable ${name} is not set. Please configure it before running drizzle commands.`);
+        throw new Error(
+            `Required environment variable ${name} is not set. Configure it in .env.local or your shell before running drizzle commands.`
+        );
     }
     return v;
 }

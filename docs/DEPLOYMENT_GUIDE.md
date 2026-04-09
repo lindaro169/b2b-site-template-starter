@@ -23,9 +23,14 @@
 
 - `wrangler.jsonc`
 - `.env.local`
-- `.dev.vars`
 - `src/lib/site-config.ts`
 - `public/favicon_io/site.webmanifest`
+
+说明：
+
+- `.env.local` 只用于本地私有配置，不上传仓库
+- 生产 / preview 的真实 secret 不写进仓库，也不依赖 `.env.local`
+- 生产 / preview 的真实 secret 应配置在 GitHub Actions secrets、Cloudflare Workers secrets 或对应平台的环境变量管理中
 
 ## 最小部署流程
 

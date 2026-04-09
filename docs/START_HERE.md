@@ -4,6 +4,12 @@
 
 目标不是让你学会所有技术，而是让你能把这个模板网站跑起来，并且知道怎么让 AI 一步一步帮你改成自己的新网站。
 
+先记住这条硬规则：
+
+- 默认用 `pnpm dev`
+- 除非你明确要跑 `wrangler dev`，否则不要创建 `.dev.vars`
+- 如果你当前只是看模板和 mock data，通常不需要 `.env.local`
+
 ## 你会得到什么
 
 这个模板默认已经带好这些能力：
@@ -36,6 +42,17 @@ pnpm db:local:setup
 pnpm dev
 ```
 
+这里的 `pnpm dev` 就是默认推荐路径，也就是 `next dev`。
+
+为什么默认用它：
+
+- 启动更直接
+- 改页面反馈更快
+- 对模板使用者最不容易搞混
+- 不要求你先理解 Cloudflare Worker 运行时
+
+只有你后面要做 Cloudflare 运行时一致性检查、Worker 绑定联调、部署前验证时，再考虑 `wrangler dev`。
+
 打开下面这些地址：
 
 ```text
@@ -46,6 +63,8 @@ http://localhost:3002/admin/contacts
 ```
 
 如果这些地址能打开，说明模板已经在你本地跑起来了。
+
+如果你当前只是看模板、改 mock data、改页面结构，通常不需要创建 `.env.local`，也不需要 `.dev.vars`。
 
 ## 第二步：先知道哪些东西是假的
 

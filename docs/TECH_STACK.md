@@ -25,9 +25,20 @@
 pnpm install
 pnpm db:local:setup
 pnpm dev
+pnpm check:repo-safety
 pnpm type-check
 pnpm lint
 ```
+
+默认推荐：
+
+- `pnpm dev`
+  日常本地开发主路径，底层是 `next dev`
+
+按需使用：
+
+- `wrangler dev`
+  只在你需要检查 Cloudflare Worker 运行时差异、绑定注入或部署前一致性时使用
 
 ## 每个命令是干什么的
 
@@ -37,6 +48,8 @@ pnpm lint
   初始化本地 D1，并写入 mock 数据
 - `pnpm dev`
   启动本地开发服务
+- `pnpm check:repo-safety`
+  检查是否误提交本地私有环境文件或疑似真实 secret
 - `pnpm type-check`
   检查 TypeScript 类型
 - `pnpm lint`
@@ -55,10 +68,9 @@ http://localhost:3002/admin/contacts
 
 不要把真实密钥提交进仓库。
 
-常见本地文件：
+默认本地文件：
 
 - `.env.local`
-- `.dev.vars`
 
 模板值应该保持占位语义，例如：
 
@@ -89,6 +101,19 @@ GOOGLE_ADS_FEED_PASSWORD=template-feed-password
 
 真实 Google 登录、Turnstile、人机验证和回调域名联调，应放在预发布或正式环境测试，不要等正式上线后才第一次验证。
 
+`.dev.vars` 不是模板默认必需文件。只有你明确要跑 Wrangler 专用的本地调试链路，或者要兼容个别只认 `.dev.vars` 的工具时，才额外创建它。需要时，复制 [`.dev.vars.example`](/Users/linda/Documents/coding-projects/b2b%20site%20template%20starter/.dev.vars.example) 为你自己的 `.dev.vars`。
+
+推荐分层：
+
+- `.env.local`
+  Next.js 本地开发唯一默认私有入口
+- `.dev.vars`
+  Wrangler / Worker runtime 本地调试专用入口，不是默认必需
+- GitHub / Cloudflare Secrets
+  preview / production 的真实 secret
+- `.env.example`
+  只保留 mock 值、占位值和公开示例
+
 ## 什么时候再去研究更深的技术细节
 
 只有当你遇到下面这些问题时，再去深挖：
@@ -103,5 +128,5 @@ GOOGLE_ADS_FEED_PASSWORD=template-feed-password
 ## 注意事项
 
 - 文档中的域名、邮箱与绑定名全部是模板示例
-- 真实密钥只放在 `.env.local` 或 `.dev.vars`
+- 真实密钥不要进仓库；本地放 `.env.local`，线上放部署平台 secrets
 - 发布前同步更新 `next.config.ts`、`wrangler.jsonc` 和 `src/lib/site-config.ts`
